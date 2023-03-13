@@ -1,28 +1,22 @@
-package com.ue.insw.proyecto.exercises.json;
+package app.Inksight;
 
 public class Libro {
 
-
-
-
-    public String bookID;
+    public int bookID;
     public String title;
     public String authors;
     public int numPages;
     public String publication_date;
     public String languageCode;
-
-    public Libro(String bookID, String title, String authors, int numPages, String publication_date, String languageCode) {
+    public String publisher;
+    public Libro(int bookID, String title, String authors, int numPages, String publication_date, String languageCode,String publisher) {
         this.bookID = bookID;
         this.title = title;
         this.authors = authors;
         this.numPages = numPages;
         this.publication_date = publication_date;
         this.languageCode = languageCode;
-    }
-
-    public void setID(String bookID) {
-        this.bookID= bookID;
+        this.publisher = publisher;
     }
 
     public void setTitle(String title) {
@@ -43,7 +37,7 @@ public class Libro {
 
     public void setLanguageCode(String languageCode) {this.languageCode = languageCode;}
 
-    public String getbookID() {
+    public int getbookID() {
         return bookID;
     }
 
@@ -65,4 +59,11 @@ public class Libro {
 
     public String getLanguageCode() {return languageCode;}
 
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 }

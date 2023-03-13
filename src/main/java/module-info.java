@@ -1,9 +1,6 @@
-module com.ue.insw.proyecto {
+module app.Inksight {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.google.gson;
-    requires com.fasterxml.jackson.databind;
-    opens com.ue.insw.proyecto.exercises.json to com.google.gson;
-
-
+    opens app.Inksight to com.google.gson;
 }
