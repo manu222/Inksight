@@ -15,8 +15,15 @@ public class PruebaClase {//usuario con limite de 100 amigos
 	
 	public void anyadirAmigo(Scanner teclado, PruebaClase usuario){
 		listaAmigos.add(usuario);//hacer esta wea un hashset
-
-		
-		
 	}
+
+	public int getnAmigos(){
+		return listaAmigos.size();
+	}
+
+	public String buscarAmigo(){
+
+		return "hola";
+	}
+
 }
