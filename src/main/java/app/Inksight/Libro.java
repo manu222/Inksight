@@ -67,14 +67,12 @@ public class Libro {
 
     @Override
     public String toString() {
-        return "Libro{" +
-                "bookID=" + bookID +
-                ", title='" + title + '\'' +
-                ", authors='" + authors + '\'' +
-                ", numPages=" + numPages +
-                ", publication_date='" + publication_date + '\'' +
-                ", languageCode='" + languageCode + '\'' +
-                '}';
+        return  "\nbookID=" + bookID +
+                "title=" + title + "\n" +
+                "authors=" + authors + "\n" +
+                "numPages=" + numPages + "\n" +
+                "publication_date=" + publication_date + "\n" +
+                "languageCode=" + languageCode + "\n";
     }
     @Override
     public boolean equals(Object other){
