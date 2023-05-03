@@ -7,18 +7,24 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class DB {
-    public Libro libro;
+    private Libro libro;
 
-    public DB(Libro libro) {
+    private Libro libroError;
+    static final String ruta = "src/main/java/app/Inksight/books.json";
+    Gson gson = new Gson();
+
+    public DB() {
         this.libro = libro;
+        this.libroError= new Libro(-1,"error","error",-1,"error","error");
     }
 
     public static void addLibro() {
-        String ruta = "app/Inksight/books.json";
+
         Scanner sc = new Scanner(System.in);
         File file = new File(ruta);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -73,7 +79,6 @@ public class DB {
     }
 
     public static void updateLibro() throws IOException {
-        String ruta = "src/main/java/app/Inksight/books.json";
         Scanner sc = new Scanner(System.in);
         File file = new File(ruta);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -172,67 +177,75 @@ public class DB {
     }
 
     public static void eliminarLibro() throws IOException {
-            String ruta = "src/main/java/app/Inksight/books.json";
-            Scanner sc = new Scanner(System.in);
-            File file = new File(ruta);
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-            System.out.print("Introduce la id del libro a eliminar:");
-            int id = sc.nextInt();
+        Scanner sc = new Scanner(System.in);
+        File file = new File(ruta);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-            if (file.exists() && file.canRead() && file.canWrite()) {
-                Reader reader = Files.newBufferedReader(Paths.get(ruta));
-                try {
-                    Type listType = new TypeToken<List<Libro>>() {}.getType();
-                    List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
+        System.out.print("Introduce la id del libro a eliminar:");
+        int id = sc.nextInt();
 
-                    for (Libro libro : libros) {
-                        if (libro.getbookID() == id) {
-                            libros.remove(libro);
-                            break;
-                        }
+        if (file.exists() && file.canRead() && file.canWrite()) {
+            Reader reader = Files.newBufferedReader(Paths.get(ruta));
+            try {
+                Type listType = new TypeToken<List<Libro>>() {}.getType();
+                List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
+
+                for (Libro libro : libros) {
+                    if (libro.getbookID() == id) {
+                        libros.remove(libro);
+                        break;
                     }
-
-                    String listaUpdate = gson.toJson(libros);
-                    FileWriter writer = new FileWriter(ruta);
-                    writer.write(listaUpdate);
-                    writer.close();
-
-                }catch (IOException e) {
-                    // Handle the IOException
                 }
 
-            } else {
-                System.out.println("Error: Este programa no ha hecho nada");
-            }
-        }
+                String listaUpdate = gson.toJson(libros);
+                FileWriter writer = new FileWriter(ruta);
+                writer.write(listaUpdate);
+                writer.close();
 
-    public static void buscarLibros() throws IOException {
-        String ruta = "src/main/java/app/Inksight/books.json";
+            }catch (IOException e) {
+                // Handle the IOException
+            }
+
+        } else {
+            System.out.println("Error: Este programa no ha hecho nada");
+        }
+    }
+
+    public Libro buscarLibro(String query) throws IOException {
         Gson gson = new Gson();
-        Scanner sc3 = new Scanner(System.in);
-        System.out.println("¿Qué buscas?:");
-        String query = sc3.nextLine().toLowerCase(); // convertimos la consulta a minúsculas
+        query = query.toLowerCase(); // convertimos la consulta a minúsculas
         Type listType = new TypeToken<List<Libro>>() {}.getType();
         List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
+        List<Libro> queryReturn = new ArrayList<>();
 
         System.out.println("Resultados de la búsqueda para '" + query + "':");
         for (Libro libro : libros) {
             // convertimos el título del libro a minúsculas para hacer la comparación
             if (Integer.toString(libro.getbookID()).equals(query) || libro.getTitle().toLowerCase().matches(".*" + query + ".*")) {
-                System.out.println("ID: " + libro.getbookID());
-                System.out.println("Título: " + libro.getTitle());
-                System.out.println("Autores: " + libro.getAuthors());
-                System.out.println("Número de páginas: " + libro.getNumPages());
-                System.out.println("Fecha de publicación: " + libro.getPublication_date());
-                System.out.println("Código de idioma: " + libro.getLanguageCode());
-                System.out.println("---------------------------");
+                return libro;
             }
         }
+        return this.libroError;
+    }
+    public List<Libro> buscarLibros(String query) throws IOException {
+        Gson gson = new Gson();
+        query = query.toLowerCase(); // convertimos la consulta a minúsculas
+        Type listType = new TypeToken<List<Libro>>() {}.getType();
+        List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
+        List<Libro> queryReturn = new ArrayList<>();
+
+        System.out.println("Resultados de la búsqueda para '" + query + "':");
+        for (Libro libro : libros) {
+            // convertimos el título del libro a minúsculas para hacer la comparación
+            if (Integer.toString(libro.getbookID()).equals(query) || libro.getTitle().toLowerCase().matches(".*" + query + ".*")) {
+                queryReturn.add(libro);
+            }
+        }
+        return queryReturn;
     }
 
     public static void leerLibros() throws IOException {
-        String ruta = "src/main/java/app/Inksight/books.json";
         Gson gson = new Gson();
         Type listType = new TypeToken<List<Libro>>() {}.getType();
         List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
@@ -251,6 +264,4 @@ public class DB {
     }
 
 }
-
-
 
