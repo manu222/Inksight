@@ -1,7 +1,6 @@
 package com.ue.insw.proyecto.exercises.json;
 
 import com.google.gson.Gson;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;

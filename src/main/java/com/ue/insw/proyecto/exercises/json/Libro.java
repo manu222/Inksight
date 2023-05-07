@@ -20,6 +20,15 @@ public class Libro {
         this.publication_date = publication_date;
         this.languageCode = languageCode;
     }
+    public Libro(Libro base) {
+        this.bookID = base.bookID;
+        this.title = base.title;
+        this.authors = base.authors;
+        this.numPages = base.numPages;
+        this.publication_date = base.publication_date;
+        this.languageCode = base.languageCode;
+    }
+
 
     public void setID(String bookID) {
         this.bookID= bookID;
