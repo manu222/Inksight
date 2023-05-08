@@ -1,4 +1,4 @@
-package app.Inksight;
+package com.ue.insw.proyecto.exercises.json;
 
 public class Challenge {
     public final String challengeID;
@@ -58,6 +58,6 @@ public class Challenge {
     public boolean isCompleted() {
         return completed;
     }
-
+    
 
 }

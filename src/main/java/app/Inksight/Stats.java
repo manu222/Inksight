@@ -1,4 +1,4 @@
-package app.Inksight;
+package com.ue.insw.proyecto.exercises.json;
 
 public class Stats {
     private int numBooks;
