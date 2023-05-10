@@ -5,9 +5,13 @@ public class reviews {
         String descripcion;
         int puntuacion;
 
-        public void setDescripcion(String descripcion) {
+
+        reviews(Libro libro, String descripcion, int puntuacion) {
+            this.libro = libro;
             this.descripcion = descripcion;
+            this.puntuacion = puntuacion;
         }
+        public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
 
         public void setLibro(Libro libro) {
             this.libro = libro;

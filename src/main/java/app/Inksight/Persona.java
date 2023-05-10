@@ -11,20 +11,20 @@ public class Persona {
     private int followers;
     HashSet<Persona> listaAmigos; //probar hashmap
     List<reviews> listaReviews;
-    List<String> libroLeer;
-    List<String> libroLeido;
+
 
 
     int permiso;
 
     int puntos;
 
-    public Persona(String first_name, String last_name, String location, boolean online, int followers,HashSet<Persona> listaAmigos,List<reviews> listaReviews) {
+    public Persona(String first_name, String last_name, String location, boolean online, int follower) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.location = location;
         this.online = online;
         this.followers = followers;
+
     }
 
     public String getFirst_name() {
@@ -68,7 +68,7 @@ public class Persona {
     public void setFollowers(int followers) {
         this.followers = followers;
     }
-}
+
 
 
     public void anyadirAmigo(Scanner teclado, Persona usuario){
@@ -82,20 +82,24 @@ public class Persona {
     public List<reviews> getListaReviews(){return listaReviews;}
 
     public HashSet<Persona> getListaAmigos(){return listaAmigos;}
-    public Persona buscarAmigo(Persona usuario) {
-        Persona actual = new Persona();
-        Iterator<Persona> it = usuario.getListaAmigos().iterator();
 
-        if (usuario.getnAmigos() != 0) {
+
+
+
+    public Persona buscarAmigo(Persona usuario) {
+        Persona actual = new Persona("ERROR","ERROR","ERROR",false, 0);
+        Iterator<Persona> it = getListaAmigos().iterator();
+
+        if (getnAmigos() != 0) {
             int contador = 0;
-            while (it.hasNext() && contador < usuario.getnAmigos()) {
+            while (it.hasNext() && contador < this.getnAmigos()) {
                 if(it.next() == usuario){
                 actual = it.next();
                 }
+                contador++;
             }
             }
         return actual;
-
         }
 
 
@@ -119,35 +123,33 @@ public class Persona {
     }
 
 
-        public void recomendacion (Scanner teclado, Persona usuario){//libros leidos por un amigo
+    public reviews recomendacion (Scanner teclado){//libros leidos por un amigo
             Random rand = new Random();
-            HashSet<Persona> listaAmigos = usuario.getListaAmigos();
+            HashSet<Persona> listaAmigos = getListaAmigos();
 
-            int numeroAmigo = rand.nextInt(usuario.getListaAmigos().size() + 1);
+            Persona actual = new Persona("ERROR","ERROR","ERROR",false, 0);
+            Libro libro = new Libro(-1,"·Error.","Error",-1,"Error","Error","Error");
+            reviews recomendado = new reviews(libro,"No tienes amigos",-1);
 
+            int numeroAmigo = rand.nextInt(getListaAmigos().size() + 1);
             Iterator<Persona> it = listaAmigos.iterator();
 
             if (listaAmigos.size() != 0) {
                 int contador = 0;
                 while (it.hasNext() && contador < numeroAmigo) {
-                    Persona actual = it.next();
+                    actual = it.next();
                 }
 
-                reviews recomendado = usuario.sortByPuntuacion(usuario.getListaReviews());
+                recomendado = sortByPuntuacion(actual.getListaReviews());
                 System.out.println("Esta es una review recomendada por tu amigo");
                 System.out.println("Titulo:" + recomendado.getLibro().getTitle());
                 System.out.println("Review:" + recomendado.getDescripcion());
                 System.out.println("Puntuacion:" + recomendado.getPuntuacion());
 
 
-            } else {
-                System.out.println("El usuario no tiene amigos, por lo que no recibe recomendaciones");
-
             }
+            return recomendado;
 
-            //hazerlo de un amigo al azar/uno que yo escsoga
-            //amigo al azar
-            //checkear si tiene algo en la lista de reviews, si esta vacia otro amigo random, si no dame tu mejor review
 
         }
     }
