@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,10 @@ import java.util.Scanner;
 public class DB {
     private Libro libro;
 
-    private Libro libroError;
+    final private Libro libroError;
     static final String ruta = "src/main/java/app/Inksight/books.json";
+    static final String rutaData = "src/main/data";
+    static final String rutaUsers = rutaData + "/Users";
     Gson gson = new Gson();
 
     public DB() {
@@ -244,7 +247,9 @@ public class DB {
         }
         return queryReturn;
     }
-
+    public Libro buscarUnLibro(String query) throws IOException {
+        return buscarLibros(query).get(0);
+    }
     public static void leerLibros() throws IOException {
         Gson gson = new Gson();
         Type listType = new TypeToken<List<Libro>>() {}.getType();
@@ -262,6 +267,88 @@ public class DB {
         }
         System.out.println("Numero de libros: "+contador+ "\n");
     }
+    public static String leerArchivo(String rutaArchivo) throws IOException {
+        Path ruta = Paths.get(rutaArchivo);
+        byte[] contenidoBytes = Files.readAllBytes(ruta);
+        return new String(contenidoBytes);
+    }
+    public void createPersona() {
 
+        Scanner sc = new Scanner(System.in);
+
+        // Comprobar si la carpeta data existe, si no existe, crearla
+        File dataDir = new File(rutaData);
+        if (!dataDir.exists()) {
+            dataDir.mkdir();
+        }
+
+        // Comprobar si la carpeta Users existe, si no existe, crearla
+        File usersDir = new File(rutaUsers);
+        if (!usersDir.exists()) {
+            usersDir.mkdir();
+        }
+
+        System.out.println("Usuario a crear:");
+        String user = sc.nextLine();
+        File userDir = new File(rutaUsers + "/" + user);
+
+        // Comprobar si el usuario ya existe
+        if (userDir.exists()) {
+            System.out.println("El usuario ya existe");
+        } else {
+            // Si el usuario no existe, crear su carpeta y el archivo "nombreUserData.json"
+            userDir.mkdir();
+            File userJson = new File(userDir, user + "Data.json");
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+
+            System.out.print("Nombre:");
+            String fn = sc.nextLine();
+
+            System.out.print("Apellido:");
+            String ln = sc.nextLine();
+
+            System.out.print("ciudad:");
+            String ciudad = sc.next();
+            sc.nextLine();
+
+            Stats Stats=new Stats();
+            Persona newUser = new Persona(fn,ln,ciudad,false,0,Stats);
+            //test
+            try{
+                Libro lTest = buscarUnLibro("Harry Potter");
+                newUser.gestionColecciones.agregarlibro("leyendo",lTest);
+                newUser.makeChallenge("Leer 10 libros", "Leer 10 libros en una semana", 10, "libros", 200);
+                newUser.markAsCompleted("1");
+            }catch (IOException e){
+                System.out.println(e.getMessage());
+            }
+            //end test
+            try {
+                userJson.createNewFile();
+                FileWriter fw = new FileWriter(userJson);
+                gson.toJson(newUser,fw);
+                fw.close();
+                try {
+                    String contenido = leerArchivo(String.valueOf(userJson));
+                    System.out.println(contenido);
+                    Persona personaObj = gson.fromJson(contenido, Persona.class);
+                    System.out.println(personaObj.getFirst_name());
+                    System.out.println(personaObj.getLast_name());
+                    System.out.println(personaObj.getLocation());
+                    System.out.println(personaObj.getnAmigos());
+                    System.out.println(personaObj.getListaReviews());
+
+
+                } catch (IOException e) {
+                    System.out.println("Ocurrió un error al leer el archivo: " + e.getMessage());
+                }
+                } catch (IOException e) {
+                System.out.println("Error al crear el archivo del usuario");
+            }
+
+        }
+    }
 }
 

@@ -1,4 +1,4 @@
-package com.ue.insw.proyecto.exercises.json;
+package app.Inksight;
 
 public class Challenge {
     public final String challengeID;

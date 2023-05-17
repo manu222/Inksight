@@ -1,9 +1,9 @@
-package com.ue.insw.proyecto.exercises.json;
-
+package app.Inksight;
 import java.util.Date;
 
 public class LibroAmpliado extends Libro {
 	private Date fechaInclusion;
+	private boolean recomendado;
 
 	public LibroAmpliado(Libro base, Date fechaInclusion) {
 		super(base);
@@ -17,5 +17,5 @@ public class LibroAmpliado extends Libro {
 	public void setFechaInclusion(Date fechaInclusion) {
 		this.fechaInclusion = fechaInclusion;
 	}
-
+	public boolean isRecomendado(){return recomendado;}
 }

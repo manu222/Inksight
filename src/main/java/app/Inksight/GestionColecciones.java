@@ -1,5 +1,4 @@
-package com.ue.insw.proyecto.exercises.json;
-
+package app.Inksight;
 import java.util.ArrayList;
 import java.util.List;
 

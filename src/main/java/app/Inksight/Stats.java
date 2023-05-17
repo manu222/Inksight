@@ -1,5 +1,4 @@
-package com.ue.insw.proyecto.exercises.json;
-
+package app.Inksight;
 public class Stats {
     private int numBooks;
     private int numPages;
@@ -17,7 +16,7 @@ public class Stats {
     public void addBook(LibroAmpliado libro){
         numBooks++;
         numPages += libro.getNumPages();
-        addXp(libro.getFechaInclusion().getTime() / 1000000000);
+        addXp(libro.getFechaInclusion().getTime() / 1000000000f);
     }
 
     //si no se sabe la fecha de inclusión, se debe llamar addXp con la experiencia calculada

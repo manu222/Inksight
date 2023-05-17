@@ -1,5 +1,4 @@
-package com.ue.insw.proyecto.exercises.json;
-
+package app.Inksight;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -73,24 +72,7 @@ public class ColeccionLibro {
 		}
 		return GestionColecciones.LIBRO_NO_EXISTE;
 	}
-	
-	
-	
-	
-	
-	public List<LibroAmpliado> consultarLibrosEnLista(){
-		List<LibroAmpliado> librosEnLista = new ArrayList<>();
-		for(int i = 0; i < librosEnLista.size();i++) {
-			LibroAmpliado visibilizar = new LibroAmpliado(new Libro("",nombreColeccion,"",0,"",""), null);
-			librosEnLista.add(visibilizar);
-		}
-		return librosEnLista;
-		
-	}
-	
-	
-	
-	
+
 	//metodos por defecto
 	public String getNombreColeccion() {
 		return nombreColeccion;
