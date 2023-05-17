@@ -1,12 +1,11 @@
 package app.Inksight;
 
-public class reviews {
+public class Review {
         Libro libro;
         String descripcion;
         int puntuacion;
 
-
-        reviews(Libro libro, String descripcion, int puntuacion) {
+        Review(Libro libro, String descripcion, int puntuacion) {
             this.libro = libro;
             this.descripcion = descripcion;
             this.puntuacion = puntuacion;
