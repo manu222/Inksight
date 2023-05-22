@@ -23880,18 +23880,10 @@
     "languageCode": "en-us"
   },
   {
-    "bookID": 2986,
-    "title": "pepe",
-    "authors": "pepe",
+    "bookID": 3000,
+    "title": "Alicia en el pais de las maravillas",
+    "authors": "Lewis Carroll",
     "numPages": 300,
-    "publication_date": "11/11/1111",
-    "languageCode": "14/06/1967"
-  },
-  {
-    "bookID": 2986,
-    "title": "alicia en el pais de las maravillas",
-    "authors": "carrol",
-    "numPages": 10,
     "publication_date": "14/06/1997",
     "languageCode": "es-es"
   }
