@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class DB {
     private Libro libro;
 
-    final private Libro libroError;
+    static private Libro libroError = null;
     static final String ruta = "src/main/java/app/Inksight/books.json";
     static final String rutaData = "src/main/data";
     static final String rutaUsers = rutaData + "/Users";
@@ -85,12 +85,18 @@ public class DB {
         Scanner sc = new Scanner(System.in);
         File file = new File(ruta);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser parser = new JsonParser();
+        Reader reader = Files.newBufferedReader(Paths.get(ruta));
+        JsonElement rootElement = parser.parse(reader);
+        JsonArray jsonArray = rootElement.getAsJsonArray();
+
 
         System.out.print("Introduce la id del libro a modificar:");
         int id = sc.nextInt();
+        Libro target = buscarLibroPorId(id);
 
         if (file.exists() && file.canRead() && file.canWrite()) {
-            Reader reader = Files.newBufferedReader(Paths.get(ruta));
+
             try {
                 Type listType = new TypeToken<List<Libro>>() {}.getType();
                 List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
@@ -104,9 +110,11 @@ public class DB {
                 System.out.println("6) Lang code");
                 int opcion = sc.nextInt();
 
+
                 switch (opcion) {
                     case 1:
                         System.out.println("introduce nueva ID:");
+                        sc.next();
                         int newId = sc.nextInt();
                         for (Libro libro : libros) {
                             if (libro.getbookID()==id){
@@ -117,6 +125,7 @@ public class DB {
                         break;
                     case 2:
                         System.out.println("introduce nuevo titulo:");
+                        sc.next();
                         String newTitle = sc.nextLine();
                         for (Libro libro : libros) {
                             if (libro.getbookID()==id){
@@ -127,15 +136,19 @@ public class DB {
                         break;
                     case 3:
                         System.out.println("introduce autor/es:");
+                        sc.next();
                         String newAuthors = sc.nextLine();
                         for (Libro libro : libros) {
                             if (libro.getbookID()==id){
                                 libro.setAuthors(newAuthors);
                                 break;
                             }
+
                         }
+                        break;
                     case 4:
                         System.out.println("introduce paginas del libro:");
+                        sc.next();
                         int newPages = sc.nextInt();
                         for (Libro libro : libros) {
                             if (libro.getbookID()==id){
@@ -143,17 +156,27 @@ public class DB {
                                 break;
                             }
                         }
+                        break;
                     case 5:
                         System.out.println("introduce fecha de publicación:");
+                        sc.nextLine();
                         String newFecha = sc.nextLine();
-                        for (Libro libro : libros) {
-                            if (libro.getbookID()==id){
-                                libro.setPublication_date(newFecha);
-                                break;
+                        System.out.println("fecha: "+newFecha);
+
+                       // target.setPublication_date(newFecha);
+
+                        for (JsonElement objElement : jsonArray) {
+                            if(objElement.getAsJsonObject().get("bookID").equals(target.getbookID())){
+                                System.out.println(target.getbookID());
+                                objElement.getAsJsonObject().addProperty("bookID",newFecha);
                             }
+
                         }
+
+                        break;
                     case 6:
                         System.out.println("introduce codigo de idioma Xx-Xx:");
+                        sc.next();
                         String newCode = sc.nextLine();
                         for (Libro libro : libros) {
                             if (libro.getbookID()==id){
@@ -161,6 +184,7 @@ public class DB {
                                 break;
                             }
                         }
+                        break;
 
                     default:
                         break;
@@ -231,6 +255,22 @@ public class DB {
         }
         return this.libroError;
     }
+    public static Libro buscarLibroPorId(int id) throws IOException {
+        Gson gson = new Gson();
+
+        Type listType = new TypeToken<List<Libro>>() {}.getType();
+        List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
+        List<Libro> queryReturn = new ArrayList<>();
+
+        System.out.println("Resultados de la búsqueda para '" + id + "':");
+        for (Libro libro : libros) {
+            // convertimos el título del libro a minúsculas para hacer la comparación
+            if (libro.getbookID()==id) {
+                return libro;
+            }
+        }
+        return libroError;
+    }
     public List<Libro> buscarLibros(String query) throws IOException {
         Gson gson = new Gson();
         query = query.toLowerCase(); // convertimos la consulta a minúsculas
@@ -248,7 +288,8 @@ public class DB {
         return queryReturn;
     }
     public Libro buscarUnLibro(String query) throws IOException {
-        return buscarLibros(query).get(0);
+        List<Libro> res = buscarLibros(query);
+        return (res.equals(null)||res.size()==0)?null:res.get(0);
     }
     public static void leerLibros() throws IOException {
         Gson gson = new Gson();
@@ -317,10 +358,16 @@ public class DB {
             Persona newUser = new Persona(fn,ln,ciudad,false,0,Stats);
             //test
             try{
-                Libro lTest = buscarUnLibro("Harry Potter");
-                newUser.gestionColecciones.agregarlibro("leyendo",lTest);
-                newUser.makeChallenge("Leer 10 libros", "Leer 10 libros en una semana", 10, "libros", 200);
-                newUser.markAsCompleted("1");
+                System.out.println("dime un libro que estes leyendo");
+                Libro lTest = buscarUnLibro(sc.nextLine());
+                if(lTest!=null) {
+                    newUser.gestionColecciones.agregarlibro("leyendo", lTest);
+                    newUser.makeChallenge("Leer 10 libros", "Leer 10 libros en una semana", 10, "libros", 200);
+                    newUser.markAsCompleted("1");
+                }
+                else{
+                    System.out.println("no se ha encontrado el libro. creado sin libros.");
+                }
             }catch (IOException e){
                 System.out.println(e.getMessage());
             }
