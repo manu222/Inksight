@@ -1,18 +1,18 @@
-package com.ue.insw.proyecto.exercises.json;
+package app.Inksight;
 
 public class Libro {
 
 
 
 
-    public String bookID;
+    public int bookID;
     public String title;
     public String authors;
     public int numPages;
     public String publication_date;
     public String languageCode;
 
-    public Libro(String bookID, String title, String authors, int numPages, String publication_date, String languageCode) {
+    public Libro(int bookID, String title, String authors, int numPages, String publication_date, String languageCode) {
         this.bookID = bookID;
         this.title = title;
         this.authors = authors;
@@ -20,8 +20,16 @@ public class Libro {
         this.publication_date = publication_date;
         this.languageCode = languageCode;
     }
+    public Libro(Libro base) {
+        this.bookID = base.bookID;
+        this.title = base.title;
+        this.authors = base.authors;
+        this.numPages = base.numPages;
+        this.publication_date = base.publication_date;
+        this.languageCode = base.languageCode;
+    }
 
-    public void setID(String bookID) {
+    public void setID(int bookID) {
         this.bookID= bookID;
     }
 
@@ -43,7 +51,7 @@ public class Libro {
 
     public void setLanguageCode(String languageCode) {this.languageCode = languageCode;}
 
-    public String getbookID() {
+    public int getbookID() {
         return bookID;
     }
 
@@ -64,5 +72,26 @@ public class Libro {
     }
 
     public String getLanguageCode() {return languageCode;}
+
+    @Override
+    public String toString() {
+        return  "\nbookID=" + bookID +
+                "title=" + title + "\n" +
+                "authors=" + authors + "\n" +
+                "numPages=" + numPages + "\n" +
+                "publication_date=" + publication_date + "\n" +
+                "languageCode=" + languageCode + "\n";
+    }
+    @Override
+    public boolean equals(Object other){
+        if (other==this){
+            return true;
+        }
+        if (other instanceof Libro){
+            Libro l=(Libro) other;
+            return l.getbookID()==this.getbookID();
+        }
+        return  false;
+    }
 
 }
