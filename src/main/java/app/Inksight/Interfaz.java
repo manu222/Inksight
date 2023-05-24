@@ -1,3 +1,4 @@
+package app.Inksight;
 
 import java.util.Scanner;
 public class Interfaz {
