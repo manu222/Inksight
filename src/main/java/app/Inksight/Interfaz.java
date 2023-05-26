@@ -5,7 +5,14 @@ public class Interfaz {
 	static Scanner sc = new Scanner(System.in);
 	String titulo;
 	String nombreLista;
+	String nombreListaAntiguo; 
 	static int opcion;
+	GestionColecciones listas = new GestionColecciones();
+	Stats stats = new Stats();
+	
+	//Libro libro = new Libro(0,"","",0,"","");
+	//Libro libro = new Libro(libro);
+	 Persona persona = new Persona("","","",false,0);	
 
 	
 	public static void menu_principal(){
@@ -46,6 +53,11 @@ public class Interfaz {
 				System.out.println("Contraseña no válida");
 
 			}
+			if(validPassword){
+				System.out.println("Contraseña válida");
+			}
+			// si la contraseña es válida, se crea el usuario
+
 			break;
 		case 2: 
 			boolean valid= false;
@@ -59,13 +71,28 @@ public class Interfaz {
 			
 		    if(valid){
 		    	System.out.println("No válido");
+		    } else {
+		    	System.out.println("Válido");
 		    }
+			// validar que el usuario existe
+			// validar que la contraseña pertenece al usuario
+		
+
+			//Si se mete X usuario y contraseña, se abre el menu de el administrador 
+			//Si se mete Y usuario y contraseña, se abre el menu del modificador
+			//Si se mete Z usuario y contraseña, se abre el menu del usuario
+			
+
 			}// while
 		}
 			
 		
 	}// menu
 	private static void validarNombre(String nombre) {
+		//comprobar si el String nombre existe en el archivo de texto
+		//boolean valid = usuarios.validarNombre(nombre);
+		//if(nombre.equals(persona.first_name)){}
+
 
 	}
 	public void menu_PerfilUsuario(String nombre){ 
@@ -85,11 +112,12 @@ public class Interfaz {
 		
 		switch(opcion){
 		case 1: 
-			System.out.println("LOGROS");
+			System.out.println("ESTADISTICAS");
+			menu_Estadisticas();
 			break; 
 		case 2: 
 			System.out.println("RETOS");
-			
+			menuRetos();
 			break;
 		case 3: 
 			System.out.println("AMIGOS");
@@ -110,6 +138,136 @@ public class Interfaz {
 			break; 
 		
 		}
+	}
+	
+	private void menu_Estadisticas() {
+	}
+	private void menuRetos() {
+		String reto;
+		System.out.println();
+		System.out.println("RETOS:");
+		System.out.println("1. Crear reto");
+		System.out.println("2. Marcar reto como completado");
+		System.out.println("3. Consultar retos");
+		System.out.println("4. Eliminar reto");
+		System.out.println("5. Salir");
+		System.out.println();
+
+		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
+		opcion = sc.nextInt();
+
+		switch(opcion){
+		case 1: 
+			System.out.println("Escriba el nombre del reto que desea crear: ");
+			reto = sc.next();
+			System.out.println("Escriba la descripción del reto: ");
+			String descripcion = sc.next();
+			System.out.println("Escriba el objetivo del reto: ");
+			int objetivo = sc.nextInt();
+			System.out.println("Escriba el tipo de reto: ");
+			String tipo = sc.next();
+			System.out.println("Escriba la recompensa del reto: ");
+			float recompensa = sc.nextFloat();
+			persona.makeChallenge(reto, descripcion, objetivo, tipo, recompensa);
+			
+			break;
+		case 2:
+			System.out.println("Escriba el nombre del reto que desea marcar como completado: ");
+			reto = sc.next();
+			break;
+		case 3:
+			System.out.println("Retos creados: ");
+			// llamar a la lista para mostrar los retos creados
+			persona.getDesafios();
+			break;
+		case 4:
+			System.out.println("Escriba el nombre del reto que desea eliminar: ");
+			reto = sc.next();
+			//coleccion.eliminar(reto);
+			break;
+		case 5:
+			System.out.println("Saliendo...");
+			// llamar al menu de perfil de usuario
+			break;
+		
+		}
+
+	}
+	public void menu_Amigo(){
+		System.out.println("1. Agregar amigo");
+		System.out.println("2. Borrar amigo");
+		System.out.println("3. Consultar amigos");
+		System.out.println("4. Salir");
+
+		System.out.println();
+		
+		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
+		opcion = sc.nextInt();
+		
+		switch(opcion){
+		case 1: 
+            System.out.print("Escriba el nombre del amigo que desea agregar: ");
+            String amigo = sc.next();
+			//persona.buscarAmigo(amigo);
+            // comprobar si el nombre del amigo existe 
+            boolean existe = false; 
+			if(existe){
+				System.out.println("Nombre no encontrado");
+			}
+            if(!existe){
+            	System.out.println("¿Desea agregarlo?");
+            	System.out.println("1. Si");
+            	System.out.println("2. No");
+            	int numero = sc.nextInt();
+            	if(numero == 1){
+					//persona.anyadirAmigo(sc, persona);
+            		System.out.println("Amigo agregado");
+            		
+            	}else if(numero == 2){
+            		System.out.println("Amigo no agregado");
+					menu_Amigo();
+            	}else{
+            		System.out.println("No has elegido una opción correcta");
+            	}
+            }
+			break; 
+		case 2: 
+			System.out.println("Ingresa el nombre del amigo que quieras borrar: ");
+			amigo = sc.next();
+			
+			// si el nombre ingresado no existe salta un aviso y deja volver a escribir el nombre
+			break;
+		case 3: 
+			System.out.println("AMIGOS");
+			persona.getListaAmigos();
+			// se muestra la lista de amigos
+			break;
+		case 4:
+			System.out.println("Saliendo...");
+			// llamar al menu de perfil de usuario
+			break;
+		}
+	}
+	public void menuReseñas(){
+		System.out.println("RESEÑAS");
+		System.out.println("1. Seleccionar el libro del que desee hacer la reseña");
+		System.out.println("2. Salir");
+		System.out.println();
+		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
+		opcion = sc.nextInt();
+
+		switch(opcion){
+		case 1: 
+			System.out.println("Selecciona el libro del que deseas hacer la reseña: ");
+			titulo = sc.next();
+			// validar que el libro existe
+			break;
+		case 2:
+			System.out.println("Saliendo...");
+			// llamar al menu de perfil de usuario
+			break;
+		}
+		
 	}
 	private void menu_Libro() {
 		System.out.println();
@@ -155,13 +313,17 @@ public class Interfaz {
 		}
 		
 	}
+	
 	public  void menu_ListaGeneral(){
+		
+
 		System.out.println();
 		System.out.println("1. Crear");
 		System.out.println("2. Seleccionar lista");
 		System.out.println("3. Consultar todas las listas");
 		System.out.println("4. Mover libros");
-		System.out.println("5. Eliminar listas");
+		System.out.println("5. Cambiar nombre de una lista");
+		System.out.println("6. Eliminar listas");
 
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
@@ -169,38 +331,57 @@ public class Interfaz {
 		switch(opcion){
 		case 1:
 			System.out.println("Escriba el nombre de la lista que desea crear: ");
+			nombreLista = sc.next();
+			
+			listas.construirLista(nombreLista);
 			break;
 		case 2:
 			System.out.println("Seleccione la lista que desea: ");
+			nombreLista = sc.next();
+			
 			break;
 		case 3:
 			System.out.println("LISTAS");
+			listas.consultarListaColecciones();
 			// mostrar todas las listas con la cantidad de libros que tiene cada una
 			break;
 		case 4:
 			System.out.println("Seleccione la lista de la que desea mover el libro: ");
-			nombreLista = sc.next();
+			nombreListaAntiguo = sc.next();
 			System.out.println("Seleccione la lista a la que desea moverlo o cree una nueva: ");
 			nombreLista = sc.next();
+			System.out.println("Seleccione el libro que desea mover: ");
+			titulo = sc.next();
+			listas.moverLibroDeColeccion(nombreListaAntiguo, nombreLista, titulo);
 			// validar que la lista existe o crearla
 			break;
 		case 5:
+			System.out.println("Seleccione la lista a la que desea cambiarle el nombre: ");
+			nombreListaAntiguo = sc.next();
+			System.out.println("Escriba el nuevo nombre: ");
+			nombreLista = sc.next();
+			listas.cambiarNombreLista(nombreListaAntiguo, nombreLista);
+			// validar que el nombre no exista y asegurarse de que el usuario quiere cambiarlo
+			break;	
+		case 6:
 			System.out.println("Seleccione la lista que desea eliminar: ");
 			nombreLista = sc.next();
+			listas.eliminarLista(nombreLista);
 			// preguntar si está seguro
-
 			break;
+		
 		}
 
 	}
 	public void menu_Lista(){
+		ColeccionLibro coleccion = new ColeccionLibro(nombreLista);
+
 		System.out.println();
 		System.out.println("1. Agregar libro ");
 		System.out.println("2. Mover libro");
 		System.out.println("3. Eliminar libro");
 		System.out.println("4. Consultar libros");
-		System.out.println("5. Cambiar nombre de la lista");
-		System.out.println("6. Salir");
+		System.out.println("5. Salir");
 		
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
@@ -209,96 +390,44 @@ public class Interfaz {
 		case 1: 
 			System.out.println("Escriba el nombre del libro que deseas añadir: ");
 			titulo = sc.next();
+			//coleccion.anadir(titulo);
+			
 			break; 
 		case 2: 
 			System.out.println("Escriba el libro que desea mover: ");
 			titulo = sc.next();
 			System.out.println("Seleccione la lista a la que desea moverlo o cree una nueva: ");
+			nombreLista = sc.next();
+			coleccion.mover(coleccion, titulo);
 			break;
 		case 3: 
 			System.out.println("Escriba el nombre del libro que desea eliminar: ");
 			titulo = sc.next();
+			coleccion.eliminar(titulo);
 			break; 
 		case 4: 
 			System.out.println("Libros agregados: ");
+			
 			// llamar a la lista para mostrar los libros agregados a ella
 			break;
 		case 5:
-			System.out.println("Escriba el nuevo nombre de la lista: ");
-			nombreLista = sc.next();
-			// validar que el nombre no exista y asegurarse de que el usuario quiere cambiarlo
-			break;
-		case 6:
 			System.out.println("Saliendo...");
 			// llamar al menu de perfil de usuario
 			break;
 		}
 	}
-	public  void menu_Amigo(){
-		System.out.println("1. Agregar amigo");
-		System.out.println("2. Borrar amigo");
-		System.out.println("3. Consultar amigos");
-		System.out.println("4. Salir");
-
-		System.out.println();
-		
-		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
-		opcion = sc.nextInt();
-		
-		switch(opcion){
-		case 1: 
-            System.out.print("Escriba el nombre del amigo que desea agregar: ");
-            String amigo = sc.next();
-            // comprobar si el nombre del amigo existe 
-            boolean existe = false; 
-			if(existe){
-				System.out.println("Nombre no encontrado");
-			}
-            if(!existe){
-            	System.out.println("¿Desea agregarlo?");
-            	System.out.println("1. Si");
-            	System.out.println("2. No");
-            	int numero = sc.nextInt();
-            	if(numero == 1){
-            		System.out.println("Amigo agregado");
-            		
-            	}else if(numero == 2){
-            		System.out.println("Amigo no agregado");
-					menu_Amigo();
-            	}else{
-            		System.out.println("No has elegido una opción correcta");
-            	}
-            }
-			break; 
-		case 2: 
-			System.out.println("Ingresa el nombre del amigo que quieras borrar: ");
-			amigo = sc.next();
-			// si el nombre ingresado no existe salta un aviso y deja volver a escribir el nombre
-			break;
-		case 3: 
-			System.out.println("AMIGOS");
-			// se muestra la lista de amigos
-			break;
-		case 4:
-			System.out.println("Saliendo...");
-			// llamar al menu de perfil de usuario
-			break;
-		}
-	}
+	
 	public void menu_Recomendaciones(){
 		// mostrar las recomendaciones que tiene el usuario por parte de sus amigos
+		System.out.println("RECOMENDACIONES");
+		persona.getListaReviews();
 
 	}
+	
 	public void menu_Logros(){
 		// mostrar los logros que tiene el usuario
 	}
-	public  void Perfil(String nombre, String contraseña){
-		System.out.println(" " + nombre);
-		menu_PerfilUsuario(nombre);
 	
-		
-		
-	}
 
 	public static void main(String[] args) {
 		menu_principal();
