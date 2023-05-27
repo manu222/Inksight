@@ -134,7 +134,7 @@ public class Interfaz {
 			break;
 		case 6: 
 			System.out.println("LISTAS ");
-			menu_ListaGeneral();
+			menu_Lista();
 			break; 
 		
 		}
@@ -296,7 +296,6 @@ public class Interfaz {
 		case 3: 
 			System.out.println("Selecciona el libro que deseas eliminar: ");
 			titulo = sc.next();
-			// preguntar si está seguro
 			break; 
 		case 4: 
 			System.out.println("Selecciona el libro que deseas consultar: ");
@@ -313,39 +312,64 @@ public class Interfaz {
 		}
 		
 	}
-	
-	public  void menu_ListaGeneral(){
-		
+	public void menu_Lista(){
+		ColeccionLibro coleccion = new ColeccionLibro(nombreLista);
 
 		System.out.println();
-		System.out.println("1. Crear");
-		System.out.println("2. Seleccionar lista");
-		System.out.println("3. Consultar todas las listas");
-		System.out.println("4. Mover libros");
-		System.out.println("5. Cambiar nombre de una lista");
-		System.out.println("6. Eliminar listas");
+		System.out.println("1. Crear lista ");
+		System.out.println("2. Eliminar lista");
+		System.out.println("3. Cambiar nombre de una lista");
+		System.out.println("4. Consultar todas las listas");
+		System.out.println("5. Añadir libro a una lista");
+		System.out.println("6. Mover libro de una lista a otra");
+		System.out.println("7. Mostrar los libros de una lista");
+		System.out.println("8. Eliminar libro de una lista");
+		System.out.println("9. Salir");
 
+		
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
-
+		
 		switch(opcion){
-		case 1:
+		case 1: 
 			System.out.println("Escriba el nombre de la lista que desea crear: ");
 			nombreLista = sc.next();
-			
 			listas.construirLista(nombreLista);
 			break;
-		case 2:
-			System.out.println("Seleccione la lista que desea: ");
+		case 2: 
+			System.out.println("Seleccione la lista que desea eliminar: ");
 			nombreLista = sc.next();
-			
+			listas.eliminarLista(nombreLista);
 			break;
-		case 3:
+		case 3: 
+			System.out.println("Seleccione la lista a la que desea cambiarle el nombre: ");
+			nombreListaAntiguo = sc.next();
+			System.out.println("Escriba el nuevo nombre: ");
+			nombreLista = sc.next();
+			listas.cambiarNombreLista(nombreListaAntiguo, nombreLista);
+			if(listas.cambiarNombreLista(nombreListaAntiguo, nombreLista) == GestionColecciones.COLECCION_NO_EXISTE){
+				System.out.println("La lista no existe");
+			}
+			if(listas.cambiarNombreLista(nombreListaAntiguo, nombreLista)==GestionColecciones.COLECCION_MODIFICADA_CORRECTAMENTE){
+				System.out.println("El nombre de la lista ha sido modificado correctamente");
+			}
+			break;
+		case 4: 
 			System.out.println("LISTAS");
 			listas.consultarListaColecciones();
-			// mostrar todas las listas con la cantidad de libros que tiene cada una
+			// mostrar todas las listas que tiene el usuario
 			break;
-		case 4:
+		case 5:
+			System.out.println("Escriba el nombre del libro que deseas añadir: ");
+			titulo = sc.next();
+			System.out.println("Escriba el nombre de la lista a la que desea añadirlo: ");
+			nombreLista = sc.next();
+			listas.agregarlibro(nombreLista,titulo);
+			if(listas.agregarlibro(nombreLista,titulo) == GestionColecciones.COLECCION_NO_EXISTE ){
+				System.out.println("La lista no existe");
+			}
+			break; 
+		case 6:
 			System.out.println("Seleccione la lista de la que desea mover el libro: ");
 			nombreListaAntiguo = sc.next();
 			System.out.println("Seleccione la lista a la que desea moverlo o cree una nueva: ");
@@ -353,66 +377,27 @@ public class Interfaz {
 			System.out.println("Seleccione el libro que desea mover: ");
 			titulo = sc.next();
 			listas.moverLibroDeColeccion(nombreListaAntiguo, nombreLista, titulo);
-			// validar que la lista existe o crearla
 			break;
-		case 5:
-			System.out.println("Seleccione la lista a la que desea cambiarle el nombre: ");
-			nombreListaAntiguo = sc.next();
-			System.out.println("Escriba el nuevo nombre: ");
-			nombreLista = sc.next();
-			listas.cambiarNombreLista(nombreListaAntiguo, nombreLista);
-			// validar que el nombre no exista y asegurarse de que el usuario quiere cambiarlo
-			break;	
-		case 6:
-			System.out.println("Seleccione la lista que desea eliminar: ");
-			nombreLista = sc.next();
-			listas.eliminarLista(nombreLista);
-			// preguntar si está seguro
+		case 7:
+			System.out.println("Libros agregados: ");
+			coleccion.consultarLibrosEnLista();
 			break;
-		
-		}
-
-	}
-	public void menu_Lista(){
-		ColeccionLibro coleccion = new ColeccionLibro(nombreLista);
-
-		System.out.println();
-		System.out.println("1. Agregar libro ");
-		System.out.println("2. Mover libro");
-		System.out.println("3. Eliminar libro");
-		System.out.println("4. Consultar libros");
-		System.out.println("5. Salir");
-		
-		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
-		opcion = sc.nextInt();
-		
-		switch(opcion){
-		case 1: 
-			System.out.println("Escriba el nombre del libro que deseas añadir: ");
-			titulo = sc.next();
-			//coleccion.anadir(titulo);
-			
-			break; 
-		case 2: 
-			System.out.println("Escriba el libro que desea mover: ");
-			titulo = sc.next();
-			System.out.println("Seleccione la lista a la que desea moverlo o cree una nueva: ");
-			nombreLista = sc.next();
-			coleccion.mover(coleccion, titulo);
-			break;
-		case 3: 
+		case 8:
 			System.out.println("Escriba el nombre del libro que desea eliminar: ");
 			titulo = sc.next();
-			coleccion.eliminar(titulo);
+			System.out.println("Seleccione la lista de la que desea eliminar el libro: ");
+			nombreLista = sc.next();
+			listas.eliminarLibro(nombreLista, titulo);
+			if(listas.eliminarLibro(nombreLista, titulo) == 2){
+				System.out.println("La lista no existe");
+			}
 			break; 
-		case 4: 
-			System.out.println("Libros agregados: ");
-			
-			// llamar a la lista para mostrar los libros agregados a ella
-			break;
-		case 5:
+		case 9:
 			System.out.println("Saliendo...");
 			// llamar al menu de perfil de usuario
+			break;
+		default:
+			System.out.println("Opción no válida");
 			break;
 		}
 	}

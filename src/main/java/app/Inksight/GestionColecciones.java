@@ -1,4 +1,5 @@
 package app.Inksight;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,17 +50,16 @@ public class GestionColecciones {
 		return null;
 	}
 	
-	public int agregarlibro(String coleccionbuscada,Libro libro) {
+	public int agregarlibro(String coleccionbuscada,String titulo) throws IOException {
 		ColeccionLibro coleccionactual = obtenerColeccion(coleccionbuscada);
 		if(coleccionactual == null) {
 			// no se encuentra la coleccion;
 			return GestionColecciones.COLECCION_NO_EXISTE;
 		}else {	
-			int resultado = coleccionactual.anadir(libro);
+			int resultado = coleccionactual.anadir(titulo);
 			return resultado;
 		}
 	}
-	
 
 //	public boolean agregarlibro() {
 //		System.out.println("Dime en que coleccion:");
@@ -129,7 +129,7 @@ public class GestionColecciones {
 		}
 	}
 
-	public int moverLibroDeColeccion(String nombreColeccionOrigen, String nombreColeccionNueva, String titulo) {
+	public int moverLibroDeColeccion(String nombreColeccionOrigen, String nombreColeccionNueva, String titulo) throws IOException {
 		ColeccionLibro coleccionOrigen = obtenerColeccion(nombreColeccionOrigen);
 		ColeccionLibro coleccionNueva = obtenerColeccion(nombreColeccionNueva);
 		if(coleccionOrigen == null || coleccionNueva == null) {

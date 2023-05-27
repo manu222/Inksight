@@ -26,7 +26,7 @@ public class DB {
         this.libroError= new Libro(-1,"error","error",-1,"error","error");
     }
 
-    public static void addLibro() {
+    public static Libro addLibro() {
 
         Scanner sc = new Scanner(System.in);
         File file = new File(ruta);
@@ -78,6 +78,7 @@ public class DB {
             System.out.println("Error: Este programa no ha hecho nada");
             // Handle the case where the file does not exist or cannot be read
         }
+        return libro;   
 
     }
 
