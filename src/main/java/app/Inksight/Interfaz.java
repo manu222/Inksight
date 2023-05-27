@@ -31,13 +31,15 @@ public class Interfaz {
 
 		System.out.print("Elija la opción deseada: ");
 		opcion = sc.nextInt();
-		String nombre;
-		String contraseña;
-		switch (opcion) {
+		String nombreUser;
+		String pass;
+		String correo;
+		switch(opcion){
 			case 1:
-				System.out.print("Ingrese un nombre o correo: ");
-				nombre = sc.next();
-				validarNombre(nombre);
+				System.out.print("Ingrese un nombre de usuario: ");
+				nombreUser = sc.next();
+				System.out.print("Ingrese un correo electronico: ");
+				correo = sc.next();
 
 				System.out.print("Ingrese una contraseña: ");
 				contraseña = sc.next();
@@ -391,6 +393,7 @@ public class Interfaz {
 		System.out.println("7. Mostrar los libros de una lista");
 		System.out.println("8. Eliminar libro de una lista");
 		System.out.println("9. Salir");
+
 
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
