@@ -71,6 +71,7 @@ public class Usuario extends Persona {
             int contador = 0;
             while (it.hasNext() && contador < numeroAmigo) {
                 Persona actual = it.next();
+                contador++;
             }
             
             Review recomendado = sortByPuntuacion(getListaReviews());
