@@ -183,7 +183,12 @@ public class Interfaz {
 		personaActual = null;
 		usuarioActual = null;
 		clearConsole();
-		menu_principal();
+		try{
+			menu_principal();
+		}
+		catch (NoSuchAlgorithmException e){
+			e.printStackTrace();
+		}
 	}
 
 	private static void menu_Estadisticas() {
