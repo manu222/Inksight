@@ -59,11 +59,11 @@ public class Usuario extends Persona {
     
     
     //<recomendaciones>
-    public void makeRecomendacion (Scanner teclado, Usuario usuario){//libros leidos por un amigo
+    public void makeRecomendacion (){//Recibes como recomendacion la mejor review de un amigo al azar
         Random rand = new Random();
-        HashSet<Usuario> listaAmigos = usuario.getListaAmigos();
+        HashSet<Usuario> listaAmigos = getListaAmigos();
         
-        int numeroAmigo = rand.nextInt(usuario.getListaAmigos().size() + 1);
+        int numeroAmigo = rand.nextInt(getListaAmigos().size() + 1);
         
         Iterator<Usuario> it = listaAmigos.iterator();
         
@@ -73,7 +73,7 @@ public class Usuario extends Persona {
                 Persona actual = it.next();
             }
             
-            Review recomendado = usuario.sortByPuntuacion(usuario.getListaReviews());
+            Review recomendado = sortByPuntuacion(getListaReviews());
             listaRecomendados.add(recomendado.getLibro());
             System.out.println("Esta es una review recomendada por tu amigo");
             System.out.println("Titulo:" + recomendado.getLibro().getTitle());
@@ -89,8 +89,22 @@ public class Usuario extends Persona {
         //</recomendaciones>
         
         //<amigos>
-        public void addAmigo(Scanner teclado, Usuario usuario){
-            listaAmigos.add(usuario);//hacer esta wea un hashset
+        public void addAmigo(Scanner teclado) {//añade amigo a lista de amigos
+            System.out.println("Introduce nombre del amigo que quieres buscar(username)");
+            String nombre = teclado.next();
+            DB db = new DB();
+            Persona user =  db.buscarUser(nombre);
+            if(user  != null){
+                listaAmigos.add((Usuario) user);
+                System.out.println("Amigo añadido de manera correcta");
+            }
+            else{
+                System.out.println("Usuario no encontrado");
+            }
+
+
+
+            //hacer esta wea un hashset
         }
         
         
@@ -130,14 +144,16 @@ public class Usuario extends Persona {
         
         //<reviews>
         public List<Review> getListaReviews(){return listaReviews;}
-        public Usuario buscarAmigo(Usuario usuario) {
+        public Usuario buscarAmigo(Scanner teclado) {//pide string de lo que buscas
+            System.out.println("Que amigo quieres buscar?(Primer nombre)");
+            String usuario = teclado.next();
             Usuario actual = new Usuario("Error","Error","Error");
-            Iterator<Usuario> it = usuario.getListaAmigos().iterator();
+            Iterator<Usuario> it = getListaAmigos().iterator();
             
-            if (usuario.getnAmigos() != 0) {
+            if (getnAmigos() != 0) {
                 int contador = 0;
-                while (it.hasNext() && contador < usuario.getnAmigos()) {
-                    if(it.next() == usuario){
+                while (it.hasNext() && contador < this.getnAmigos()) {
+                    if(it.next().getFirst_name() == usuario){
                         actual = it.next();
                     }
                 }

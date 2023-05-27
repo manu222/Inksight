@@ -1,32 +1,36 @@
 package app.Inksight;
 
-import java.util.*;
 
-public class Persona {
+abstract class Persona {
 
     private String first_name;
     private String last_name;
     private String location;
     private boolean online;
     private int followers;
-    HashSet<Persona> listaAmigos; //probar hashmap
-    List<reviews> listaReviews;
+    protected String authLevel;
 
+    Boolean isBanned;
+    int daysUntilUnban;
 
-
-    int permiso;
-
-    int puntos;
-
-    public Persona(String first_name, String last_name, String location, boolean online, int follower) {
+    public Persona(String first_name, String last_name, String location, boolean online, int followers,Stats stats) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.location = location;
         this.online = online;
         this.followers = followers;
-
+        isBanned = false;
+        daysUntilUnban = 0;
     }
-
+    public Persona(String first_name, String last_name, String location) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.location = location;
+        this.online = true;
+        this.followers = 0;
+        isBanned = false;
+        daysUntilUnban = 0;
+    }
     public String getFirst_name() {
         return first_name;
     }
@@ -36,9 +40,7 @@ public class Persona {
     }
 
     public String getLast_name() {
-        System.out.println("d");
         return last_name;
-
     }
 
     public void setLast_name(String last_name) {
@@ -69,87 +71,53 @@ public class Persona {
         this.followers = followers;
     }
 
-
-
-    public void anyadirAmigo(Scanner teclado, Persona usuario){
-        listaAmigos.add(usuario);//hacer esta wea un hashset
+    //--------------------Moderation--------------------
+    public void ban(){
+        isBanned = true;
+        daysUntilUnban=-1;
+    }
+    public void unban(){
+        isBanned = false;
+        daysUntilUnban = 0;
+    }
+    public void suspend(int dias){
+        daysUntilUnban = dias;
+    }
+    public Boolean getIsBanned(){
+        return isBanned;
+    }
+    public int getDaysUntilUnban(){
+        return daysUntilUnban;
+    }
+    public void addBanDuration(int dias){
+        daysUntilUnban += dias;
     }
 
-    public int getnAmigos(){
-        return listaAmigos.size();
-    }
+}
 
-    public List<reviews> getListaReviews(){return listaReviews;}
-
-    public HashSet<Persona> getListaAmigos(){return listaAmigos;}
-
-
-
-
-    public Persona buscarAmigo(Persona usuario) {
-        Persona actual = new Persona("ERROR","ERROR","ERROR",false, 0);
-        Iterator<Persona> it = getListaAmigos().iterator();
-
-        if (getnAmigos() != 0) {
-            int contador = 0;
-            while (it.hasNext() && contador < this.getnAmigos()) {
-                if(it.next() == usuario){
-                actual = it.next();
-                }
-                contador++;
-            }
-            }
-        return actual;
-        }
+/*
+ * Date lastChallenge= usuario.getLastChallenge();
+ * if(lastChallenge.getTime() < (new Date().getTime() - 604800000)){
+ * //pasaron 7 días desde el último desafío
+ * int tipo = (int) (Math.random() * 3);
+ * switch(tipo){
+ * //permite agregar todas las opciones de desafios que quieras, simplemente agrega un nuevo case(permite ajustar pesos repitiendo numeros)
+ * case 0:
+ * makeChallenge("Leer 5 libros", "Leer 5 libros en una semana", 5, "libros", 100);
+ * break;
+ * case 1:
+ * makeChallenge("Leer 100 páginas", "Leer 100 páginas en una semana", 100, "paginas", 100);
+ * break;
+ * case 2:
+ * makeChallenge("Leer 10 libros", "Leer 10 libros en una semana", 10, "libros", 200);
+ * break;
+ * case 3,4:
+ * makeChallenge("Aceptar 1 recomendacion","lee un libro que un amigo te haya recomendado",1,"rec",40
+ *
+ * }
+ */
 
 
 
 
-    public static reviews sortByPuntuacion(List<reviews> reviewsList) {
-        int n = reviewsList.size();
 
-        // Bubble sort algorithm
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = 0; j < n - i - 1; j++) {
-                if (reviewsList.get(j).getPuntuacion() < reviewsList.get(j + 1).getPuntuacion()) {
-                    // swap reviews
-                    reviews temp = reviewsList.get(j);
-                    reviewsList.set(j, reviewsList.get(j + 1));
-                    reviewsList.set(j + 1, temp);
-                }
-            }
-        }
-        return reviewsList.get(0);
-    }
-
-
-    public reviews recomendacion (Scanner teclado){//libros leidos por un amigo
-            Random rand = new Random();
-            HashSet<Persona> listaAmigos = getListaAmigos();
-
-            Persona actual = new Persona("ERROR","ERROR","ERROR",false, 0);
-            Libro libro = new Libro(-1,"·Error.","Error",-1,"Error","Error","Error");
-            reviews recomendado = new reviews(libro,"No tienes amigos",-1);
-
-            int numeroAmigo = rand.nextInt(getListaAmigos().size() + 1);
-            Iterator<Persona> it = listaAmigos.iterator();
-
-            if (listaAmigos.size() != 0) {
-                int contador = 0;
-                while (it.hasNext() && contador < numeroAmigo) {
-                    actual = it.next();
-                }
-
-                recomendado = sortByPuntuacion(actual.getListaReviews());
-                System.out.println("Esta es una review recomendada por tu amigo");
-                System.out.println("Titulo:" + recomendado.getLibro().getTitle());
-                System.out.println("Review:" + recomendado.getDescripcion());
-                System.out.println("Puntuacion:" + recomendado.getPuntuacion());
-
-
-            }
-            return recomendado;
-
-
-        }
-    }
