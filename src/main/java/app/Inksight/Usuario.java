@@ -1,68 +1,96 @@
 package app.Inksight;
 
-
 import java.util.*;
 
 public class Usuario extends Persona {
 
     HashSet<String> listaAmigos;
 
+
+     private String nombreUser;
+    private String correo;
+    private String pass;
     List<Review> listaReviews;
     Set<Libro> listaRecomendados;
-    private List <Challenge> desafios;
-    private Stats stats;
+    private List<Challenge> desafios;
+    private static Stats stats;
     private Date lastChallenge;
-
-
+private Date lastLogin;
     public GestionColecciones gestionColecciones;
-    public Usuario(String first_name, String last_name, String location){
-        super(first_name,last_name,location);
+
+    public Usuario(String nombreUser,String correo,String pass ,String first_name, String last_name, String location,HashSet<Usuario> listaAmigos){
+        super(nombreUser,correo,pass, first_name,last_name,location);
         this.desafios = new LinkedList<>();
+        this.listaAmigos=new HashSet<>();
         this.stats = new Stats();
         gestionColecciones=new GestionColecciones();
         lastChallenge = new Date(System.currentTimeMillis());
         listaRecomendados = new HashSet<>();
         authLevel = "user";
     }
-    public Usuario(String first_name, String last_name, String location, boolean online, int followers,Stats stats){
-        super(first_name,last_name,location,online,followers,stats);
+    public Usuario(String nombreUser,String correo,String pass ,String first_name, String last_name, String location, boolean online, int followers,Stats stats,HashSet<Usuario> listaAmigos){
+        super(nombreUser,correo,pass,first_name,last_name,location,online,followers,stats);
         this.desafios = new LinkedList<>();
+        this.listaAmigos=new HashSet<>();
         this.stats = stats;
         gestionColecciones=new GestionColecciones();
         lastChallenge = new Date(System.currentTimeMillis());
         listaRecomendados = new HashSet<>();
         authLevel = "user";
     }
-    //<desafios>
-    public Challenge makeChallenge(String title, String description, int target, String type, float reward){
-        Challenge challenge = new Challenge(""+(desafios.size()+1),title, description, target, type, reward);
+
+    public String getPass() {
+        return pass;
+    }
+    public String getNombreUser() {
+        return nombreUser;
+    }
+    public static Stats getStats(Persona u) {
+        return stats;
+    }
+    public Date getLastLogin(){
+        return lastLogin;
+    }
+    public void setLastLogin(Date lastLogin){
+        this.lastLogin = lastLogin;
+    }
+    // <desafios>
+    public Challenge makeChallenge(String title, String description, int target, String type, float reward) {
+        Challenge challenge = new Challenge("" + (desafios.size() + 1), title, description, target, type, reward,false,0);
         this.desafios.add(challenge);
         return challenge;
     }
-    public void addChallenge(Challenge challenge){
+    public Challenge makeChallenge(String title, String description, int target, String type, float reward,boolean timeSensitive,int timeLimit) {
+        Challenge challenge = new Challenge("" + (desafios.size() + 1), title, description, target, type, reward,timeSensitive,timeLimit);
+        this.desafios.add(challenge);
+        return challenge;
+    }
+
+    public void addChallenge(Challenge challenge) {
         this.desafios.add(challenge);
     }
-    public void markAsCompleted(String challengeID){
+
+    public void markAsCompleted(String challengeID) {
         for (Challenge challenge : desafios) {
-            if(challenge.getChallengeID().equals(challengeID)){
+            if (challenge.getChallengeID().equals(challengeID)) {
                 challenge.markAsCompleted();
                 this.stats.addXp(challenge.getReward());
             }
         }
     }
-    
-    public List<Challenge> getDesafios(){
+
+    public List<Challenge> getDesafios() {
         return this.desafios;
     }
     //</desafios>
-    
-    
-    
+
+
+
     //<recomendaciones>
     public void makeRecomendacion (Usuario usuario){//Recibes como string como recomendacion la mejor review de un amigo al azar
         Random rand = new Random();
         HashSet<String> listaAmigos = usuario.getListaAmigos();
-        
+
         int numeroAmigo = rand.nextInt(usuario.getListaAmigos().size() + 1);
         DB db = new DB();
         Iterator<String> it = listaAmigos.iterator();
@@ -83,21 +111,22 @@ public class Usuario extends Persona {
             System.out.println("Titulo:" + recomendado.getLibro().getTitle());
             System.out.println("Review:" + recomendado.getDescripcion());
             System.out.println("Puntuacion:" + recomendado.getPuntuacion());
+
         } else {
             System.out.println("El usuario no tiene amigos, por lo que no recibe recomendaciones");
-            
+
         }
     }
         //</recomendaciones>
-        
+
         //<amigos>
         public void addAmigo(String nombre, Usuario usuarioActual) {//añade amigo a lista de amigos
 
             DB db = new DB();
-            Persona user =  db.buscarUser(nombre);
+            Usuario user =  (Usuario)db.buscarUser(nombre);
             HashSet<String> listaAmigo = new HashSet<String>();
             if(user  != null){
-                usuarioActual.listaAmigos.add( user.getFirst_name());
+                usuarioActual.listaAmigos.add( user.getNombreUser());
                 System.out.println("Amigo añadido de manera correcta");
             }
             else{
@@ -110,7 +139,9 @@ public class Usuario extends Persona {
         }
 
 
-        public static Review sortByPuntuacion(List<Review> reviewsList) {
+
+
+    public static Review sortByPuntuacion(List<Review> reviewsList) {
             int n = reviewsList.size();
             Review temp;
             // Bubble sort algorithm
@@ -161,11 +192,14 @@ public class Usuario extends Persona {
                 }
             }
             return actual;
-            
+
         }
         //</reviews>
-        
+
         //<libros>
+        public void eliminarReview(Review review) {
+            listaReviews.remove(review);
+        }
         public int libroTerminado(Libro libro){
             //1. actualizar stats
             stats.addBook(libro);
@@ -178,27 +212,25 @@ public class Usuario extends Persona {
                     case "paginas":
                     completedCount+=challenge.addProgress(libro.getNumPages())?1:0;
                     break;
-                    case "libros":
-                    completedCount+=challenge.addProgress(1)?1:0;
+                case "libros":
+                    completedCount += challenge.addProgress(1) ? 1 : 0;
                     break;
-                    case "rec":
-                        for(Libro l: listaRecomendados){
-                            if(libro.equals(l)){
-                                completedCount+=challenge.addProgress(1)?1:0;
-                            }
+                case "rec":
+                    for (Libro l : listaRecomendados) {
+                        if (libro.equals(l)) {
+                            completedCount += challenge.addProgress(1) ? 1 : 0;
                         }
-                    //se pueden añadir más tipos
-                }
+                    }
+                    // se pueden añadir más tipos
             }
-            return completedCount;
         }
-        //</libros>
-        
-
-        //hazerlo de un amigo al azar/uno que yo escsoga
-        //amigo al azar
-        //checkear si tiene algo en la lista de reviews, si esta vacia otro amigo random, si no dame tu mejor review
-
+        return completedCount;
     }
+    // </libros>
 
+    // hazerlo de un amigo al azar/uno que yo escsoga
+    // amigo al azar
+    // checkear si tiene algo en la lista de reviews, si esta vacia otro amigo
+    // random, si no dame tu mejor review
 
+}
