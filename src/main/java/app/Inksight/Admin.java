@@ -1,12 +1,12 @@
 package app.Inksight;
 
 public class Admin extends Persona {
-    public Admin(String name, String surname, String location) {
-        super(name, surname, location);
+    public Admin(String nombreUser,String correo,String pass ,String name, String surname, String location) {
+        super(nombreUser,correo,pass,name, surname, location);
         authLevel = "admin";
     }
-    public Admin(String first_name, String last_name, String location, boolean online, int followers,Stats stats) {
-        super(first_name, last_name, location, online, followers,stats);
+    public Admin(String nombreUser,String correo,String pass ,String first_name, String last_name, String location, boolean online, int followers,Stats stats) {
+        super(nombreUser,correo,pass, first_name, last_name, location, online, followers,stats);
         authLevel = "admin";
     }
 

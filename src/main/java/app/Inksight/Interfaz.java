@@ -1,7 +1,11 @@
 package app.Inksight;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,19 +14,19 @@ public class Interfaz {
 	String titulo;
 	String nombreLista;
 	String nombreListaAntiguo;
-	int opcion;
+	static int opcion;
 	GestionColecciones listas = new GestionColecciones();
-	Stats stats = new Stats();
+	static Stats stats = new Stats();
 	int timeout = 2000;
-
+	static HashSet<Usuario> listaAmigos = new HashSet<>();
 	// Libro libro = new Libro(0,"","",0,"","");
 	// Libro libro = new Libro(libro);
-	Persona personaActual = new Usuario("", "", "");
-	Usuario usuarioActual;
+	static Persona personaActual = new Usuario("","", "", "","","",false,0,stats,listaAmigos);
+	static Usuario usuarioActual = (Usuario) personaActual;
 	DB db = new DB();
 	String permiso;
 
-	public void menu_principal() {
+	public static void menu_principal() throws NoSuchAlgorithmException {
 		System.out.println();
 		System.out.println("-----INKSIGHT-----");
 		System.out.println();
@@ -41,8 +45,7 @@ public class Interfaz {
 				System.out.print("Ingrese un correo electronico: ");
 				correo = sc.next();
 
-				System.out.print("Ingrese una contraseña: ");
-				contraseña = sc.next();
+
 				// aviso de los requisitos que tiene que tener la contraseña
 				System.out.println("Tener en cuenta que: ");
 				System.out.println("Debe tener entre 8 y 20 caracteres");
@@ -52,71 +55,54 @@ public class Interfaz {
 				System.out.println("No debe contener espacios en blanco");
 				System.out.println("No debe contener caracteres especiales");
 
+
 				String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
 				boolean validPassword = false;
-				if (contraseña.matches(regex)) {
-					validPassword = true;
-					System.out.println("Confirmar contraseña: ");
-					contraseña = sc.next();
-				} else {
-					System.out.println("Contraseña no válida");
+				while(validPassword==false){
+					System.out.print("Ingrese una contraseña valida: ");
+					pass = sc.next();
+					if (pass.matches(regex)) {
+						validPassword = true;
+						System.out.println("Confirmar contraseña: ");
+						String contraseñaConfirmada = sc.next();
+						if (pass.matches(contraseñaConfirmada)){
+							DB db = new DB();
+							MessageDigest digest = MessageDigest.getInstance("SHA-256");
+							byte[] encodedhash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
+							String passHash= db.bytesToHex(encodedhash);
+							db.createPersona(nombreUser,correo, passHash);
 
-				}
-				if (validPassword) {
-					System.out.println("Contraseña válida");
-				}
-				// si la contraseña es válida, se crea el usuario
-
-				break;
-			case 2:
-				boolean valid = false;
-				while (!valid) {
-					System.out.println("Ingresa nombre o correo:");
-					nombre = sc.next();
-					validarNombre(nombre);
-					System.out.println("Ingresa contraseña:");
-					contraseña = sc.next();
-					// asegurarse de que la contraseña pertenece al usuario
-
-					if (valid) {
-						System.out.println("No válido");
-						permiso = ((personaActual instanceof Admin) ? "admin"
-								: (personaActual instanceof Moderador ? "Moderador" : "usuario"));
-						if (permiso.equals("usuario")) {
-							usuarioActual = (Usuario) personaActual;
-							checkTimeWhenLogin();
-							if (usuarioActual.isBanned()) {
-								System.out.println("El usuario seleccionado no puede acceder al sistema.");
-								if (usuarioActual.getDaysUntilUnban() > 0) {
-									System.out.println(
-											"duración de la prohibicion: " + usuarioActual.getDaysUntilUnban());
-								} else {
-									System.out.println("El usuario está prohibido permanentemente.");
-								}
-								System.out.println("¿Desea iniciar sesión con otro usuario? (S/N)");
-								String respuesta = sc.next();
-								if (respuesta.equals("S")) {
-									valid = false;
-								} else {
-									System.exit(0);
-								}
-							}
 						}
 
 					} else {
-						System.out.println("Válido");
+						System.out.println("Contraseña no válida");
 					}
-					// validar que el usuario existe
-					// validar que la contraseña pertenece al usuario
+				}
+				break;
+			case 2:
+				boolean valid= false;
+				while(!valid ){
+					System.out.println("Ingresa nombre de usuario:");
+					nombreUser = sc.next();
+					System.out.println("Ingresa contraseña:");
+					String passLogin = sc.next();
+					usuarioActual = (Usuario) DB.buscarUser(nombreUser);
+					// asegurarse de que la contraseña pertenece al usuario
 
-					// Si se mete X usuario y contraseña, se abre el menu de el administrador
-					// Si se mete Y usuario y contraseña, se abre el menu del modificador
-					// Si se mete Z usuario y contraseña, se abre el menu del usuario
+					MessageDigest digest = MessageDigest.getInstance("SHA-256");
+					byte[] encodedhash = digest.digest(passLogin.getBytes(StandardCharsets.UTF_8));
+					String passHash= DB.bytesToHex(encodedhash);
 
-				} // while
+					if (usuarioActual.getPass().equals(passHash)){
+						System.out.println("Sesión Iniciada");
+						usuarioActual.setOnline(true);
+						//(Usuario)usuarioActual.makeChallenge("Leer 5 libros", "Leer 5 libros en una semana", 5, "libros", 100);
+					}
+					valid=true;
+				}
+
 		}
-
-	}// menu
+	}
 
 	private static void validarNombre(String nombre) {
 		// comprobar si el String nombre existe en el archivo de texto
@@ -125,7 +111,7 @@ public class Interfaz {
 
 	}
 
-	public void menu_PerfilUsuario(String nombre) {
+	public void menu_PerfilUsuario(String nombre) throws NoSuchAlgorithmException {
 		System.out.println(nombre);
 		System.out.println();
 		System.out.println("1. Estadisticas");
@@ -200,7 +186,12 @@ public class Interfaz {
 		menu_principal();
 	}
 
-	private void menu_Estadisticas() {
+	private static void menu_Estadisticas() {
+		System.out.println("Nivel: "+Usuario.getStats(usuarioActual).getLevel());
+		System.out.println("XP: "+Usuario.getStats(usuarioActual).getXp());
+		System.out.println("Xp para siguiente nivel: "+Usuario.getStats(usuarioActual).getXpToNextLevel());
+		System.out.println("Libros leidos: "+Usuario.getStats(usuarioActual).getNumBooks());
+		System.out.println("Pgs leidas: "+Usuario.getStats(usuarioActual).getNumPages());
 	}
 
 	private void menuRetos() {
@@ -713,7 +704,7 @@ public class Interfaz {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NoSuchAlgorithmException {
 		Interfaz interfaz = new Interfaz();
 		interfaz.menu_principal();
 

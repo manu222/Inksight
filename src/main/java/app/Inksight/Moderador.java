@@ -1,12 +1,12 @@
 package app.Inksight;
 
 public class Moderador extends Persona {
-    public Moderador(String name, String surname, String location) {
-        super(name, surname, location);
+    public Moderador(String nombreUser,String correo,String pass ,String name, String surname, String location) {
+        super(nombreUser,correo,pass,name, surname, location);
         authLevel = "moderador";
     }
-    public Moderador(String first_name, String last_name, String location, boolean online, int followers,Stats stats) {
-        super(first_name, last_name, location, online, followers,stats);
+    public Moderador(String nombreUser,String correo,String pass ,String first_name, String last_name, String location, boolean online, int followers,Stats stats) {
+        super(nombreUser,correo,pass, first_name, last_name, location, online, followers,stats);
         authLevel= "moderador";
     }
     public void eliminarReseña(Review r){

@@ -5,33 +5,43 @@ import java.util.*;
 public class Usuario extends Persona {
 
     HashSet<Usuario> listaAmigos;
-
+     private String nombreUser;
+    private String correo;
+    private String pass;
     List<Review> listaReviews;
     Set<Libro> listaRecomendados;
     private List<Challenge> desafios;
-    private Stats stats;
+    private static Stats stats;
     private Date lastChallenge;
 private Date lastLogin;
     public GestionColecciones gestionColecciones;
 
-    public Usuario(String first_name, String last_name, String location) {
-        super(first_name, last_name, location);
+    public Usuario(String nombreUser,String correo,String pass ,String first_name, String last_name, String location,HashSet<Usuario> listaAmigos){
+        super(nombreUser,correo,pass, first_name,last_name,location);
         this.desafios = new LinkedList<>();
+        this.listaAmigos=new HashSet<>();
         this.stats = new Stats();
-        gestionColecciones = new GestionColecciones();
+        gestionColecciones=new GestionColecciones();
+        lastChallenge = new Date(System.currentTimeMillis());
+        listaRecomendados = new HashSet<>();
+        authLevel = "user";
+    }
+    public Usuario(String nombreUser,String correo,String pass ,String first_name, String last_name, String location, boolean online, int followers,Stats stats,HashSet<Usuario> listaAmigos){
+        super(nombreUser,correo,pass,first_name,last_name,location,online,followers,stats);
+        this.desafios = new LinkedList<>();
+        this.listaAmigos=new HashSet<>();
+        this.stats = stats;
+        gestionColecciones=new GestionColecciones();
         lastChallenge = new Date(System.currentTimeMillis());
         listaRecomendados = new HashSet<>();
         authLevel = "user";
     }
 
-    public Usuario(String first_name, String last_name, String location, boolean online, int followers, Stats stats) {
-        super(first_name, last_name, location, online, followers, stats);
-        this.desafios = new LinkedList<>();
-        this.stats = stats;
-        gestionColecciones = new GestionColecciones();
-        lastChallenge = new Date(System.currentTimeMillis());
-        listaRecomendados = new HashSet<>();
-        authLevel = "user";
+    public String getPass() {
+        return pass;
+    }
+    public static Stats getStats(Persona u) {
+        return stats;
     }
     public Date getLastLogin(){
         return lastLogin;
@@ -147,18 +157,18 @@ private Date lastLogin;
     }
 
     public Usuario buscarAmigo(Usuario usuario) {
-        Usuario actual = new Usuario("Error", "Error", "Error");
+       // Usuario actual = new Usuario("Error", "Error", "Error","","","",);
         Iterator<Usuario> it = usuario.getListaAmigos().iterator();
 
         if (usuario.getnAmigos() != 0) {
             int contador = 0;
             while (it.hasNext() && contador < usuario.getnAmigos()) {
                 if (it.next() == usuario) {
-                    actual = it.next();
+                //    actual = it.next();
                 }
             }
         }
-        return actual;
+        return null;
 
     }
 
