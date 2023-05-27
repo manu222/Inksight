@@ -85,7 +85,7 @@ public class DB {
         return libroError; 
     }
 
-    public static void updateLibro() throws IOException {
+        public static void updateLibro() throws IOException {
         Scanner sc = new Scanner(System.in);
         File file = new File(ruta);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -194,6 +194,7 @@ public class DB {
 
 
     }
+
 
     public static void eliminarLibro() throws IOException {
 
@@ -382,6 +383,57 @@ public class DB {
             }
 
         }
+    }
+    public Persona buscarUser(String userName){
+        Gson gson = new Gson();
+
+        // Comprobar si la carpeta data existe, si no existe, crearla
+        File dataDir = new File(rutaData);
+        if (!dataDir.exists()) {
+            dataDir.mkdir();
+        }
+
+        // Comprobar si la carpeta Users existe, si no existe, crearla
+        File usersDir = new File(rutaUsers);
+        if (!usersDir.exists()) {
+            usersDir.mkdir();
+        }
+
+
+        File userDir = new File(rutaUsers + "/" + userName);
+        File userData = new File(rutaUsers + "/" + userName + "/" + userName + "Data.json");
+        if (userDir.exists()){
+            System.out.println("existe el usuario");
+            if (userData.exists()){
+                System.out.println("tiene datos");
+                try {
+                    System.out.println("contenido:");
+                    String contenidoUser = leerArchivo(String.valueOf(userData));
+                    System.out.println(contenidoUser);
+                    // Comprobar si el usuario ya existe
+
+                    Persona user = gson.fromJson(contenidoUser, Persona.class);
+                    System.out.println(user.getFirst_name());
+                    return user;
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return null;
+        }
+        return null;
+    }
+    public static String bytesToHex(byte[] hash) {
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if(hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
     }
 }
 
