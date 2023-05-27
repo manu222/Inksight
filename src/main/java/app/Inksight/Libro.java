@@ -2,21 +2,35 @@ package app.Inksight;
 
 public class Libro {
 
+
+
+
     public int bookID;
     public String title;
     public String authors;
     public int numPages;
     public String publication_date;
     public String languageCode;
-    public String publisher;
-    public Libro(int bookID, String title, String authors, int numPages, String publication_date, String languageCode,String publisher) {
+
+    public Libro(int bookID, String title, String authors, int numPages, String publication_date, String languageCode) {
         this.bookID = bookID;
         this.title = title;
         this.authors = authors;
         this.numPages = numPages;
         this.publication_date = publication_date;
         this.languageCode = languageCode;
-        this.publisher = publisher;
+    }
+    public Libro(Libro base) {
+        this.bookID = base.bookID;
+        this.title = base.title;
+        this.authors = base.authors;
+        this.numPages = base.numPages;
+        this.publication_date = base.publication_date;
+        this.languageCode = base.languageCode;
+    }
+
+    public void setID(int bookID) {
+        this.bookID= bookID;
     }
 
     public void setTitle(String title) {
@@ -59,11 +73,25 @@ public class Libro {
 
     public String getLanguageCode() {return languageCode;}
 
-    public String getPublisher() {
-        return publisher;
+    @Override
+    public String toString() {
+        return  "\nbookID=" + bookID +
+                "title=" + title + "\n" +
+                "authors=" + authors + "\n" +
+                "numPages=" + numPages + "\n" +
+                "publication_date=" + publication_date + "\n" +
+                "languageCode=" + languageCode + "\n";
+    }
+    @Override
+    public boolean equals(Object other){
+        if (other==this){
+            return true;
+        }
+        if (other instanceof Libro){
+            Libro l=(Libro) other;
+            return l.getbookID()==this.getbookID();
+        }
+        return  false;
     }
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
 }
