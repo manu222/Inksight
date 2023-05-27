@@ -272,6 +272,16 @@ public class DB {
         byte[] contenidoBytes = Files.readAllBytes(ruta);
         return new String(contenidoBytes);
     }
+
+    public Persona PersonaCast(Persona p ){
+        if(p instanceof Admin){
+            return(Admin)p;
+        }
+        if(p instanceof Moderador){
+            return(Moderador)p;
+        }
+        else return (Usuario)p;
+    }
     public void createPersona() {
 
         Scanner sc = new Scanner(System.in);
@@ -314,17 +324,8 @@ public class DB {
             sc.nextLine();
 
             Stats Stats=new Stats();
-            Persona newUser = new Persona(fn,ln,ciudad,false,0,Stats);
-            //test
-            try{
-                Libro lTest = buscarUnLibro("Harry Potter");
-                newUser.gestionColecciones.agregarlibro("leyendo",lTest);
-                newUser.makeChallenge("Leer 10 libros", "Leer 10 libros en una semana", 10, "libros", 200);
-                newUser.markAsCompleted("1");
-            }catch (IOException e){
-                System.out.println(e.getMessage());
-            }
-            //end test
+            Persona newUser = new Usuario(fn,ln,ciudad,false,0,Stats);
+            
             try {
                 userJson.createNewFile();
                 FileWriter fw = new FileWriter(userJson);
@@ -333,7 +334,7 @@ public class DB {
                 try {
                     String contenido = leerArchivo(String.valueOf(userJson));
                     System.out.println(contenido);
-                    Persona personaObj = gson.fromJson(contenido, Persona.class);
+                    Usuario personaObj = gson.fromJson(contenido, Usuario.class);
                     System.out.println(personaObj.getFirst_name());
                     System.out.println(personaObj.getLast_name());
                     System.out.println(personaObj.getLocation());

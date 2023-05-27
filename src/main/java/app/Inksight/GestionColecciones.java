@@ -9,7 +9,7 @@ public class GestionColecciones {
 	public static final int LIBRO_ELIMINADO_CORRECTAMENTE = 3; 
 	public static final int LIBRO_NO_EXISTE = 4; 
 	public static final int COLECCION_MODIFICADA_CORRECTAMENTE = 5; 
-
+	
 	List<ColeccionLibro> listaColecciones = new ArrayList<>();
 	public static final String LISTA_NO_LEIDOS = "no leidos"; 
 	public static final String LISTA_LEIDOS = "leidos"; 

@@ -13,6 +13,15 @@ public class Stats {
         this.xp = 0;
         this.xpToNextLevel = 1000;
     }
+    public Stats(int numBooks, int numPages, int level, float xp, float xpToNextLevel) {
+        this.numBooks = numBooks;
+        this.numPages = numPages;
+        this.level = level;
+        this.xp = xp;
+        this.xpToNextLevel = xpToNextLevel;
+    
+
+    }
     public void addBook(LibroAmpliado libro){
         numBooks++;
         numPages += libro.getNumPages();
