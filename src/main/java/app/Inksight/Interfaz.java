@@ -34,7 +34,7 @@ public class Interfaz {
 		String nombreUser;
 		String pass;
 		String correo;
-		switch(opcion){
+		switch (opcion) {
 			case 1:
 				System.out.print("Ingrese un nombre de usuario: ");
 				nombreUser = sc.next();
@@ -183,21 +183,21 @@ public class Interfaz {
 					System.out.println("MODERADOR");
 					menu_Moderador();
 				} else {
-					personaActual.setOnline(false);
-					personaActual = null;
-					usuarioActual = null;
-					clearConsole();
-					menu_principal();
+					cerrarSesion();
 				}
 				break;
 			case 8:
-				personaActual.setOnline(false);
-				personaActual = null;
-				usuarioActual = null;
-				clearConsole();
-				menu_principal();
-
+				cerrarSesion();
+				break;
 		}
+	}
+
+	private void cerrarSesion() {
+		personaActual.setOnline(false);
+		personaActual = null;
+		usuarioActual = null;
+		clearConsole();
+		menu_principal();
 	}
 
 	private void menu_Estadisticas() {
@@ -394,7 +394,6 @@ public class Interfaz {
 		System.out.println("8. Eliminar libro de una lista");
 		System.out.println("9. Salir");
 
-
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
 
@@ -485,25 +484,29 @@ public class Interfaz {
 	public void checkTimeWhenLogin() {
 		Date lastChallenge = usuarioActual.getLastChallenge();
 		Date now = new Date(System.currentTimeMillis());
-		// revisar si el usuario está baneado después de reducir el tiempo restante de la condena
+		// revisar si el usuario está baneado después de reducir el tiempo restante de
+		// la condena
 		if ((now.getTime() - usuarioActual.getLastLogin().getTime()) < (24 * 60 * 60 * 1000)) {
 			// pasó 1 día. disminuir la condena y si es 0, desbanear
 			if (usuarioActual.dayPassed()) {
 				usuarioActual.unban();
 			}
 		}
-		//revisar todos los desafíos. si alguno expiró, eliminarlo. Si no, disminuir el tiempo restante
+		// revisar todos los desafíos. si alguno expiró, eliminarlo. Si no, disminuir el
+		// tiempo restante
 		for (Challenge c : usuarioActual.getDesafios()) {
 			if (c.getTimeRemaining() < (usuarioActual.getLastLogin().getTime() - now.getTime())) {
 				usuarioActual.getDesafios().remove(c);
+			} else {
+				c.setTimeRemaining(
+						(int) (c.getTimeRemaining() - (usuarioActual.getLastLogin().getTime() - now.getTime())));
 			}
-			else{
-				c.setTimeRemaining((int)(c.getTimeRemaining() - (usuarioActual.getLastLogin().getTime() - now.getTime())));}
 		}
 		// actualizar la fecha de ultimo inicio de sesión
 		usuarioActual.setLastLogin(now);
 
-		// revisar si el usuario tiene menos de 3 desafíos y si pasaron 7 días desde el último desafío
+		// revisar si el usuario tiene menos de 3 desafíos y si pasaron 7 días desde el
+		// último desafío
 		if (lastChallenge.getTime() < (now.getTime() - 604800000) && usuarioActual.getDesafios().size() < 3) {
 			// pasaron 7 días desde el último desafío
 			int tipo = (int) (Math.random() * 3);
@@ -542,6 +545,41 @@ public class Interfaz {
 
 	public void menu_Administrador() {
 		// mostrar las opciones que tiene el administrador
+		System.out.println("ADMINISTRADOR:");
+		System.out.println("1. Gestionar Libros");
+		System.out.println("2. Gestionar Usuarios");
+		System.out.println("3. Crear nuevo moderador");
+		System.out.println("4. Cerrar sesión");
+		int opcion = sc.nextInt();
+		switch (opcion) {
+			case 1:
+				try {
+					Funciones.menuDBLibro();
+				} catch (Exception e) {
+					System.out.println("Error");
+				}
+				break;
+			case 2:
+				menu_Moderador();
+				break;
+			case 3:
+				System.out.println("Ingrese el nombre del nuevo moderador");
+				String nombre = sc.next();
+				System.out.println("Ingrese el apellido del nuevo moderador");
+				String apellido = sc.next();
+				System.out.println("ingrese el nombre de usuario del nuevo moderador");
+				String username = sc.next();
+				System.out.println("ingrese la contraseña del nuevo moderador");
+				String password = sc.next();
+				System.out.println("ingrese el correo del nuevo moderador");
+				String correo = sc.next();
+				
+				//todo crear el Moderador y guardarlo en la BDD
+			break;
+			case 4:
+			cerrarSesion();
+
+		}
 	}
 
 	public void menu_Moderador() {
@@ -561,7 +599,7 @@ public class Interfaz {
 				System.out.println("1. Suspender usuario");
 				System.out.println(user.isBanned ? "2. Eliminar veto" : "2. vetar usuario");
 				System.out.println("3. Ver reseñas");
-				System.out.println("4. Volver");
+				System.out.println("4. Cambiar usuario");
 				int opcion = sc.nextInt();
 				switch (opcion) {
 					case 1:
@@ -615,6 +653,7 @@ public class Interfaz {
 
 						break;
 					case 4:
+					cerrarSesion();
 						break;
 					default:
 						System.out.println("Opción no válida");

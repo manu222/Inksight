@@ -5,6 +5,8 @@ public class Stats {
     private int level;
     private float xp;
     private float xpToNextLevel;
+    private int quiereLeerHistorico;
+    private float tasaFinalizacion;
 
     public Stats(){
         this.numBooks = 0;
@@ -19,7 +21,7 @@ public class Stats {
         this.level = level;
         this.xp = xp;
         this.xpToNextLevel = xpToNextLevel;
-    
+        tasaFinalizacion = (numBooks/quiereLeerHistorico)*100;
 
     }
     public void addBook(LibroAmpliado libro){
