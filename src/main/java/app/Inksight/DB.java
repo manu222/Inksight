@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -315,7 +316,7 @@ public class DB {
         }
         else return (Usuario)p;
     }
-    public void createPersona() {
+    public void createPersona(String userName,String correo, String pass) {
 
         Scanner sc = new Scanner(System.in);
 
@@ -331,9 +332,8 @@ public class DB {
             usersDir.mkdir();
         }
 
-        System.out.println("Usuario a crear:");
-        String user = sc.nextLine();
-        File userDir = new File(rutaUsers + "/" + user);
+
+        File userDir = new File(rutaUsers + "/" + userName);
 
         // Comprobar si el usuario ya existe
         if (userDir.exists()) {
@@ -341,7 +341,7 @@ public class DB {
         } else {
             // Si el usuario no existe, crear su carpeta y el archivo "nombreUserData.json"
             userDir.mkdir();
-            File userJson = new File(userDir, user + "Data.json");
+            File userJson = new File(userDir, userName + "Data.json");
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -357,8 +357,9 @@ public class DB {
             sc.nextLine();
 
             Stats Stats=new Stats();
-            Persona newUser = new Usuario(fn,ln,ciudad,false,0,Stats);
-            
+            HashSet<Usuario> listaAmigos= new HashSet<>();
+            Persona newUser = new Usuario(userName,correo,pass,fn,ln,ciudad,false,0,Stats,listaAmigos);
+
             try {
                 userJson.createNewFile();
                 FileWriter fw = new FileWriter(userJson);
@@ -367,24 +368,23 @@ public class DB {
                 try {
                     String contenido = leerArchivo(String.valueOf(userJson));
                     System.out.println(contenido);
-                    Usuario personaObj = gson.fromJson(contenido, Usuario.class);
+                    Persona personaObj = gson.fromJson(contenido, Persona.class);
                     System.out.println(personaObj.getFirst_name());
                     System.out.println(personaObj.getLast_name());
                     System.out.println(personaObj.getLocation());
-                    System.out.println(personaObj.getnAmigos());
-                    System.out.println(personaObj.getListaReviews());
+
 
 
                 } catch (IOException e) {
                     System.out.println("Ocurrió un error al leer el archivo: " + e.getMessage());
                 }
-                } catch (IOException e) {
+            } catch (IOException e) {
                 System.out.println("Error al crear el archivo del usuario");
             }
 
         }
     }
-    public Persona buscarUser(String userName){
+    public static Persona buscarUser(String userName){
         Gson gson = new Gson();
 
         // Comprobar si la carpeta data existe, si no existe, crearla
@@ -403,13 +403,13 @@ public class DB {
         File userDir = new File(rutaUsers + "/" + userName);
         File userData = new File(rutaUsers + "/" + userName + "/" + userName + "Data.json");
         if (userDir.exists()){
-            System.out.println("existe el usuario");
+            //System.out.println("existe el usuario");
             if (userData.exists()){
-                System.out.println("tiene datos");
+             //   System.out.println("tiene datos");
                 try {
-                    System.out.println("contenido:");
+                 //   System.out.println("contenido:");
                     String contenidoUser = leerArchivo(String.valueOf(userData));
-                    System.out.println(contenidoUser);
+                    // System.out.println(contenidoUser);
                     // Comprobar si el usuario ya existe
 
                     Persona user = gson.fromJson(contenidoUser, Persona.class);

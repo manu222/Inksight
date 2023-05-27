@@ -1,7 +1,9 @@
 package app.Inksight;
 
 abstract class Persona {
-
+    private String nombreUser;
+    private String correo;
+    private String pass;
     private String first_name;
     private String last_name;
     private String location;
@@ -12,8 +14,11 @@ abstract class Persona {
     Boolean isBanned;
     int daysUntilUnban;
 
-    public Persona(String first_name, String last_name, String location, boolean online, int followers, Stats stats) {
+    public Persona(String nombreUser,String correo,String pass,String first_name, String last_name, String location, boolean online, int followers, Stats stats) {
         this.first_name = first_name;
+        this.nombreUser = nombreUser;
+        this.correo = correo;
+        this.pass = pass;
         this.last_name = last_name;
         this.location = location;
         this.online = online;
@@ -22,7 +27,10 @@ abstract class Persona {
         daysUntilUnban = 0;
     }
 
-    public Persona(String first_name, String last_name, String location) {
+    public Persona(String nombreUser,String correo,String pass,String first_name, String last_name, String location) {
+        this.first_name = first_name;
+        this.nombreUser = nombreUser;
+        this.correo = correo;
         this.first_name = first_name;
         this.last_name = last_name;
         this.location = location;

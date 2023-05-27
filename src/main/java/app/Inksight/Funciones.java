@@ -48,7 +48,7 @@ public class Funciones {
             case 5:
                 break;
             case 6:
-                db.createPersona();
+                //db.createPersona();
                 break;
             default:
                 System.out.println("Opción no válida, por favor intenta de nuevo.");
