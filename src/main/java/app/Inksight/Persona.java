@@ -113,11 +113,6 @@ abstract class Persona {
  * break;
  * case 3,4:
  * makeChallenge("Aceptar 1 recomendacion","lee un libro que un amigo te haya recomendado",1,"rec",40
- *
+ * 
  * }
  */
-
-
-
-
-

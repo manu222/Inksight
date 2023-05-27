@@ -4,9 +4,9 @@ package app.Inksight;
 import java.util.*;
 
 public class Usuario extends Persona {
-    
+
     HashSet<String> listaAmigos;
-    String username;
+
     List<Review> listaReviews;
     Set<Libro> listaRecomendados;
     private List <Challenge> desafios;
@@ -108,8 +108,8 @@ public class Usuario extends Persona {
 
             //hacer esta wea un hashset
         }
-        
-        
+
+
         public static Review sortByPuntuacion(List<Review> reviewsList) {
             int n = reviewsList.size();
             Review temp;
@@ -126,8 +126,8 @@ public class Usuario extends Persona {
             }
             return reviewsList.get(0);
         }
-        
-        
+
+
         public HashSet<String> getListaAmigos() {
             if (listaAmigos.size() <= 0) {
                 System.out.println("No hay amigos");
@@ -143,7 +143,7 @@ public class Usuario extends Persona {
             }
         }
         //</amigos>
-        
+
         //<reviews>
         public List<Review> getListaReviews(){return listaReviews;}
 
@@ -151,7 +151,7 @@ public class Usuario extends Persona {
 
             String actual = "";
             Iterator<String> it = usuario.getListaAmigos().iterator();
-            
+
             if (getnAmigos() != 0) {
                 int contador = 0;
                 while (it.hasNext() && contador < usuario.getnAmigos()) {
