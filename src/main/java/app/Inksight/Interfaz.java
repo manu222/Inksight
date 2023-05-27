@@ -360,6 +360,8 @@ public class Interfaz {
 			// mostrar todas las listas que tiene el usuario
 			break;
 		case 5:
+		try{
+
 			System.out.println("Escriba el nombre del libro que deseas añadir: ");
 			titulo = sc.next();
 			System.out.println("Escriba el nombre de la lista a la que desea añadirlo: ");
@@ -368,8 +370,13 @@ public class Interfaz {
 			if(listas.agregarlibro(nombreLista,titulo) == GestionColecciones.COLECCION_NO_EXISTE ){
 				System.out.println("La lista no existe");
 			}
+		}catch(Exception e){
+			System.out.println("El libro no existe");
+		}
 			break; 
 		case 6:
+		try{
+
 			System.out.println("Seleccione la lista de la que desea mover el libro: ");
 			nombreListaAntiguo = sc.next();
 			System.out.println("Seleccione la lista a la que desea moverlo o cree una nueva: ");
@@ -377,6 +384,9 @@ public class Interfaz {
 			System.out.println("Seleccione el libro que desea mover: ");
 			titulo = sc.next();
 			listas.moverLibroDeColeccion(nombreListaAntiguo, nombreLista, titulo);
+		}catch(Exception e){
+			System.out.println("El libro no existe");
+		}
 			break;
 		case 7:
 			System.out.println("Libros agregados: ");
