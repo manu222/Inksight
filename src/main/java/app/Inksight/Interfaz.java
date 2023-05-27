@@ -15,7 +15,7 @@ public class Interfaz {
 	 Usuario usuarioActual = new Usuario("","","");	
 
 	
-	public static void menu_principal(){
+	public static void menu_principal() throws NoSuchAlgorithmException {
 		System.out.println();
 		System.out.println("-----INKSIGHT-----");
 		System.out.println();
@@ -24,70 +24,65 @@ public class Interfaz {
 		
 		System.out.print("Elija la opción deseada: ");
 		opcion = sc.nextInt();
-		String nombre;
-		String contraseña;
+		String nombreUser;
+		String pass;
+		String correo;
 		switch(opcion){
-		case 1: 
-			System.out.print("Ingrese un nombre o correo: ");
-			nombre = sc.next();
-			validarNombre(nombre);
+			case 1:
+				System.out.print("Ingrese un nombre de usuario: ");
+				nombreUser = sc.next();
+				System.out.print("Ingrese un correo electronico: ");
+				correo = sc.next();
 
-			System.out.print("Ingrese una contraseña: ");
-			contraseña = sc.next();
-			// aviso de los requisitos que tiene que tener la contraseña
-			System.out.println("Tener en cuenta que: ");
-			System.out.println("Debe tener entre 8 y 20 caracteres");
-			System.out.println("Debe contener al menos un dígito");
-			System.out.println("Debe contener al menos una minúscula");
-			System.out.println("Debe contener al menos una mayúscula");
-			System.out.println("No debe contener espacios en blanco");
-			System.out.println("No debe contener caracteres especiales");
-			
-			String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
-			boolean validPassword = false;
-			if(contraseña.matches(regex)){
-				validPassword = true;
-				System.out.println("Confirmar contraseña: ");
-			    contraseña =sc.next();
-			} else {
-				System.out.println("Contraseña no válida");
 
-			}
-			if(validPassword){
-				System.out.println("Contraseña válida");
-			}
-			// si la contraseña es válida, se crea el usuario
+				// aviso de los requisitos que tiene que tener la contraseña
+				System.out.println("Tener en cuenta que: ");
+				System.out.println("Debe tener entre 8 y 20 caracteres");
+				System.out.println("Debe contener al menos un dígito");
+				System.out.println("Debe contener al menos una minúscula");
+				System.out.println("Debe contener al menos una mayúscula");
+				System.out.println("No debe contener espacios en blanco");
+				System.out.println("No debe contener caracteres especiales");
 
-			break;
-		case 2: 
-			boolean valid= false;
-			while(!valid ){
-			System.out.println("Ingresa nombre o correo:");
-			nombre = sc.next();
-			validarNombre(nombre);
-			System.out.println("Ingresa contraseña:");
-			contraseña = sc.next();
-			// asegurarse de que la contraseña pertenece al usuario
-			
-		    if(valid){
-		    	System.out.println("No válido");
-		    } else {
-		    	System.out.println("Válido");
-		    }
-			// validar que el usuario existe
-			// validar que la contraseña pertenece al usuario
-		
 
-			//Si se mete X usuario y contraseña, se abre el menu de el administrador 
-			//Si se mete Y usuario y contraseña, se abre el menu del modificador
-			//Si se mete Z usuario y contraseña, se abre el menu del usuario
-			
+				String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
+				boolean validPassword = false;
+				while(validPassword==false){
+					System.out.print("Ingrese una contraseña valida: ");
+					pass = sc.next();
+					if (pass.matches(regex)) {
+						validPassword = true;
+						System.out.println("Confirmar contraseña: ");
+						String contraseñaConfirmada = sc.next();
+						if (pass.matches(contraseñaConfirmada)){
+							DB db = new DB();
+							MessageDigest digest = MessageDigest.getInstance("SHA-256");
+							byte[] encodedhash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
+							String passHash= db.bytesToHex(encodedhash);
+							db.createPersona(nombreUser,correo, passHash);
 
-			}// while
+						}
+
+					} else {
+						System.out.println("Contraseña no válida");
+					}
+				}
+				break;
+			case 2:
+				boolean valid= false;
+				while(!valid ){
+					System.out.println("Ingresa nombre de usuario:");
+					nombreUser = sc.next();
+					System.out.println("Ingresa contraseña:");
+					pass = sc.next();
+					// asegurarse de que la contraseña pertenece al usuario
+
+					if(valid){
+						System.out.println("No válido");
+					}
+				}
 		}
-			
 		
-	}// menu
 	private static void validarNombre(String nombre) {
 		//comprobar si el String nombre existe en el archivo de texto
 		//boolean valid = usuarios.validarNombre(nombre);
