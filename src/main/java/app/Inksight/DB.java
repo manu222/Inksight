@@ -5,9 +5,11 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -19,7 +21,6 @@ public class DB {
     static final String ruta = "src/main/java/app/Inksight/books.json";
     static final String rutaData = "src/main/data";
     static final String rutaUsers = rutaData + "/Users";
-    Gson gson = new Gson();
 
     public DB() {
         this.libro = libro;
@@ -232,18 +233,17 @@ public class DB {
         query = query.toLowerCase(); // convertimos la consulta a minúsculas
         Type listType = new TypeToken<List<Libro>>() {}.getType();
         List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
-        List<Libro> queryReturn = new ArrayList<>();
 
-        System.out.println("Resultados de la búsqueda para '" + query + "':");
+        System.out.println("Primer resultado de la búsqueda '" + query + "':");
         for (Libro libro : libros) {
             // convertimos el título del libro a minúsculas para hacer la comparación
-            if (Integer.toString(libro.getbookID()).equals(query) || libro.getTitle().toLowerCase().matches(".*" + query + ".*")) {
+            if (libro.getTitle().toLowerCase().contains(query.toLowerCase())) {
                 return libro;
             }
         }
         return this.libroError;
     }
-    /*public static Libro buscarLibroPorId(List<Libro> libros,int id) throws IOException {
+    public static Libro buscarLibroPorId(int id) throws IOException {
         Gson gson = new Gson();
 
         Type listType = new TypeToken<List<Libro>>() {}.getType();
@@ -257,7 +257,7 @@ public class DB {
             }
         }
         return libroError;
-    }*/
+    }
     public List<Libro> buscarLibros(String query) throws IOException {
         Gson gson = new Gson();
         query = query.toLowerCase(); // convertimos la consulta a minúsculas
@@ -268,7 +268,7 @@ public class DB {
         System.out.println("Resultados de la búsqueda para '" + query + "':");
         for (Libro libro : libros) {
             // convertimos el título del libro a minúsculas para hacer la comparación
-            if (Integer.toString(libro.getbookID()).equals(query) || libro.getTitle().toLowerCase().matches(".*" + query + ".*")) {
+            if (libro.getTitle().toLowerCase().contains( query.toLowerCase())) {
                 queryReturn.add(libro);
             }
         }
@@ -300,17 +300,7 @@ public class DB {
         byte[] contenidoBytes = Files.readAllBytes(ruta);
         return new String(contenidoBytes);
     }
-
-    public Persona PersonaCast(Persona p ){
-        if(p instanceof Admin){
-            return(Admin)p;
-        }
-        if(p instanceof Moderador){
-            return(Moderador)p;
-        }
-        else return (Usuario)p;
-    }
-    public void createPersona() {
+    public void createPersona(String userName,String correo, String pass) {
 
         Scanner sc = new Scanner(System.in);
 
@@ -326,9 +316,8 @@ public class DB {
             usersDir.mkdir();
         }
 
-        System.out.println("Usuario a crear:");
-        String user = sc.nextLine();
-        File userDir = new File(rutaUsers + "/" + user);
+
+        File userDir = new File(rutaUsers + "/" + userName);
 
         // Comprobar si el usuario ya existe
         if (userDir.exists()) {
@@ -336,7 +325,7 @@ public class DB {
         } else {
             // Si el usuario no existe, crear su carpeta y el archivo "nombreUserData.json"
             userDir.mkdir();
-            File userJson = new File(userDir, user + "Data.json");
+            File userJson = new File(userDir, userName + "Data.json");
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -352,8 +341,23 @@ public class DB {
             sc.nextLine();
 
             Stats Stats=new Stats();
-            Persona newUser = new Usuario(fn,ln,ciudad,false,0,Stats);
-            
+            Persona newUser = new Persona(userName,correo,pass,fn,ln,ciudad,false,0,Stats);
+            //test
+            try{
+                System.out.println("dime un libro que estes leyendo");
+                Libro lTest = buscarUnLibro(sc.nextLine());
+                if(lTest!=null) {
+                    newUser.gestionColecciones.agregarlibro("leyendo", lTest);
+                    newUser.makeChallenge("Leer 10 libros", "Leer 10 libros en una semana", 10, "libros", 200);
+                    newUser.markAsCompleted("1");
+                }
+                else{
+                    System.out.println("no se ha encontrado el libro. creado sin libros.");
+                }
+            }catch (IOException e){
+                System.out.println(e.getMessage());
+            }
+            //end test
             try {
                 userJson.createNewFile();
                 FileWriter fw = new FileWriter(userJson);
@@ -362,7 +366,7 @@ public class DB {
                 try {
                     String contenido = leerArchivo(String.valueOf(userJson));
                     System.out.println(contenido);
-                    Usuario personaObj = gson.fromJson(contenido, Usuario.class);
+                    Persona personaObj = gson.fromJson(contenido, Persona.class);
                     System.out.println(personaObj.getFirst_name());
                     System.out.println(personaObj.getLast_name());
                     System.out.println(personaObj.getLocation());
@@ -379,5 +383,58 @@ public class DB {
 
         }
     }
+
+    public Persona buscarUser(String userName){
+        Gson gson = new Gson();
+
+        // Comprobar si la carpeta data existe, si no existe, crearla
+        File dataDir = new File(rutaData);
+        if (!dataDir.exists()) {
+            dataDir.mkdir();
+        }
+
+        // Comprobar si la carpeta Users existe, si no existe, crearla
+        File usersDir = new File(rutaUsers);
+        if (!usersDir.exists()) {
+            usersDir.mkdir();
+        }
+
+
+        File userDir = new File(rutaUsers + "/" + userName);
+        File userData = new File(rutaUsers + "/" + userName + "/" + userName + "Data.json");
+        if (userDir.exists()){
+            System.out.println("existe el usuario");
+            if (userData.exists()){
+                System.out.println("tiene datos");
+                try {
+                    System.out.println("contenido:");
+                    String contenidoUser = leerArchivo(String.valueOf(userData));
+                    System.out.println(contenidoUser);
+                    // Comprobar si el usuario ya existe
+
+                    Persona user = gson.fromJson(contenidoUser, Persona.class);
+                    System.out.println(user.getFirst_name());
+                    return user;
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return null;
+        }
+        return null;
+    }
+    public static String bytesToHex(byte[] hash) {
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if(hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
+
 }
 

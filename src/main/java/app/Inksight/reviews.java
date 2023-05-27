@@ -1,6 +1,6 @@
 package app.Inksight;
 
-public class Review {
+public class reviews {
     Libro libro;
     String descripcion;
     int puntuacion;

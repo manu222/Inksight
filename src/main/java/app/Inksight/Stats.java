@@ -1,5 +1,8 @@
 package app.Inksight;
-public class Stats {
+
+import java.io.Serializable;
+
+public class Stats implements Serializable {
     private int numBooks;
     private int numPages;
     private int level;
@@ -12,15 +15,6 @@ public class Stats {
         this.level = 0;
         this.xp = 0;
         this.xpToNextLevel = 1000;
-    }
-    public Stats(int numBooks, int numPages, int level, float xp, float xpToNextLevel) {
-        this.numBooks = numBooks;
-        this.numPages = numPages;
-        this.level = level;
-        this.xp = xp;
-        this.xpToNextLevel = xpToNextLevel;
-    
-
     }
     public void addBook(LibroAmpliado libro){
         numBooks++;

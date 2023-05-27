@@ -1,6 +1,8 @@
 package app.Inksight;
 
-public class Challenge {
+import java.io.Serializable;
+
+public class Challenge implements Serializable {
     public final String challengeID;
     private String title;
     private String description;

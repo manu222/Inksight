@@ -1,0 +1,90 @@
+{
+  "first_name": "test",
+  "last_name": "test",
+  "location": "test",
+  "online": false,
+  "followers": 0,
+  "correo": "test",
+  "pass": [
+    -64,
+    -98,
+    88,
+    112,
+    97,
+    106,
+    -16,
+    53,
+    -4,
+    -3,
+    40,
+    -35,
+    74,
+    -41,
+    110,
+    -27,
+    56,
+    123,
+    -36,
+    70,
+    45,
+    76,
+    119,
+    126,
+    114,
+    -23,
+    63,
+    100,
+    -50,
+    102,
+    -23,
+    -97
+  ],
+  "listaRecomendados": [],
+  "desafios": [
+    {
+      "challengeID": "1",
+      "title": "Leer 10 libros",
+      "description": "Leer 10 libros en una semana",
+      "target": 10,
+      "progress": 0,
+      "reward": 200.0,
+      "completed": true
+    }
+  ],
+  "stats": {
+    "numBooks": 0,
+    "numPages": 0,
+    "level": 0,
+    "xp": 200.0,
+    "xpToNextLevel": 1000.0
+  },
+  "lastChallenge": "May 27, 2023, 6:07:17 PM",
+  "userName": "test",
+  "gestionColecciones": {
+    "listaColecciones": [
+      {
+        "nombreColeccion": "leidos",
+        "listaLibros": []
+      },
+      {
+        "nombreColeccion": "no leidos",
+        "listaLibros": []
+      },
+      {
+        "nombreColeccion": "leyendo",
+        "listaLibros": [
+          {
+            "fechaInclusion": "May 27, 2023, 6:07:20 PM",
+            "recomendado": false,
+            "bookID": 1,
+            "title": "Harry Potter and the Half-Blood Prince (Harry Potter  #6)",
+            "authors": "J.K. Rowling/Mary GrandPré",
+            "numPages": 652,
+            "publication_date": "9/16/2006",
+            "languageCode": "en-us"
+          }
+        ]
+      }
+    ]
+  }
+}

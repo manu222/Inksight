@@ -12,14 +12,11 @@ import static app.Inksight.Funciones.menuDBLibro;
 public class Main {
     public static void main(String[] args) throws IOException {
         DB db= new DB();
-        //String ruta = "src/main/java/app/Inksight/books.json";
-        // Create a File object for the JSON file
-        //File file = new File(ruta);
-        //Gson gson = new Gson();
-        //Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
-        //JsonParser parser = new JsonParser();
-
-        menuDBLibro();
+      //  Scanner menu = new Scanner(System.in);
+        Interfaz interfaz = new Interfaz();
+       // interfaz.menu_Principal();
+    //    db.createPersona();
+        //menuDBLibro();
 
 
 
