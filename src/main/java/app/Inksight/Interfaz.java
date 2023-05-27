@@ -1,5 +1,8 @@
 package app.Inksight;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 public class Interfaz {
 	static Scanner sc = new Scanner(System.in);
@@ -8,7 +11,7 @@ public class Interfaz {
 	static int opcion;
 
 	
-	public static void menu_principal(){
+	public static void menu_principal() throws NoSuchAlgorithmException {
 		System.out.println();
 		System.out.println("-----INKSIGHT-----");
 		System.out.println();
@@ -17,50 +20,63 @@ public class Interfaz {
 		
 		System.out.print("Elija la opción deseada: ");
 		opcion = sc.nextInt();
-		String nombre;
-		String contraseña;
+		String nombreUser;
+		String pass;
+		String correo;
 		switch(opcion){
-		case 1: 
-			System.out.print("Ingrese un nombre o correo: ");
-			nombre = sc.next();
-			validarNombre(nombre);
+			case 1:
+				System.out.print("Ingrese un nombre de usuario: ");
+				nombreUser = sc.next();
+				System.out.print("Ingrese un correo electronico: ");
+				correo = sc.next();
 
-			System.out.print("Ingrese una contraseña: ");
-			contraseña = sc.next();
-			// aviso de los requisitos que tiene que tener la contraseña
-			System.out.println("Tener en cuenta que: ");
-			System.out.println("Debe tener entre 8 y 20 caracteres");
-			System.out.println("Debe contener al menos un dígito");
-			System.out.println("Debe contener al menos una minúscula");
-			System.out.println("Debe contener al menos una mayúscula");
-			System.out.println("No debe contener espacios en blanco");
-			System.out.println("No debe contener caracteres especiales");
-			
-			String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
-			boolean validPassword = false;
-			if(contraseña.matches(regex)){
-				validPassword = true;
-				System.out.println("Confirmar contraseña: ");
-			    contraseña =sc.next();
-			} else {
-				System.out.println("Contraseña no válida");
 
-			}
-			break;
-		case 2: 
-			boolean valid= false;
-			while(!valid ){
-			System.out.println("Ingresa nombre o correo:");
-			nombre = sc.next();
-			validarNombre(nombre);
-			System.out.println("Ingresa contraseña:");
-			contraseña = sc.next();
-			// asegurarse de que la contraseña pertenece al usuario
-			
-		    if(valid){
-		    	System.out.println("No válido");
-		    }
-			}// while
+				// aviso de los requisitos que tiene que tener la contraseña
+				System.out.println("Tener en cuenta que: ");
+				System.out.println("Debe tener entre 8 y 20 caracteres");
+				System.out.println("Debe contener al menos un dígito");
+				System.out.println("Debe contener al menos una minúscula");
+				System.out.println("Debe contener al menos una mayúscula");
+				System.out.println("No debe contener espacios en blanco");
+				System.out.println("No debe contener caracteres especiales");
+
+
+				String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
+				boolean validPassword = false;
+				while(validPassword==false){
+					System.out.print("Ingrese una contraseña valida: ");
+					pass = sc.next();
+					if (pass.matches(regex)) {
+						validPassword = true;
+						System.out.println("Confirmar contraseña: ");
+						String contraseñaConfirmada = sc.next();
+						if (pass.matches(contraseñaConfirmada)){
+							DB db = new DB();
+							MessageDigest digest = MessageDigest.getInstance("SHA-256");
+							byte[] encodedhash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
+							String passHash= db.bytesToHex(encodedhash);
+							db.createPersona(nombreUser,correo, passHash);
+
+						}
+
+					} else {
+						System.out.println("Contraseña no válida");
+					}
+				}
+				break;
+			case 2:
+				boolean valid= false;
+				while(!valid ){
+					System.out.println("Ingresa nombre de usuario:");
+					nombreUser = sc.next();
+					System.out.println("Ingresa contraseña:");
+					pass = sc.next();
+					// asegurarse de que la contraseña pertenece al usuario
+
+					if(valid){
+						System.out.println("No válido");
+					}
+				}
 		}
 			
 		
@@ -300,7 +316,7 @@ public class Interfaz {
 		
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NoSuchAlgorithmException {
 		menu_principal();
 		
 			
