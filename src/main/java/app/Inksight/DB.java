@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class DB {
     private Libro libro;
 
-    static Libro libroError = null;
+    static private Libro libroError = null;
     static final String ruta = "src/main/java/app/Inksight/books.json";
     static final String rutaData = "src/main/data";
     static final String rutaUsers = rutaData + "/Users";
@@ -26,11 +26,9 @@ public class DB {
         this.libroError= new Libro(-1,"error","error",-1,"error","error");
     }
 
-    public static void addLibro() {
+    public static void promptAddLibro() {
 
         Scanner sc = new Scanner(System.in);
-        File file = new File(ruta);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         int id;
         System.out.print("Titulo:");
         String titulo = sc.nextLine();
@@ -47,7 +45,15 @@ public class DB {
 
         System.out.print("Codigo xx-xx:");
         String code = sc.nextLine();
+        addLibro(titulo, autores, pages, date, code);
 
+          
+
+    }
+    public static Libro addLibro(String titulo, String autores, int pages, String date, String code){
+
+        File file = new File(ruta);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         if (file.exists() && file.canRead() && file.canWrite()) {
             try {
                 // Read the JSON file into a string
@@ -58,11 +64,7 @@ public class DB {
                 // Convert the JSON string to a Java object
                 Libro[] obj = gson.fromJson(reader, Libro[].class);
                 // Print the data from the Java object
-                int contador = 0;
-                for (Libro dato : obj) {
-                    contador++;
-                }
-                id = contador;
+                int id = obj.length+1;
                 Libro libro = new Libro(id, titulo, autores, pages, date, code);
                 Libros.add(libro);
 
@@ -72,16 +74,18 @@ public class DB {
                 writer.close();
 
             } catch (IOException e) {
+                return libroError;
                 // Handle the IOException
             }
         } else {
             System.out.println("Error: Este programa no ha hecho nada");
+            return libroError;
             // Handle the case where the file does not exist or cannot be read
         }
-
+        return libroError; 
     }
 
-    public static void updateLibro() throws IOException {
+        public static void updateLibro() throws IOException {
         Scanner sc = new Scanner(System.in);
         File file = new File(ruta);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -190,6 +194,7 @@ public class DB {
 
 
     }
+
 
     public static void eliminarLibro() throws IOException {
 
@@ -379,7 +384,6 @@ public class DB {
 
         }
     }
-
     public Persona buscarUser(String userName){
         Gson gson = new Gson();
 
@@ -419,6 +423,17 @@ public class DB {
             return null;
         }
         return null;
+    }
+    public static String bytesToHex(byte[] hash) {
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if(hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
     }
 }
 

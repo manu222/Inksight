@@ -23,7 +23,7 @@ public class Funciones {
 
         switch (opcion) {
             case 1:
-                addLibro();
+                promptAddLibro();
                 break;
             case 2:
                 updateLibro();
