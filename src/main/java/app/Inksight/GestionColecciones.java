@@ -1,24 +1,24 @@
 package app.Inksight;
-import java.io.Serializable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GestionColecciones implements Serializable {
-	public static final int LIBRO_AGREGADO_CORRECTAMENTE = 0; 
-	public static final int LIBRO_YA_EXISTE = 1; 
-	public static final int COLECCION_NO_EXISTE = 2; 
-	public static final int LIBRO_ELIMINADO_CORRECTAMENTE = 3; 
-	public static final int LIBRO_NO_EXISTE = 4; 
-	public static final int COLECCION_MODIFICADA_CORRECTAMENTE = 5; 
+public class GestionColecciones {
+	public static final int LIBRO_AGREGADO_CORRECTAMENTE = 0;
+	public static final int LIBRO_YA_EXISTE = 1;
+	public static final int COLECCION_NO_EXISTE = 2;
+	public static final int LIBRO_ELIMINADO_CORRECTAMENTE = 3;
+	public static final int LIBRO_NO_EXISTE = 4;
+	public static final int COLECCION_MODIFICADA_CORRECTAMENTE = 5;
 
 	List<ColeccionLibro> listaColecciones = new ArrayList<>();
-	public static final String LISTA_NO_LEIDOS = "no leidos"; 
-	public static final String LISTA_LEIDOS = "leidos"; 
-	public static final String LISTA_LEYENDO = "leyendo"; 
+	public static final String LISTA_NO_LEIDOS = "no leidos";
+	public static final String LISTA_LEIDOS = "leidos";
+	public static final String LISTA_LEYENDO = "leyendo";
 
-	
-	
-	
+
+
+
 	public GestionColecciones() {
 		construirLista(LISTA_LEIDOS);
 		construirLista(LISTA_NO_LEIDOS);
@@ -33,8 +33,8 @@ public class GestionColecciones implements Serializable {
 		}
 		return nombres;
 	}
-	
-	
+
+
 	public void construirLista(String nombreNuevaLista) {
 		ColeccionLibro coleccion = new ColeccionLibro(nombreNuevaLista);
 		listaColecciones.add(coleccion);
@@ -49,18 +49,17 @@ public class GestionColecciones implements Serializable {
 		}
 		return null;
 	}
-	
-	public int agregarlibro(String coleccionbuscada,Libro libro) {
+
+	public int agregarlibro(String coleccionbuscada,String titulo) throws IOException {
 		ColeccionLibro coleccionactual = obtenerColeccion(coleccionbuscada);
 		if(coleccionactual == null) {
 			// no se encuentra la coleccion;
 			return GestionColecciones.COLECCION_NO_EXISTE;
-		}else {	
-			int resultado = coleccionactual.anadir(libro);
+		}else {
+			int resultado = coleccionactual.anadir(titulo);
 			return resultado;
 		}
 	}
-	
 
 //	public boolean agregarlibro() {
 //		System.out.println("Dime en que coleccion:");
@@ -68,16 +67,16 @@ public class GestionColecciones implements Serializable {
 //		System.out.println("Dime el titulo del nuevo libro:");
 //		String titulo = sc.nextLine();
 //		Libro libro = new Libro(titulo);
-//		
+//
 //		ColeccionLibro coleccionactual = obtenerColeccion(coleccionbuscada);
 //		if(coleccionactual == null) {
 //			// no se encuentra la coleccion;
 //			return false;
-//		}else {	
+//		}else {
 //			coleccionactual.anadir(libro);
 //			return true;
 //		}
-//	
+//
 //	}
 
 	public int eliminarLibro(String coleccionbuscada,String titulo) {
@@ -85,14 +84,14 @@ public class GestionColecciones implements Serializable {
 		if(coleccionactual == null) {
 			// no se encuentra la coleccion;
 			return GestionColecciones.COLECCION_NO_EXISTE;
-		}else {	
+		}else {
 			int resultado = coleccionactual.eliminar(titulo);
 			return resultado;
 		}
 
 	}
 
-	
+
 //	public void eliminarLibro() {
 //		System.out.println("introduzca la lista de la que desea eliminar el libro");
 //		String coleccionSeleccionada = sc.nextLine();
@@ -108,11 +107,11 @@ public class GestionColecciones implements Serializable {
 //		}
 //
 //	}
-	
-	
+
+
 
 	public void eliminarLista(String nombreColeccionEliminar) {
-		//meter condiciones en caso de que no exista la lista 
+		//meter condiciones en caso de que no exista la lista
 		ColeccionLibro coleccionActual = obtenerColeccion(nombreColeccionEliminar);
 		listaColecciones.remove(coleccionActual);
 	}
@@ -124,32 +123,32 @@ public class GestionColecciones implements Serializable {
 		if(coleccionactual == null) {
 			// no se encuentra la coleccion;
 			return GestionColecciones.COLECCION_NO_EXISTE;
-		}else {	
+		}else {
 			coleccionactual.setNombreColeccion(nuevonombre);
 			return GestionColecciones.COLECCION_MODIFICADA_CORRECTAMENTE;
 		}
 	}
 
-	public int moverLibroDeColeccion(String nombreColeccionOrigen, String nombreColeccionNueva, String titulo) {
+	public int moverLibroDeColeccion(String nombreColeccionOrigen, String nombreColeccionNueva, String titulo) throws IOException {
 		ColeccionLibro coleccionOrigen = obtenerColeccion(nombreColeccionOrigen);
 		ColeccionLibro coleccionNueva = obtenerColeccion(nombreColeccionNueva);
 		if(coleccionOrigen == null || coleccionNueva == null) {
 			// no se encuentra la coleccion;
 			return GestionColecciones.COLECCION_NO_EXISTE;
-		}else {	
+		}else {
 			int respuesta = coleccionOrigen.mover(coleccionNueva, titulo);
 			return respuesta;
 		}
 	}
-	
+
 }
 /*
  * se encarga del manejo de las listas: construye las listas
- * 
+ *
  * se encarga de al agregar ver si la coleccion existe o no con eliminar lo
  * mismo
- * 
+ *
  * elimina las listas
- * 
+ *
  * cambia el nombre de la lista
  */
