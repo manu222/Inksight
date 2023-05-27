@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class DB {
     private Libro libro;
 
-    final private Libro libroError;
+    static private Libro libroError = null;
     static final String ruta = "src/main/java/app/Inksight/books.json";
     static final String rutaData = "src/main/data";
     static final String rutaUsers = rutaData + "/Users";
@@ -90,93 +90,105 @@ public class DB {
         int id = sc.nextInt();
 
         if (file.exists() && file.canRead() && file.canWrite()) {
-            Reader reader = Files.newBufferedReader(Paths.get(ruta));
             try {
                 Type listType = new TypeToken<List<Libro>>() {}.getType();
                 List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
-
-                System.out.println("Que quieres editar");
+                boolean seguir = true;
+                while (seguir) {
+                System.out.println("¿Qué quieres editar?");
                 System.out.println("1) ID");
-                System.out.println("2) Titulo");
+                System.out.println("2) Título");
                 System.out.println("3) Autores");
-                System.out.println("4) Pages");
-                System.out.println("5) Date");
-                System.out.println("6) Lang code");
+                System.out.println("4) Páginas");
+                System.out.println("5) Fecha");
+                System.out.println("6) Código de idioma");
+                System.out.println("OTRO) SALIR");
                 int opcion = sc.nextInt();
 
-                switch (opcion) {
-                    case 1:
-                        System.out.println("introduce nueva ID:");
-                        int newId = sc.nextInt();
-                        for (Libro libro : libros) {
-                            if (libro.getbookID()==id){
-                                libro.setID(newId);
-                                break;
-                            }
-                        }
-                        break;
-                    case 2:
-                        System.out.println("introduce nuevo titulo:");
-                        String newTitle = sc.nextLine();
-                        for (Libro libro : libros) {
-                            if (libro.getbookID()==id){
-                                libro.setTitle(newTitle);
-                                break;
-                            }
-                        }
-                        break;
-                    case 3:
-                        System.out.println("introduce autor/es:");
-                        String newAuthors = sc.nextLine();
-                        for (Libro libro : libros) {
-                            if (libro.getbookID()==id){
-                                libro.setAuthors(newAuthors);
-                                break;
-                            }
-                        }
-                    case 4:
-                        System.out.println("introduce paginas del libro:");
-                        int newPages = sc.nextInt();
-                        for (Libro libro : libros) {
-                            if (libro.getbookID()==id){
-                                libro.setNumPages(newPages);
-                                break;
-                            }
-                        }
-                    case 5:
-                        System.out.println("introduce fecha de publicación:");
-                        String newFecha = sc.nextLine();
-                        for (Libro libro : libros) {
-                            if (libro.getbookID()==id){
-                                libro.setPublication_date(newFecha);
-                                break;
-                            }
-                        }
-                    case 6:
-                        System.out.println("introduce codigo de idioma Xx-Xx:");
-                        String newCode = sc.nextLine();
-                        for (Libro libro : libros) {
-                            if (libro.getbookID()==id){
-                                libro.setLanguageCode(newCode);
-                                break;
-                            }
-                        }
+                    switch (opcion) {
+                        case 1:
+                            System.out.println("Introduce nueva ID:");
+                            int newId = sc.nextInt();
+                            for (Libro libro : libros) {
+                                if (libro.getbookID() == id) {
+                                    libro.setID(newId);
+                                    break;
+                                }
+                           }
 
-                    default:
-                        break;
+                            break;
+                        case 2:
+                            System.out.println("Introduce nuevo título:");
+                            sc.nextLine();
+                            String newTitle = sc.nextLine();
+                            for (Libro libro : libros) {
+                                if (libro.getbookID() == id) {
+                                    libro.setTitle(newTitle);
+                                    break;
+                                }
+                            }
+                            break;
+                        case 3:
+                            System.out.println("Introduce autor/es:");
+                            sc.nextLine();
+                            String newAuthors = sc.nextLine();
+                            for (Libro libro : libros) {
+                                if (libro.getbookID() == id) {
+                                    libro.setAuthors(newAuthors);
+                                    break;
+                                }
+                            }
+                            break;
+                        case 4:
+                            System.out.println("Introduce páginas del libro:");
+                            int newPages = sc.nextInt();
+                            for (Libro libro : libros) {
+                                if (libro.getbookID() == id) {
+                                    libro.setNumPages(newPages);
+                                    break;
+                                }
+                            }
+                            break;
+                        case 5:
+                            System.out.println("Introduce fecha de publicación:");
+                            sc.nextLine();
+                            String newFecha = sc.nextLine();
+                            for (Libro libro : libros) {
+                                if (libro.getbookID() == id) {
+                                    libro.setPublication_date(newFecha);
+                                    break;
+                                }
+                            }
+                            break;
+                        case 6:
+                            System.out.println("Introduce código de idioma (XX-XX):");
+                            sc.nextLine();
+                            String newCode = sc.nextLine();
+                            for (Libro libro : libros) {
+                                if (libro.getbookID() == id) {
+                                    libro.setLanguageCode(newCode);
+                                    break;
+                                }
+                            }
+                            break;
+                        default:
+                            seguir=false;
+                            break;
+                    }
+
+                    FileWriter writer = new FileWriter(ruta);
+                    gson.toJson(libros, writer);
+                    writer.close();
                 }
-
-                FileWriter writer = new FileWriter(ruta);
-                gson.toJson(libros, writer);
-                writer.close();
-
             } catch (IOException e) {
                 // Handle the IOException
             }
-
         } else {
-            System.out.println("Error: Este programa no ha hecho nada");
+            System.out.println("Error: No se pudo leer/escribir en el archivo.");
         }
+
+
+
     }
 
     public static void eliminarLibro() throws IOException {
@@ -231,6 +243,21 @@ public class DB {
         }
         return this.libroError;
     }
+    /*public static Libro buscarLibroPorId(List<Libro> libros,int id) throws IOException {
+        Gson gson = new Gson();
+
+        Type listType = new TypeToken<List<Libro>>() {}.getType();
+        List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
+
+        System.out.println("Resultados de la búsqueda para '" + id + "':");
+        for (Libro libro : libros) {
+            // convertimos el título del libro a minúsculas para hacer la comparación
+            if (libro.getbookID()==id) {
+                return libro;
+            }
+        }
+        return libroError;
+    }*/
     public List<Libro> buscarLibros(String query) throws IOException {
         Gson gson = new Gson();
         query = query.toLowerCase(); // convertimos la consulta a minúsculas
@@ -248,7 +275,8 @@ public class DB {
         return queryReturn;
     }
     public Libro buscarUnLibro(String query) throws IOException {
-        return buscarLibros(query).get(0);
+        List<Libro> res = buscarLibros(query);
+        return (res.equals(null)||res.size()==0)?null:res.get(0);
     }
     public static void leerLibros() throws IOException {
         Gson gson = new Gson();

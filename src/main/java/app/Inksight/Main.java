@@ -18,8 +18,8 @@ public class Main {
         //Gson gson = new Gson();
         //Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
         //JsonParser parser = new JsonParser();
-        db.createPersona();
-        //menuDBLibro();
+
+        menuDBLibro();
 
 
 
