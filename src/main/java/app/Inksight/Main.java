@@ -10,16 +10,10 @@ import java.util.*;
 
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
         Scanner teclado = new Scanner(System.in);
-        PruebaClase Fea = new PruebaClase();
-        PruebaClase Jose = new PruebaClase();
-        Fea.nombre = "Paula";
-        Jose.nombre = "Jose";
-        Fea.listaAmigos = new HashSet<PruebaClase>();
-        Fea.anyadirAmigo(teclado, Jose);
-        Fea.anyadirAmigo(teclado, Jose);
+       Review.hacerReview(teclado);
 
 
     }

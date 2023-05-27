@@ -5,8 +5,8 @@ import java.util.*;
 
 public class Usuario extends Persona {
     
-    HashSet<Usuario> listaAmigos;
-
+    HashSet<String> listaAmigos;
+    String username;
     List<Review> listaReviews;
     Set<Libro> listaRecomendados;
     private List <Challenge> desafios;
@@ -59,29 +59,30 @@ public class Usuario extends Persona {
     
     
     //<recomendaciones>
-    public void makeRecomendacion (){//Recibes como recomendacion la mejor review de un amigo al azar
+    public void makeRecomendacion (Usuario usuario){//Recibes como string como recomendacion la mejor review de un amigo al azar
         Random rand = new Random();
-        HashSet<Usuario> listaAmigos = getListaAmigos();
+        HashSet<String> listaAmigos = usuario.getListaAmigos();
         
-        int numeroAmigo = rand.nextInt(getListaAmigos().size() + 1);
-        
-        Iterator<Usuario> it = listaAmigos.iterator();
-        
+        int numeroAmigo = rand.nextInt(usuario.getListaAmigos().size() + 1);
+        DB db = new DB();
+        Iterator<String> it = listaAmigos.iterator();
+        String actual = "";
         if (listaAmigos.size() != 0) {
             int contador = 0;
             while (it.hasNext() && contador < numeroAmigo) {
-                Persona actual = it.next();
+                actual = it.next();
                 contador++;
             }
-            
-            Review recomendado = sortByPuntuacion(getListaReviews());
-            listaRecomendados.add(recomendado.getLibro());
+
+            Usuario  usuario2 = (Usuario)db.buscarUser(actual);
+            Review recomendado = sortByPuntuacion(usuario2.getListaReviews());
+
+            usuario.listaRecomendados.add(recomendado.getLibro());
+
             System.out.println("Esta es una review recomendada por tu amigo");
             System.out.println("Titulo:" + recomendado.getLibro().getTitle());
             System.out.println("Review:" + recomendado.getDescripcion());
             System.out.println("Puntuacion:" + recomendado.getPuntuacion());
-            
-            
         } else {
             System.out.println("El usuario no tiene amigos, por lo que no recibe recomendaciones");
             
@@ -90,13 +91,13 @@ public class Usuario extends Persona {
         //</recomendaciones>
         
         //<amigos>
-        public void addAmigo(Scanner teclado) {//añade amigo a lista de amigos
-            System.out.println("Introduce nombre del amigo que quieres buscar(username)");
-            String nombre = teclado.next();
+        public void addAmigo(String nombre, Usuario usuarioActual) {//añade amigo a lista de amigos
+
             DB db = new DB();
             Persona user =  db.buscarUser(nombre);
+            HashSet<String> listaAmigo = new HashSet<String>();
             if(user  != null){
-                listaAmigos.add((Usuario) user);
+                usuarioActual.listaAmigos.add( user.getFirst_name());
                 System.out.println("Amigo añadido de manera correcta");
             }
             else{
@@ -127,7 +128,7 @@ public class Usuario extends Persona {
         }
         
         
-        public HashSet<Usuario> getListaAmigos() {
+        public HashSet<String> getListaAmigos() {
             if (listaAmigos.size() <= 0) {
                 System.out.println("No hay amigos");
                 return null;
@@ -145,16 +146,16 @@ public class Usuario extends Persona {
         
         //<reviews>
         public List<Review> getListaReviews(){return listaReviews;}
-        public Usuario buscarAmigo(Scanner teclado) {//pide string de lo que buscas
-            System.out.println("Que amigo quieres buscar?(Primer nombre)");
-            String usuario = teclado.next();
-            Usuario actual = new Usuario("Error","Error","Error");
-            Iterator<Usuario> it = getListaAmigos().iterator();
+
+        public String buscarAmigo(String amigo, Usuario usuario) {//pide string de lo que buscas
+
+            String actual = "";
+            Iterator<String> it = usuario.getListaAmigos().iterator();
             
             if (getnAmigos() != 0) {
                 int contador = 0;
-                while (it.hasNext() && contador < this.getnAmigos()) {
-                    if(it.next().getFirst_name() == usuario){
+                while (it.hasNext() && contador < usuario.getnAmigos()) {
+                    if(it.next() == amigo){
                         actual = it.next();
                     }
                 }
