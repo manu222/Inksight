@@ -1,4 +1,5 @@
 package app.Inksight;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,28 +16,55 @@ public class ColeccionLibro {
 		listaLibros = new ArrayList<>();
 	}
 
-	public int anadir(Libro libroQueAñado) {
-		boolean bandera = false;
+	public int anadir(String titulo) throws IOException {
+
+		Date hoy = Calendar.getInstance().getTime();
+		boolean yaexistiaellibro = false;
+		
+		// el metodo de la bbdd debe buscar un libro por su titulo
+		// si lo encuentra, me devuelve el OBJETO LIBRO que ha encontrado
+		// si no lo encuentra, me devuelve null
+		DB db = new DB();
+		Libro librofinal;
+		
+		librofinal = db.buscarUnLibro(titulo);
+
+
+		
+		if(librofinal==null) {
+			return GestionColecciones.LIBRO_NO_EXISTE;
+		}
+		
+		LibroAmpliado libroampliadofinal = new LibroAmpliado(librofinal, hoy);
+		
 		for (int i = 0; i < listaLibros.size(); i++) {
 			LibroAmpliado libroactual = listaLibros.get(i);
-			if (libroactual.getTitle().equals(libroQueAñado.getTitle())) {
-				bandera = true;
+		     if (libroactual.getbookID() == libroampliadofinal.getbookID()) {
+		//	if (libroactual..getTitulo().equals(libroQueAñado.getTitulo())) {
+				yaexistiaellibro = true;
 			}
 		}
 
-		if (bandera == false) {
-			Date hoy = Calendar.getInstance().getTime();
-			LibroAmpliado la = new LibroAmpliado(libroQueAñado, hoy);
-			listaLibros.add(la);
+		if (yaexistiaellibro == false) {
+			listaLibros.add(libroampliadofinal);
 			return GestionColecciones.LIBRO_AGREGADO_CORRECTAMENTE;
 		} else {
 			// avisar que ya existe el titulo
 			return GestionColecciones.LIBRO_YA_EXISTE;
 		}
+		
 
 	}
 
-	
+	public List<LibroAmpliado> consultarLibrosEnLista(){
+		List<LibroAmpliado> librosEnLista = new ArrayList<>();
+		for(int i = 0; i < librosEnLista.size();i++) {
+			LibroAmpliado visibilizar = librosEnLista.get(i);
+			librosEnLista.add(visibilizar);
+		}
+		return librosEnLista;
+		
+	}	
 	
 	
 	public int eliminar(String tituloAEliminar) {
@@ -61,12 +89,17 @@ public class ColeccionLibro {
 		for (int i = 0; i < listaLibros.size(); i++) {
 			LibroAmpliado libroactual = listaLibros.get(i);
 			if (libroactual.getTitle().equals(titulo)) {
-				int respuesta = coleccionNueva.anadir(libroactual);
-				if (respuesta == GestionColecciones.LIBRO_YA_EXISTE) {
-					return GestionColecciones.LIBRO_YA_EXISTE;
-				} else {
-					listaLibros.remove(libroactual);
-					return GestionColecciones.COLECCION_MODIFICADA_CORRECTAMENTE;
+				try{
+					int respuesta = coleccionNueva.anadir(libroactual.getTitle());
+					if (respuesta == GestionColecciones.LIBRO_YA_EXISTE) {
+						return GestionColecciones.LIBRO_YA_EXISTE;
+					} else {
+						listaLibros.remove(libroactual);
+						return GestionColecciones.COLECCION_MODIFICADA_CORRECTAMENTE;
+					}
+				}
+				catch(IOException e){
+					e.printStackTrace();
 				}
 			}
 		}
