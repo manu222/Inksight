@@ -313,7 +313,7 @@ public class DB {
         }
         else return (Usuario)p;
     }
-    public void createPersona(String userName,String correo, String pass) {
+    public Persona createPersona(String userName,String correo, String pass) {
 
         Scanner sc = new Scanner(System.in);
 
@@ -379,8 +379,9 @@ public class DB {
             } catch (IOException e) {
                 System.out.println("Error al crear el archivo del usuario");
             }
-
+            return newUser;
         }
+        return null;
     }
     public static Usuario buscarUser(String userName){
         Gson gson = new Gson();

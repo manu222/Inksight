@@ -8,8 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-import static app.Inksight.DB.leerArchivo;
-
 public class Usuario extends Persona {
     HashSet<Usuario> listaAmigos;
     List<Review> listaReviews;
@@ -17,30 +15,34 @@ public class Usuario extends Persona {
     private List<Challenge> desafios;
     Stats stats;
     private Date lastChallenge;
-private Date lastLogin;
+    private Date lastLogin;
     public GestionColecciones gestionColecciones;
 
-    public Usuario(String nombreUser,String correo,String pass ,String first_name, String last_name, String location,HashSet<Usuario> listaAmigos){
-        super(nombreUser,correo,pass, first_name,last_name,location);
+    public Usuario(String nombreUser, String correo, String pass, String first_name, String last_name, String location,
+            HashSet<Usuario> listaAmigos) {
+        super(nombreUser, correo, pass, first_name, last_name, location);
         this.desafios = new LinkedList<>();
-        this.listaAmigos=new HashSet<>();
+        this.listaAmigos = new HashSet<>();
         this.stats = new Stats();
-        gestionColecciones=new GestionColecciones();
+        gestionColecciones = new GestionColecciones();
         lastChallenge = new Date(System.currentTimeMillis());
         listaRecomendados = new HashSet<>();
         authLevel = "user";
     }
-    public Usuario(String nombreUser,String correo,String pass ,String first_name, String last_name, String location, boolean online, int followers,Stats stats,HashSet<Usuario> listaAmigos,List<Challenge> desafios){
-        super(nombreUser,correo,pass,first_name,last_name,location,online,followers,stats);
-        this.desafios =desafios;
-        this.listaAmigos=new HashSet<>();
+
+    public Usuario(String nombreUser, String correo, String pass, String first_name, String last_name, String location,
+            boolean online, int followers, Stats stats, HashSet<Usuario> listaAmigos, List<Challenge> desafios) {
+        super(nombreUser, correo, pass, first_name, last_name, location, online, followers, stats);
+        this.desafios = desafios;
+        this.listaAmigos = new HashSet<>();
         this.stats = stats;
-        gestionColecciones=new GestionColecciones();
+        gestionColecciones = new GestionColecciones();
         lastChallenge = new Date(System.currentTimeMillis());
         listaRecomendados = new HashSet<>();
         authLevel = "user";
     }
-    public void serializeToJson(){
+
+    public void serializeToJson() {
         // Comprobar si la carpeta data existe, si no existe, crearla
         File dataDir = new File(DB.rutaData);
         if (!dataDir.exists()) {
@@ -57,8 +59,8 @@ private Date lastLogin;
             File userJson = new File(userDir, this.getNombreUser() + "Data.json");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             try {
-                FileWriter fw = new FileWriter(userJson,false);
-                gson.toJson(this,fw);
+                FileWriter fw = new FileWriter(userJson, false);
+                gson.toJson(this, fw);
                 System.out.println(userJson);
                 fw.close();
             } catch (IOException e) {
@@ -66,24 +68,34 @@ private Date lastLogin;
             }
         }
     }
+
     public Stats getStats() {
         return this.stats;
     }
-    public Date getLastLogin(){
+
+    public Date getLastLogin() {
         return lastLogin;
     }
-    public void setLastLogin(Date lastLogin){
+
+    public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
     }
+
     // <desafios>
     public Challenge makeChallenge(String title, String description, int target, String type, float reward) {
-        Challenge challenge = new Challenge("" + (desafios.size() + 1), title, description, target, type, reward,false,0);
+        Challenge challenge = new Challenge("" + (desafios.size() + 1), title, description, target, type, reward, false,
+                0);
         this.desafios.add(challenge);
+        setLastChallenge(new Date(System.currentTimeMillis()));
         return challenge;
     }
-    public Challenge makeChallenge(String title, String description, int target, String type, float reward,boolean timeSensitive,int timeLimit) {
-        Challenge challenge = new Challenge("" + (desafios.size() + 1), title, description, target, type, reward,timeSensitive,timeLimit);
+
+    public Challenge makeChallenge(String title, String description, int target, String type, float reward,
+            boolean timeSensitive, int timeLimit) {
+        Challenge challenge = new Challenge("" + (desafios.size() + 1), title, description, target, type, reward,
+                timeSensitive, timeLimit);
         this.desafios.add(challenge);
+        setLastChallenge(new Date(System.currentTimeMillis()));
         return challenge;
     }
 
@@ -106,6 +118,9 @@ private Date lastLogin;
 
     public Date getLastChallenge() {
         return lastChallenge;
+    }
+     public void setLastChallenge(Date now) {
+        this.lastChallenge = now;
     }
     // </desafios>
 
@@ -162,7 +177,6 @@ private Date lastLogin;
 
     public HashSet<Usuario> getListaAmigos() {
         if (listaAmigos.size() <= 0) {
-            System.out.println("No hay amigos");
             return null;
         }
         return listaAmigos;
@@ -183,14 +197,14 @@ private Date lastLogin;
     }
 
     public Usuario buscarAmigo(Usuario usuario) {
-       // Usuario actual = new Usuario("Error", "Error", "Error","","","",);
+        // Usuario actual = new Usuario("Error", "Error", "Error","","","",);
         Iterator<Usuario> it = usuario.getListaAmigos().iterator();
 
         if (usuario.getnAmigos() != 0) {
             int contador = 0;
             while (it.hasNext() && contador < usuario.getnAmigos()) {
                 if (it.next() == usuario) {
-                //    actual = it.next();
+                    // actual = it.next();
                 }
             }
         }
@@ -208,12 +222,17 @@ private Date lastLogin;
         // 1. actualizar stats
         stats.addBook(libro);
         // 2. mover a la lista de libros leídos y eliminar de la lista de leyendo
-        // parte de paula :smile:
+        try{
+            gestionColecciones.moverLibroDeColeccion("leyendo", "leidos", libro.getTitle());
+        }catch(Exception e){
+            System.out.println("No se ha podido marcar el libro como leído. Intentelo de nuevo más tarde");
+        }
         // 3.actualizar desafíos
         int completedCount = 0;
         for (Challenge challenge : desafios) {
             switch (challenge.getType()) {
                 case "paginas":
+                    //si el progreso añadido completa el desafío, devuelve true y suma 1 al contador
                     completedCount += challenge.addProgress(libro.getNumPages()) ? 1 : 0;
                     break;
                 case "libros":
@@ -228,9 +247,12 @@ private Date lastLogin;
                     // se pueden añadir más tipos
             }
         }
+        //valor máximo de 3
         return completedCount;
     }
+
     // </libros>
+   
 
     // hazerlo de un amigo al azar/uno que yo escsoga
     // amigo al azar

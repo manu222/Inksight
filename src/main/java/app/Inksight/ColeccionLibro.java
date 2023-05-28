@@ -18,7 +18,7 @@ public class ColeccionLibro {
 
 	public int anadir(String titulo) throws IOException {
 
-		Date hoy = Calendar.getInstance().getTime();
+		Date hoy = new Date(System.currentTimeMillis());
 		boolean yaexistiaellibro = false;
 		
 		// el metodo de la bbdd debe buscar un libro por su titulo
@@ -56,11 +56,10 @@ public class ColeccionLibro {
 
 	}
 
-	public List<LibroAmpliado> consultarLibrosEnLista(){
-		List<LibroAmpliado> librosEnLista = new ArrayList<>();
+	public List<Libro> consultarLibrosEnLista(){
+		List<Libro> librosEnLista = new ArrayList<>(listaLibros.size());
 		for(int i = 0; i < librosEnLista.size();i++) {
-			LibroAmpliado visibilizar = librosEnLista.get(i);
-			librosEnLista.add(visibilizar);
+			librosEnLista.add((Libro)listaLibros.get(i));
 		}
 		return librosEnLista;
 		
