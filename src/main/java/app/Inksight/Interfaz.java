@@ -4,10 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Interfaz {
 	static Scanner sc = new Scanner(System.in);
@@ -18,11 +15,11 @@ public class Interfaz {
 	GestionColecciones listas = new GestionColecciones();
 	static Stats stats = new Stats();
 	int timeout = 2000;
-	static HashSet<Usuario> listaAmigos = new HashSet<>();
 	// Libro libro = new Libro(0,"","",0,"","");
 	// Libro libro = new Libro(libro);
-	static Persona personaActual = new Usuario("","", "", "","","",false,0,stats,listaAmigos);
-	static Usuario usuarioActual = (Usuario) personaActual;
+
+	static Persona personaActual = new Usuario("","", "", "","","",false,0,stats,new HashSet<>(),new LinkedList<>());
+	private static Usuario usuarioActual = (Usuario) personaActual;
 	DB db = new DB();
 	String permiso;
 
@@ -86,7 +83,7 @@ public class Interfaz {
 					nombreUser = sc.next();
 					System.out.println("Ingresa contraseña:");
 					String passLogin = sc.next();
-					usuarioActual = (Usuario) DB.buscarUser(nombreUser);
+					usuarioActual =  DB.buscarUser(nombreUser);
 					// asegurarse de que la contraseña pertenece al usuario
 
 					MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -96,7 +93,11 @@ public class Interfaz {
 					if (usuarioActual.getPass().equals(passHash)){
 						System.out.println("Sesión Iniciada");
 						usuarioActual.setOnline(true);
-						//(Usuario)usuarioActual.makeChallenge("Leer 5 libros", "Leer 5 libros en una semana", 5, "libros", 100);
+						//usuarioActual.makeChallenge("Leer 5 libros", "Leer 5 libros en una semana", 5, "libros", 100);
+						//usuarioActual.getDesafios().get(0).setProgress(1);
+						usuarioActual.serializeToJson();
+						System.out.println(usuarioActual.getDesafios().get(0).getProgress());
+					menu_Estadisticas();
 					}
 					valid=true;
 				}
@@ -187,11 +188,11 @@ public class Interfaz {
 	}
 
 	private static void menu_Estadisticas() {
-		System.out.println("Nivel: "+Usuario.getStats(usuarioActual).getLevel());
-		System.out.println("XP: "+Usuario.getStats(usuarioActual).getXp());
-		System.out.println("Xp para siguiente nivel: "+Usuario.getStats(usuarioActual).getXpToNextLevel());
-		System.out.println("Libros leidos: "+Usuario.getStats(usuarioActual).getNumBooks());
-		System.out.println("Pgs leidas: "+Usuario.getStats(usuarioActual).getNumPages());
+		System.out.println("Nivel: "+usuarioActual.getStats().getLevel());
+		System.out.println("XP: "+usuarioActual.getStats().getXp());
+		System.out.println("Xp para siguiente nivel: "+usuarioActual.getStats().getXpToNextLevel());
+		System.out.println("Libros leidos: "+usuarioActual.getStats().getNumBooks());
+		System.out.println("Pgs leidas: "+usuarioActual.getStats().getNumPages());
 	}
 
 	private void menuRetos() {
@@ -667,7 +668,9 @@ public class Interfaz {
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		Interfaz interfaz = new Interfaz();
+
 		interfaz.menu_principal();
+		//interfaz.menu_Estadisticas();
 
 	}
 

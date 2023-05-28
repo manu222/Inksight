@@ -8,10 +8,7 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class DB {
     private Libro libro;
@@ -358,7 +355,8 @@ public class DB {
 
             Stats Stats=new Stats();
             HashSet<Usuario> listaAmigos= new HashSet<>();
-            Persona newUser = new Usuario(userName,correo,pass,fn,ln,ciudad,false,0,Stats,listaAmigos);
+            List<Challenge> desafios = new LinkedList<>();
+            Persona newUser = new Usuario(userName,correo,pass,fn,ln,ciudad,false,0,Stats,listaAmigos,desafios);
 
             try {
                 userJson.createNewFile();
@@ -384,7 +382,7 @@ public class DB {
 
         }
     }
-    public static Persona buscarUser(String userName){
+    public static Usuario buscarUser(String userName){
         Gson gson = new Gson();
 
         // Comprobar si la carpeta data existe, si no existe, crearla
@@ -412,8 +410,11 @@ public class DB {
                     // System.out.println(contenidoUser);
                     // Comprobar si el usuario ya existe
 
-                    Persona user = gson.fromJson(contenidoUser, Persona.class);
+                    Usuario user = gson.fromJson(contenidoUser, Usuario.class);
                     System.out.println(user.getFirst_name());
+                   // Usuario userConvert= (Usuario)user;
+                    //test
+                    // System.out.println(userConvert.getDesafios().get(0).getProgress());
                     return user;
 
                 } catch (IOException e) {

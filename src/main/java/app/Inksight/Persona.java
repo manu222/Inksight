@@ -1,6 +1,6 @@
 package app.Inksight;
 
-abstract class Persona {
+public class Persona {
     private String nombreUser;
     private String correo;
     private String pass;
@@ -28,7 +28,6 @@ abstract class Persona {
     }
 
     public Persona(String nombreUser,String correo,String pass,String first_name, String last_name, String location) {
-        this.first_name = first_name;
         this.nombreUser = nombreUser;
         this.correo = correo;
         this.first_name = first_name;
@@ -42,6 +41,13 @@ abstract class Persona {
 
     public String getFirst_name() {
         return first_name;
+    }
+    public String getPass() {
+        return pass;
+    }
+
+    public String getNombreUser() {
+        return nombreUser;
     }
 
     public void setFirst_name(String first_name) {

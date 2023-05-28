@@ -1,17 +1,21 @@
 package app.Inksight;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
-public class Usuario extends Persona {
+import static app.Inksight.DB.leerArchivo;
 
+public class Usuario extends Persona {
     HashSet<Usuario> listaAmigos;
-     private String nombreUser;
-    private String correo;
-    private String pass;
     List<Review> listaReviews;
     Set<Libro> listaRecomendados;
     private List<Challenge> desafios;
-    private static Stats stats;
+    Stats stats;
     private Date lastChallenge;
 private Date lastLogin;
     public GestionColecciones gestionColecciones;
@@ -26,9 +30,9 @@ private Date lastLogin;
         listaRecomendados = new HashSet<>();
         authLevel = "user";
     }
-    public Usuario(String nombreUser,String correo,String pass ,String first_name, String last_name, String location, boolean online, int followers,Stats stats,HashSet<Usuario> listaAmigos){
+    public Usuario(String nombreUser,String correo,String pass ,String first_name, String last_name, String location, boolean online, int followers,Stats stats,HashSet<Usuario> listaAmigos,List<Challenge> desafios){
         super(nombreUser,correo,pass,first_name,last_name,location,online,followers,stats);
-        this.desafios = new LinkedList<>();
+        this.desafios =desafios;
         this.listaAmigos=new HashSet<>();
         this.stats = stats;
         gestionColecciones=new GestionColecciones();
@@ -36,12 +40,34 @@ private Date lastLogin;
         listaRecomendados = new HashSet<>();
         authLevel = "user";
     }
+    public void serializeToJson(){
+        // Comprobar si la carpeta data existe, si no existe, crearla
+        File dataDir = new File(DB.rutaData);
+        if (!dataDir.exists()) {
+            dataDir.mkdir();
+        }
 
-    public String getPass() {
-        return pass;
+        // Comprobar si la carpeta Users existe, si no existe, crearla
+        File usersDir = new File(DB.rutaUsers);
+        if (!usersDir.exists()) {
+            usersDir.mkdir();
+        }
+        File userDir = new File(DB.rutaUsers + "/" + this.getNombreUser());
+        if (userDir.exists()) {
+            File userJson = new File(userDir, this.getNombreUser() + "Data.json");
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            try {
+                FileWriter fw = new FileWriter(userJson,false);
+                gson.toJson(this,fw);
+                System.out.println(userJson);
+                fw.close();
+            } catch (IOException e) {
+                System.out.println("Error al crear el archivo del usuario");
+            }
+        }
     }
-    public static Stats getStats(Persona u) {
-        return stats;
+    public Stats getStats() {
+        return this.stats;
     }
     public Date getLastLogin(){
         return lastLogin;
