@@ -6,9 +6,9 @@ import java.util.Scanner;
 public class Review {
         Libro libro;
         String descripcion;
-        int puntuacion;
+        float puntuacion;
 
-        Review(Libro libro, String descripcion, int puntuacion) {
+        Review(Libro libro, String descripcion, float puntuacion) {
             this.libro = libro;
             this.descripcion = descripcion;
             this.puntuacion = puntuacion;
@@ -22,8 +22,21 @@ public class Review {
             String autor = sc.nextLine();
             System.out.println("Escribe tu review del libro:");
             String texto = sc.nextLine();
-            System.out.println("Escribe tu puntuacion de 1-5:");
-            int puntos = sc.nextInt();
+            float puntos = -1.0f;
+            System.out.println("Escribe tu puntuacion de 0-5:");
+            if (sc.hasNextFloat()) {
+                puntos = sc.nextFloat();
+            }
+            else{
+                System.out.println("Formato de puntuacion incorrecto");
+                return null;
+            }
+
+            if(puntos > 5 && puntos < 0){
+                System.out.print("Puntuacion fuera del rango 0-5:");
+                return null;
+            }
+
             DB db = new DB();
             Review review = new Review (null, null, -1);
 
@@ -31,20 +44,20 @@ public class Review {
                 Libro libro = db.buscarLibro(titulo);
 
                 review = new Review(libro,texto,puntos);
+                System.out.println("Review hecha de manera correcta.");
                 return(review);
 
             }
             else{
                 System.out.println("Libro no encontrado");
+                return null;
             }
-
-            return review;
         }
 
         public String toString() {
             return  "\ntitle=" + libro.title +
-                "authors=" + libro.authors + "\n" +
-                "descripcion=" + descripcion + "\n" +
+                //"authors=" + libro.authors + "\n" +
+                //"descripcion=" + descripcion + "\n" +
                 "puntuacion=" + puntuacion + "\n" ;
         }
 
@@ -65,7 +78,7 @@ public class Review {
             return libro;
         }
 
-        public int getPuntuacion() {
+        public float getPuntuacion() {
             return puntuacion;
         }
 

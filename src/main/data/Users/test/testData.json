@@ -1,0 +1,83 @@
+{
+  "listaAmigos": [],
+  "listaRecomendados": [],
+  "desafios": [
+    {
+      "challengeID": "1",
+      "title": "Leer 5 libros",
+      "description": "Leer 5 libros",
+      "type": "libros",
+      "target": 5,
+      "progress": 0,
+      "reward": 100.0,
+      "completed": false,
+      "timeSensitive": false,
+      "timeLimit": 0,
+      "timeRemaining": 267441
+    },
+    {
+      "challengeID": "2",
+      "title": "Leer 5 libros",
+      "description": "Leer 5 libros",
+      "type": "libros",
+      "target": 5,
+      "progress": 0,
+      "reward": 100.0,
+      "completed": false,
+      "timeSensitive": false,
+      "timeLimit": 0,
+      "timeRemaining": 52417
+    },
+    {
+      "challengeID": "3",
+      "title": "Leer 5 libros",
+      "description": "Leer 5 libros",
+      "type": "libros",
+      "target": 5,
+      "progress": 0,
+      "reward": 100.0,
+      "completed": false,
+      "timeSensitive": false,
+      "timeLimit": 0,
+      "timeRemaining": 0
+    }
+  ],
+  "stats": {
+    "numBooks": 0,
+    "numPages": 0,
+    "level": 0,
+    "xp": 0.0,
+    "xpToNextLevel": 1000.0,
+    "quiereLeerHistorico": 0,
+    "tasaFinalizacion": 0.0
+  },
+  "lastChallenge": "May 28, 2023, 4:12:59 PM",
+  "lastLogin": "May 28, 2023, 4:12:59 PM",
+  "gestionColecciones": {
+    "listaColecciones": [
+      {
+        "nombreColeccion": "leidos",
+        "listaLibros": []
+      },
+      {
+        "nombreColeccion": "no leidos",
+        "listaLibros": []
+      },
+      {
+        "nombreColeccion": "leyendo",
+        "listaLibros": []
+      }
+    ]
+  },
+  "nombreUser": "test",
+  "correo": "test",
+  "pass": "c09e5870616af035fcfd28dd4ad76ee5387bdc462d4c777e72e93f64ce66e99f",
+  "first_name": "Manu",
+  "last_name": "manu",
+  "location": "madrid",
+  "online": true,
+  "followers": 0,
+  "authLevel": "user",
+  "isBanned": false,
+  "daysUntilUnban": 0
+}

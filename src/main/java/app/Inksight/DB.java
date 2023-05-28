@@ -8,6 +8,11 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Scanner;
+import java.util.LinkedList;
 import java.util.*;
 
 public class DB {
@@ -48,6 +53,9 @@ public class DB {
           
 
     }
+
+
+
     public static Libro addLibro(String titulo, String autores, int pages, String date, String code){
 
         File file = new File(ruta);
@@ -305,15 +313,16 @@ public class DB {
     }
 
     public Persona PersonaCast(Persona p ){
-        if(p instanceof Admin){
+        if(p.getAuthLevel().equalsIgnoreCase("admin")){
             return(Admin)p;
         }
-        if(p instanceof Moderador){
+        if(p.getAuthLevel().equalsIgnoreCase("moderador")){
             return(Moderador)p;
         }
         else return (Usuario)p;
     }
-    public void createPersona(String userName,String correo, String pass) {
+    public Persona createPersona(String userName, String correo, String pass, String type) {
+
 
         Scanner sc = new Scanner(System.in);
 
@@ -335,13 +344,13 @@ public class DB {
         // Comprobar si el usuario ya existe
         if (userDir.exists()) {
             System.out.println("El usuario ya existe");
+            return null;
         } else {
             // Si el usuario no existe, crear su carpeta y el archivo "nombreUserData.json"
             userDir.mkdir();
             File userJson = new File(userDir, userName + "Data.json");
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
 
             System.out.print("Nombre:");
             String fn = sc.nextLine();
@@ -353,16 +362,26 @@ public class DB {
             String ciudad = sc.next();
             sc.nextLine();
 
-            Stats Stats=new Stats();
-            HashSet<Usuario> listaAmigos= new HashSet<>();
+            Stats stats = new Stats();
+            HashSet<String> listaAmigos = new HashSet<>();
             List<Challenge> desafios = new LinkedList<>();
-            Persona newUser = new Usuario(userName,correo,pass,fn,ln,ciudad,false,0,Stats,listaAmigos,desafios);
+
+            Persona newUser;
+
+            if (type.equalsIgnoreCase("admin")) {
+                newUser = new Admin(userName, correo, pass, fn, ln, ciudad);
+            } else if (type.equalsIgnoreCase("moderador")) {
+                newUser = new Moderador(userName, correo, pass, fn, ln, ciudad);
+            } else {
+                newUser = new Usuario(userName, correo, pass, fn, ln, ciudad, false, 0, stats, listaAmigos, desafios);
+            }
 
             try {
                 userJson.createNewFile();
                 FileWriter fw = new FileWriter(userJson);
-                gson.toJson(newUser,fw);
+                gson.toJson(newUser, fw);
                 fw.close();
+
                 try {
                     String contenido = leerArchivo(String.valueOf(userJson));
                     System.out.println(contenido);
@@ -370,17 +389,18 @@ public class DB {
                     System.out.println(personaObj.getFirst_name());
                     System.out.println(personaObj.getLast_name());
                     System.out.println(personaObj.getLocation());
-
-
-
+                    System.out.println(personaObj.getPass());
                 } catch (IOException e) {
-                    System.out.println("Ocurrió un error al leer el archivo: " + e.getMessage());
+                    System.out.println("OcurriÃ³ un error al leer el archivo: " + e.getMessage());
                 }
             } catch (IOException e) {
                 System.out.println("Error al crear el archivo del usuario");
             }
 
+            return newUser;
+
         }
+
     }
     public static Usuario buscarUser(String userName){
         Gson gson = new Gson();

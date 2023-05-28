@@ -28,6 +28,7 @@ public class Persona {
     }
 
     public Persona(String nombreUser,String correo,String pass,String first_name, String last_name, String location) {
+        this.first_name = first_name;
         this.nombreUser = nombreUser;
         this.correo = correo;
         this.first_name = first_name;
@@ -118,7 +119,7 @@ public class Persona {
     public boolean dayPassed(){
         if(daysUntilUnban>0){
             daysUntilUnban--;
-        
+
         }
         return daysUntilUnban==0;
     }
