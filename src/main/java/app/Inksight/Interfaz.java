@@ -16,11 +16,14 @@ public class Interfaz {
 	GestionColecciones listas = new GestionColecciones();
 	Stats stats = new Stats();
 	int timeout = 2000;
+	static HashSet<String> listaAmigos = new HashSet<>();
 	// Libro libro = new Libro(0,"","",0,"","");
 	// Libro libro = new Libro(libro);
-
 	Persona personaActual = new Usuario("", "", "", "", "", "", false, 0, stats, new HashSet<>(), new LinkedList<>());
 	private Usuario usuarioActual = (Usuario) personaActual;
+
+
+
 	DB db = new DB();
 	String permiso;
 
@@ -33,15 +36,34 @@ public class Interfaz {
 
 		System.out.print("Elija la opción deseada: ");
 		opcion = sc.nextInt();
+		int opcionUser;
+		String userType;
 		String nombreUser;
 		String pass;
 		String correo;
 		switch (opcion) {
 			case 1:
+				System.out.println("1) User");
+				System.out.println("2) Moderador");
+				System.out.println("3) Admin");
+
+				opcionUser = sc.nextInt();
+				if (opcionUser==3){
+					userType="admin";
+				} else if (opcionUser==2) {
+					userType="moderador";
+				}else{
+					userType="user";
+				}
+
+
+
+
 				System.out.print("Ingrese un nombre de usuario: ");
 				nombreUser = sc.next();
 				System.out.print("Ingrese un correo electronico: ");
 				correo = sc.next();
+
 
 				// aviso de los requisitos que tiene que tener la contraseña
 				System.out.println("Tener en cuenta que: ");
@@ -66,7 +88,7 @@ public class Interfaz {
 							MessageDigest digest = MessageDigest.getInstance("SHA-256");
 							byte[] encodedhash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
 							String passHash = db.bytesToHex(encodedhash);
-							personaActual = db.createPersona(nombreUser, correo, passHash);
+							personaActual = db.createPersona(nombreUser, correo, passHash,userType);
 						}
 						if (personaActual instanceof Usuario) {
 							usuarioActual = (Usuario) personaActual;
@@ -170,6 +192,7 @@ public class Interfaz {
 				menu_Estadisticas();
 				break;
 			case 2:
+				System.out.println("RETOS");
 				menuRetos();
 				break;
 			case 3:
@@ -298,32 +321,72 @@ public class Interfaz {
 			case 1:
 				System.out.print("Escriba el nombre del amigo que desea agregar: ");
 				String amigo = sc.next();
+				usuarioActual.addAmigo(amigo);
 				// usuarioActual.buscarAmigo(amigo);
 				// comprobar si el nombre del amigo existe
-				boolean existe = false;
+				boolean existe = usuarioActual.addAmigo(amigo);;
 				if (existe) {
-					System.out.println("Nombre no encontrado");
+					System.out.println("Amigo añadido de manera correcta");
+					limpiarConDelay();
+					menu_Amigo();
 				}
 				if (!existe) {
+					System.out.println("Usuario no encontrado");
 					System.out.println("¿Desea agregarlo?");
 					System.out.println("1. Si");
 					System.out.println("2. No");
 					int numero = sc.nextInt();
 					if (numero == 1) {
+						usuarioActual.addAmigo(amigo);
 						// usuarioActual.anyadirAmigo(sc, usuarioActual);
-						System.out.println("Amigo agregado");
+						boolean existe2 = usuarioActual.addAmigo(amigo);;
+						if (existe2) {
+							System.out.println("Amigo añadido de manera correcta");
+						}
+						if (!existe2) {
+							System.out.println("Usuario no encontrado");
+						}
+						limpiarConDelay();
+						menu_Amigo();
 
 					} else if (numero == 2) {
 						System.out.println("Amigo no agregado");
+						limpiarConDelay();
 						menu_Amigo();
 					} else {
 						System.out.println("No has elegido una opción correcta");
+						limpiarConDelay();
+						menu_Amigo();
 					}
 				}
+
 				break;
 			case 2:
 				System.out.println("Ingresa el nombre del amigo que quieras borrar: ");
 				amigo = sc.next();
+				boolean borrado = usuarioActual.borrarAmigo(amigo);
+				if(borrado){
+					System.out.println("Usuario borrado de lista de amigos");
+					limpiarConDelay();
+					menu_Amigo();
+				}
+				if(!borrado){
+					System.out.println("Usuario no existe vuelva a intentarlo.");
+				}
+
+				System.out.println("Ingresa el nombre del amigo que quieras borrar: ");
+				amigo = sc.next();
+				borrado = usuarioActual.borrarAmigo(amigo);
+				if(borrado){
+					System.out.println("Usuario borrado de lista de amigos");
+				}
+				if(!borrado){
+					System.out.println("Usuario no existe vuelva a intentarlo.");
+				}
+				limpiarConDelay();
+				menu_Amigo();
+
+
 
 				// si el nombre ingresado no existe salta un aviso y deja volver a escribir el
 				// nombre
@@ -331,36 +394,121 @@ public class Interfaz {
 			case 3:
 				System.out.println("AMIGOS");
 				usuarioActual.getListaAmigos();
+				menu_Amigo();
 				// se muestra la lista de amigos
 				break;
 			case 4:
 				System.out.println("Saliendo...");
-				try {
-					menu_PerfilUsuario();
-				} catch (NoSuchAlgorithmException e) {
-					e.printStackTrace();
-				}
+				// llamar al menu de perfil de usuario
+
 				break;
 		}
 	}
 
-	public void menuReseñas() {
+	public void menuReseñas() throws IOException {
 		System.out.println("RESEÑAS");
-		System.out.println("1. Seleccionar el libro del que desee hacer la reseña");
-		System.out.println("2. Salir");
-		System.out.println();
+		System.out.println("1. Hacer reseña");
+		System.out.println("2. Borrar Review");
+		System.out.println("3. Ver Reviews");
+		System.out.println("4. Salir");
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
 
 		switch (opcion) {
 			case 1:
-				System.out.println("Selecciona el libro del que deseas hacer la reseña: ");
+				usuarioActual.addReview(sc);
+
+				if(!usuarioActual.addReview(sc)){
+					System.out.println("Fallo al guardar la Review");
+					limpiarConDelay();
+					menuReseñas();
+				}
+				if(usuarioActual.addReview(sc)){
+					System.out.println("Review Guardada");
+					limpiarConDelay();
+					menuReseñas();
+				}
+				break;
+				// validar que el libro existe
+
+			case 2:
+				System.out.println("Escoge que review quieres borrar");
+				List<Review> reviews = usuarioActual.getListaReviews();
+				int n = 0;
+				for(Review review:reviews){
+					System.out.println("Review numero:" + n +  " " + review.toString());
+					n++;
+				}
+				System.out.println("Que review desea eliminar(numero)?");
+				int k = sc.nextInt();
+				reviews.remove(k);
+				limpiarConDelay();
+				menuReseñas();
+				// llamar al menu de perfil de usuario
+				break;
+
+
+			case 3:
+
+				List<Review> reviews2 = usuarioActual.getListaReviews();
+				int c = 0;
+				for(Review review:reviews2){
+					System.out.println("Review numero:" + c +  " " + review.toString());
+					c++;
+				}
+				limpiarConDelay();
+				menuReseñas();
+
+				break;
+			case 4:
+				System.out.println("Saliendo...");
+
+				// llamar al menu de perfil de usuario
+				break;
+	}
+
+
+	}
+
+	private void menu_Libro() {
+		System.out.println();
+		System.out.println("1. Agregar libro ");
+		System.out.println("2. Mover libro a una lista");
+		System.out.println("3. Eliminar libro");
+		System.out.println("4. Libro terminado");
+		System.out.println("5. Salir");
+
+		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
+		opcion = sc.nextInt();
+
+		switch (opcion) {
+			case 1:
+				System.out.println("Selecciona el libro que deseas agregar: ");
 				titulo = sc.next();
 				// validar que el libro existe
 				break;
 			case 2:
-				System.out.println("Saliendo...");
-				// llamar al menu de perfil de usuario
+				System.out.println("Selecciona el libro que deseas mover: ");
+				titulo = sc.next();
+				System.out.println("Selecciona la lista a la que deseas moverlo o crea una nueva: ");
+				nombreLista = sc.next();
+				// validar que la lista existe o crearla
+				break;
+			case 3:
+				System.out.println("Selecciona el libro que deseas eliminar: ");
+				titulo = sc.next();
+				break;
+			case 4:
+				System.out.println("Selecciona el libro que deseas consultar: ");
+				titulo = sc.next();
+				// mostrar la información del libro
+				break;
+			case 5:
+				System.out.println("Selecciona el libro al que deseas cambiarle el nombre: ");
+				titulo = sc.next();
+				System.out.println("Escribe el nuevo nombre: ");
+				titulo = sc.next();
+				// validar que el libro existe
 				break;
 		}
 
@@ -379,6 +527,7 @@ public class Interfaz {
 		System.out.println("7. Mostrar los libros de una lista");
 		System.out.println("8. Eliminar libro de una lista");
 		System.out.println("9. Salir");
+
 
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
