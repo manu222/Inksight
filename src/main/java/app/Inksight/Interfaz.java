@@ -22,8 +22,6 @@ public class Interfaz {
 	Persona personaActual = new Usuario("", "", "", "", "", "", false, 0, stats, new HashSet<>(), new LinkedList<>());
 	private Usuario usuarioActual = (Usuario) personaActual;
 
-
-
 	DB db = new DB();
 	String permiso;
 
@@ -48,22 +46,18 @@ public class Interfaz {
 				System.out.println("3) Admin");
 
 				opcionUser = sc.nextInt();
-				if (opcionUser==3){
-					userType="admin";
-				} else if (opcionUser==2) {
-					userType="moderador";
-				}else{
-					userType="user";
+				if (opcionUser == 3) {
+					userType = "admin";
+				} else if (opcionUser == 2) {
+					userType = "moderador";
+				} else {
+					userType = "user";
 				}
-
-
-
 
 				System.out.print("Ingrese un nombre de usuario: ");
 				nombreUser = sc.next();
 				System.out.print("Ingrese un correo electronico: ");
 				correo = sc.next();
-
 
 				// aviso de los requisitos que tiene que tener la contraseña
 				System.out.println("Tener en cuenta que: ");
@@ -88,7 +82,7 @@ public class Interfaz {
 							MessageDigest digest = MessageDigest.getInstance("SHA-256");
 							byte[] encodedhash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
 							String passHash = db.bytesToHex(encodedhash);
-							personaActual = db.createPersona(nombreUser, correo, passHash,userType);
+							personaActual = db.createPersona(nombreUser, correo, passHash, userType);
 						}
 						if (personaActual instanceof Usuario) {
 							usuarioActual = (Usuario) personaActual;
@@ -96,6 +90,7 @@ public class Interfaz {
 							menu_PerfilUsuario();
 						} else {
 							menu_principal();
+
 						}
 
 					} else {
@@ -111,8 +106,8 @@ public class Interfaz {
 					System.out.println("Ingresa contraseña:");
 					String passLogin = sc.next();
 					personaActual = DB.personaCast(DB.buscarUser(nombreUser));
-					if(personaActual instanceof Usuario){
-						usuarioActual = (Usuario)personaActual;
+					if (personaActual instanceof Usuario) {
+						usuarioActual = (Usuario) personaActual;
 					}
 					// asegurarse de que la contraseña pertenece al usuario
 
@@ -165,7 +160,6 @@ public class Interfaz {
 
 		}
 	}
-
 
 	public void menu_PerfilUsuario() throws NoSuchAlgorithmException {
 		System.out.println(usuarioActual.getFirst_name());
@@ -327,7 +321,8 @@ public class Interfaz {
 				usuarioActual.addAmigo(amigo);
 				// usuarioActual.buscarAmigo(amigo);
 				// comprobar si el nombre del amigo existe
-				boolean existe = usuarioActual.addAmigo(amigo);;
+				boolean existe = usuarioActual.addAmigo(amigo);
+				;
 				if (existe) {
 					System.out.println("Amigo añadido de manera correcta");
 					limpiarConDelay();
@@ -342,7 +337,8 @@ public class Interfaz {
 					if (numero == 1) {
 						usuarioActual.addAmigo(amigo);
 						// usuarioActual.anyadirAmigo(sc, usuarioActual);
-						boolean existe2 = usuarioActual.addAmigo(amigo);;
+						boolean existe2 = usuarioActual.addAmigo(amigo);
+						;
 						if (existe2) {
 							System.out.println("Amigo añadido de manera correcta");
 						}
@@ -368,28 +364,26 @@ public class Interfaz {
 				System.out.println("Ingresa el nombre del amigo que quieras borrar: ");
 				amigo = sc.next();
 				boolean borrado = usuarioActual.borrarAmigo(amigo);
-				if(borrado){
+				if (borrado) {
 					System.out.println("Usuario borrado de lista de amigos");
 					limpiarConDelay();
 					menu_Amigo();
 				}
-				if(!borrado){
+				if (!borrado) {
 					System.out.println("Usuario no existe vuelva a intentarlo.");
 				}
 
 				System.out.println("Ingresa el nombre del amigo que quieras borrar: ");
 				amigo = sc.next();
 				borrado = usuarioActual.borrarAmigo(amigo);
-				if(borrado){
+				if (borrado) {
 					System.out.println("Usuario borrado de lista de amigos");
 				}
-				if(!borrado){
+				if (!borrado) {
 					System.out.println("Usuario no existe vuelva a intentarlo.");
 				}
 				limpiarConDelay();
 				menu_Amigo();
-
-
 
 				// si el nombre ingresado no existe salta un aviso y deja volver a escribir el
 				// nombre
@@ -425,25 +419,25 @@ public class Interfaz {
 			case 1:
 				usuarioActual.addReview(sc);
 
-				if(!usuarioActual.addReview(sc)){
+				if (!usuarioActual.addReview(sc)) {
 					System.out.println("Fallo al guardar la Review");
 					limpiarConDelay();
 					menuReseñas();
 				}
-				if(usuarioActual.addReview(sc)){
+				if (usuarioActual.addReview(sc)) {
 					System.out.println("Review Guardada");
 					limpiarConDelay();
 					menuReseñas();
 				}
 				break;
-				// validar que el libro existe
+			// validar que el libro existe
 
 			case 2:
 				System.out.println("Escoge que review quieres borrar");
 				List<Review> reviews = usuarioActual.getListaReviews();
 				int n = 0;
-				for(Review review:reviews){
-					System.out.println("Review numero:" + n +  " " + review.toString());
+				for (Review review : reviews) {
+					System.out.println("Review numero:" + n + " " + review.toString());
 					n++;
 				}
 				System.out.println("Que review desea eliminar(numero)?");
@@ -454,13 +448,12 @@ public class Interfaz {
 				// llamar al menu de perfil de usuario
 				break;
 
-
 			case 3:
 
 				List<Review> reviews2 = usuarioActual.getListaReviews();
 				int c = 0;
-				for(Review review:reviews2){
-					System.out.println("Review numero:" + c +  " " + review.toString());
+				for (Review review : reviews2) {
+					System.out.println("Review numero:" + c + " " + review.toString());
 					c++;
 				}
 				limpiarConDelay();
@@ -476,8 +469,7 @@ public class Interfaz {
 				}
 				// llamar al menu de perfil de usuario
 				break;
-	}
-
+		}
 
 	}
 
@@ -539,7 +531,6 @@ public class Interfaz {
 		System.out.println("8. Eliminar libro de una lista");
 		System.out.println("9. Salir");
 
-
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
 
@@ -571,9 +562,9 @@ public class Interfaz {
 				break;
 			case 4:
 				System.out.println("LISTAS");
-				for(String s :listas.consultarListaColecciones()){
+				for (String s : listas.consultarListaColecciones()) {
 					System.out.println(s);
-					//wait for input to show next list
+					// wait for input to show next list
 					sc.nextLine();
 				}
 				limpiarConDelay();
@@ -590,7 +581,7 @@ public class Interfaz {
 					clearConsole();
 					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.COLECCION_NO_EXISTE) {
 						System.out.println("La lista no existe");
-					}else {
+					} else {
 						System.out.println("El libro ha sido añadido correctamente");
 						usuarioActual.serializeToJson();
 					}
@@ -619,8 +610,7 @@ public class Interfaz {
 				sc.nextLine();
 				nombreLista = sc.nextLine();
 				coleccion = usuarioActual.gestionColecciones.obtenerColeccion(nombreLista);
-				for(Libro l:coleccion.consultarLibrosEnLista())
-				{
+				for (Libro l : coleccion.consultarLibrosEnLista()) {
 					System.out.println(l.getTitle());
 				}
 				break;
@@ -642,9 +632,9 @@ public class Interfaz {
 				System.out.println("Opción no válida");
 				break;
 		}
-		try{
+		try {
 			menu_PerfilUsuario();
-		}catch(Exception e){
+		} catch (Exception e) {
 			System.out.println("Opción no válida");
 		}
 	}
@@ -686,23 +676,68 @@ public class Interfaz {
 		if (lastChallenge.getTime() < (now.getTime() - 604800000) && usuarioActual.getDesafios().size() < 3) {
 			// pasaron 7 días desde el último desafío
 			int tipo = (int) (Math.random() * 3);
+			int difficulty;
 			switch (tipo) {
 				// permite agregar todas las opciones de desafios que quieras, simplemente
 				// agrega un nuevo case(permite ajustar pesos repitiendo numeros)
+				/*
+				 * //aceptar recomendaciones
+				 * usuarioActual.makeChallenge("Aceptar una recomendación",
+				 * "Lee un libro que haya sido recomendado por un amigo", 1, "accept", 100);
+				 * usuarioActual.makeChallenge("Aceptar 2 recomendaciones",
+				 * "Lee 2 libros que hayan sido recomendados por un amigo", 2, "accept", 250);
+				 * //recomendar
+				 * usuarioActual.makeChallenge("Recomienda un libro",
+				 * "Expresa tu opinión sobre un libro. Comparte tu opinion con el mundo", 1,
+				 * "recommend", 50);
+				 * //leer de un autor
+				 * difficulty = (int)(Math.random()*2+1);
+				 * usuarioActual.makeChallenge("Leer"+ difficulty +"libros del mismo autor",
+				 * "Lee libros del mismo autor. No tiene que ser una saga", difficulty,
+				 * "author_repeat", 150*difficulty);
+				 * //leer un autor nuevo
+				 * usuarioActual.makeChallenge("Leer un libro de un autor nuevo",
+				 * "Lee un libro de un autor que no hayas leido antes", 1, "author_new", 100);
+				 * //leer un libro de mas de x paginas
+				 * difficulty = ((int)(Math.random()*10))*10;
+				 * usuarioActual.makeChallenge("Leer un libro de más de "+ difficulty
+				 * +" páginas", "Lee un libro de más de "+ difficulty +" páginas", 1,
+				 * "book_length", difficulty);
+				 * 
+				 */
 				case 0:
-					usuarioActual.makeChallenge("Leer 5 libros", "Leer 5 libros", 5, "libros", 100);
+					difficulty = (int) (Math.random() * 2);
+					usuarioActual.makeChallenge("Leer" + difficulty * 5 + "libros",
+							"Leer una determinada cantidad de libros", difficulty * 5, "libros", 50 * difficulty * 5);
 					break;
 				case 1:
 					usuarioActual.makeChallenge("Leer 100 páginas", "Leer 100 páginas en una semana", 100, "paginas",
 							100);
 					break;
 				case 2:
-					usuarioActual.makeChallenge("Leer 10 libros", "Leer 10 libros en una semana", 10, "libros", 200);
+					usuarioActual.makeChallenge("Aceptar una recomendación",
+							"Lee un libro que haya sido recomendado por un amigo", 1, "accept", 100);
 					break;
 				case 3:
+					usuarioActual.makeChallenge("Aceptar 2 recomendaciones",
+							"Lee 2 libros que hayan sido recomendados por un amigo", 2, "accept", 250);
+					break;
 				case 4:
-					usuarioActual.makeChallenge("Aceptar 1 recomendacion",
-							"lee un libro que un amigo te haya recomendado", 1, "rec", 40);
+				case 5:
+					usuarioActual.makeChallenge("Recomienda un libro",
+							"Expresa tu opinión sobre un libro. Comparte tu opinion con el mundo", 1,
+							"recommend", 50);
+					break;
+				case 6:
+					usuarioActual.makeChallenge("Recomienda un libro",
+							"Expresa tu opinión sobre un libro. Comparte tu opinion con el mundo", 1,
+							"recommend", 50);
+					break;
+				case 7:
+					difficulty = ((int) (Math.random() * 10)) * 10;
+					usuarioActual.makeChallenge("Leer un libro de más de " + difficulty
+							+ " páginas", "Lee un libro de más de " + difficulty + " páginas", 1,
+							"book_length", difficulty);
 					break;
 			}
 		}
@@ -907,7 +942,7 @@ public class Interfaz {
 
 		Interfaz interfaz = new Interfaz();
 		interfaz.menu_principal();
-		//interfaz.menu_Estadisticas();
+		// interfaz.menu_Estadisticas();
 
 	}
 

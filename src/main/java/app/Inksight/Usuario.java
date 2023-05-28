@@ -205,6 +205,11 @@ public class Usuario extends Persona {
                 }
             }
         }
+        for(Challenge c : desafios){
+            if(c.getType().equals("review")){
+                c.addProgress(1);
+            }
+        }
         return false;
     }
 
@@ -300,11 +305,17 @@ public class Usuario extends Persona {
                 case "libros":
                     completedCount += challenge.addProgress(1) ? 1 : 0;
                     break;
-                case "rec":
+                case "accept":
                     for (Libro l : listaRecomendados) {
                         if (libro.equals(l)) {
                             completedCount += challenge.addProgress(1) ? 1 : 0;
                         }
+                    }
+                    break;
+                    case "book_length":
+                    if(libro.getNumPages()>=challenge.getTarget()){
+                        challenge.markAsCompleted();
+                        completedCount++;
                     }
                     // se pueden añadir más tipos
             }
