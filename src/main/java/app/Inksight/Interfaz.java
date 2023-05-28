@@ -378,6 +378,7 @@ public class Interfaz {
 				if (listas.cambiarNombreLista(nombreListaAntiguo,
 						nombreLista) == GestionColecciones.COLECCION_MODIFICADA_CORRECTAMENTE) {
 					System.out.println("El nombre de la lista ha sido modificado correctamente");
+					
 				}
 				break;
 			case 4:
