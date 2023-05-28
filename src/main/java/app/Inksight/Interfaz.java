@@ -41,7 +41,7 @@ public class Interfaz {
 		String nombreUser;
 		String pass;
 		String correo;
-		switch(opcion){
+		switch (opcion) {
 			case 1:
 				System.out.println("1) User");
 				System.out.println("2) Moderador");
@@ -110,14 +110,17 @@ public class Interfaz {
 					nombreUser = sc.next();
 					System.out.println("Ingresa contraseña:");
 					String passLogin = sc.next();
-					usuarioActual = DB.buscarUser(nombreUser);
+					personaActual = DB.personaCast(DB.buscarUser(nombreUser));
+					if(personaActual instanceof Usuario){
+						usuarioActual = (Usuario)personaActual;
+					}
 					// asegurarse de que la contraseña pertenece al usuario
 
 					MessageDigest digest = MessageDigest.getInstance("SHA-256");
 					byte[] encodedhash = digest.digest(passLogin.getBytes(StandardCharsets.UTF_8));
 					String passHash = DB.bytesToHex(encodedhash);
 
-					if (usuarioActual.getPass().equals(passHash)) {
+					if (personaActual.getPass().equals(passHash)) {
 						System.out.println("Sesión Iniciada");
 
 						permiso = ((personaActual instanceof Admin) ? "admin"
@@ -153,7 +156,7 @@ public class Interfaz {
 				}
 				break;
 			case 3:
-				usuarioActual = DB.buscarUser("test");
+				usuarioActual = (Usuario) DB.buscarUser("test");
 				usuarioActual.setOnline(true);
 				checkTimeWhenLogin();
 				usuarioActual.serializeToJson();
@@ -168,7 +171,7 @@ public class Interfaz {
 		System.out.println(usuarioActual.getFirst_name());
 		System.out.println();
 		System.out.println("1. Estadisticas");
-		System.out.println("2. Retos");
+		System.out.println("2. Desafios");
 		System.out.println("3. Amigos");
 		System.out.println("4. Hacer reseña");
 		System.out.println("5. Marcar libro como leido");
@@ -240,19 +243,14 @@ public class Interfaz {
 					System.out.println("MODERADOR");
 					menu_Moderador();
 				} else {
-					personaActual.setOnline(false);
-					personaActual = null;
-					usuarioActual = null;
-					clearConsole();
-					menu_principal();
+					cerrarSesion();
 				}
 				break;
 			case 8:
-				personaActual.setOnline(false);
-				personaActual = null;
-				usuarioActual = null;
-				clearConsole();
-				menu_principal();
+				cerrarSesion();
+				break;
+		}
+	}
 
 	private void cerrarSesion() {
 		personaActual.setOnline(false);
@@ -292,8 +290,7 @@ public class Interfaz {
 	}
 
 	private void menuRetos() {
-		String reto;
-		System.out.println();
+		clearConsole();
 		System.out.println("RETOS:");
 		for (Challenge c : usuarioActual.getDesafios()) {
 			clearConsole();
@@ -303,27 +300,7 @@ public class Interfaz {
 			String input = sc.nextLine();
 			if (input.equals("q")) {
 				break;
-			case 2:
-				System.out.println("Escriba el nombre del reto que desea marcar como completado: ");
-				reto = sc.next();
-				break;
-			case 3:
-				System.out.println("Retos creados: ");
-				// llamar a la lista para mostrar los retos creados
-				if (usuarioActual instanceof Usuario) {
-					usuarioActual.getDesafios();
-				}
-				break;
-			case 4:
-				System.out.println("Escriba el nombre del reto que desea eliminar: ");
-				reto = sc.next();
-				// coleccion.eliminar(reto);
-				break;
-			case 5:
-				System.out.println("Saliendo...");
-				// llamar al menu de perfil de usuario
-				break;
-
+			}
 		}
 		try {
 			menu_PerfilUsuario();
@@ -617,18 +594,6 @@ public class Interfaz {
 						System.out.println("El libro ha sido añadido correctamente");
 						usuarioActual.serializeToJson();
 					}
-					//el libro esta en la base de datos pero no en la lista, se agrega
-					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.LIBRO_AGREGADO_CORRECTAMENTE) {
-						System.out.println("El libro ha sido añadido correctamente");
-					}
-					//el libro ya esta en la lista
-					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.LIBRO_YA_EXISTE) {
-						System.out.println("El libro ya existe en la lista");
-					}
-					//el libro no esta en la base de datos
-					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.LIBRO_NO_EXISTE) {
-						System.out.println("El libro no esta disponible en la base de datos");
-					}
 				} catch (Exception e) {
 					System.out.println("El libro no existe");
 				}
@@ -665,17 +630,8 @@ public class Interfaz {
 				System.out.println("Seleccione la lista de la que desea eliminar el libro: ");
 				nombreLista = sc.nextLine();
 				listas.eliminarLibro(nombreLista, titulo);
-				//validar que la lista existe
-				if (listas.eliminarLibro(nombreLista, titulo) == GestionColecciones.COLECCION_NO_EXISTE) {
+				if (listas.eliminarLibro(nombreLista, titulo) == 2) {
 					System.out.println("La lista no existe");
-				}
-				//el libro no esta en la lista
-				if (listas.eliminarLibro(nombreLista, titulo) == GestionColecciones.LIBRO_NO_EXISTE) {
-					System.out.println("El libro no existe en la lista");
-				}
-				//el libro esta en la lista
-				if (listas.eliminarLibro(nombreLista, titulo) == GestionColecciones.LIBRO_ELIMINADO_CORRECTAMENTE) {
-					System.out.println("El libro ha sido eliminado correctamente");
 				}
 				break;
 			case 9:
@@ -712,18 +668,21 @@ public class Interfaz {
 				usuarioActual.unban();
 			}
 		}
-		//revisar todos los desafíos. si alguno expiró, eliminarlo. Si no, disminuir el tiempo restante
+		// revisar todos los desafíos. si alguno expiró, eliminarlo. Si no, disminuir el
+		// tiempo restante
 		for (Challenge c : usuarioActual.getDesafios()) {
 			if (c.getTimeRemaining() < (usuarioActual.getLastLogin().getTime() - now.getTime())) {
 				usuarioActual.getDesafios().remove(c);
+			} else {
+				c.setTimeRemaining(
+						(int) (c.getTimeRemaining() - (usuarioActual.getLastLogin().getTime() - now.getTime())));
 			}
-			else{
-				c.setTimeRemaining((int)(c.getTimeRemaining() - (usuarioActual.getLastLogin().getTime() - now.getTime())));}
 		}
 		// actualizar la fecha de ultimo inicio de sesión
 		usuarioActual.setLastLogin(now);
 
-		// revisar si el usuario tiene menos de 3 desafíos y si pasaron 7 días desde el último desafío
+		// revisar si el usuario tiene menos de 3 desafíos y si pasaron 7 días desde el
+		// último desafío
 		if (lastChallenge.getTime() < (now.getTime() - 604800000) && usuarioActual.getDesafios().size() < 3) {
 			// pasaron 7 días desde el último desafío
 			int tipo = (int) (Math.random() * 3);
@@ -816,7 +775,7 @@ public class Interfaz {
 				System.out.println("1. Suspender usuario");
 				System.out.println(user.isBanned ? "2. Eliminar veto" : "2. vetar usuario");
 				System.out.println("3. Ver reseñas");
-				System.out.println("4. Volver");
+				System.out.println("4. Cambiar usuario");
 				int opcion = sc.nextInt();
 				switch (opcion) {
 					case 1:
@@ -899,15 +858,15 @@ public class Interfaz {
 			unit = unit.substring(0, unit.length() - 1);
 		}
 		switch (unit) {
-			case "días":
+			case "día":
 				break;
-			case "semanas":
+			case "semana":
 				amount *= 7;
 				break;
-			case "meses":
+			case "mese":
 				amount *= 30;
 				break;
-			case "años":
+			case "año":
 				amount *= 365;
 				break;
 			default:
@@ -945,10 +904,10 @@ public class Interfaz {
 	}
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
-		Interfaz interfaz = new Interfaz();
 
+		Interfaz interfaz = new Interfaz();
 		interfaz.menu_principal();
-		// interfaz.menu_Estadisticas();
+		//interfaz.menu_Estadisticas();
 
 	}
 

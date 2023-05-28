@@ -312,7 +312,7 @@ public class DB {
         return new String(contenidoBytes);
     }
 
-    public Persona PersonaCast(Persona p ){
+    public static Persona personaCast(Persona p){
         if(p.getAuthLevel().equalsIgnoreCase("admin")){
             return(Admin)p;
         }
@@ -402,7 +402,7 @@ public class DB {
         }
 
     }
-    public static Usuario buscarUser(String userName){
+    public static Persona buscarUser(String userName){
         Gson gson = new Gson();
 
         // Comprobar si la carpeta data existe, si no existe, crearla
