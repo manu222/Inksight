@@ -35,7 +35,7 @@ public class Interfaz {
 		String nombreUser;
 		String pass;
 		String correo;
-		switch (opcion) {
+		switch(opcion){
 			case 1:
 				System.out.print("Ingrese un nombre de usuario: ");
 				nombreUser = sc.next();
@@ -116,7 +116,7 @@ public class Interfaz {
 		System.out.println(nombre);
 		System.out.println();
 		System.out.println("1. Estadisticas");
-		System.out.println("2. Desafios");
+		System.out.println("2. Retos");
 		System.out.println("3. Amigos");
 		System.out.println("4. Hacer reseña");
 		System.out.println("5. Libros");
@@ -140,6 +140,7 @@ public class Interfaz {
 				menu_Estadisticas();
 				break;
 			case 2:
+				System.out.println("RETOS");
 				menuRetos();
 				break;
 			case 3:
@@ -169,25 +170,20 @@ public class Interfaz {
 					System.out.println("MODERADOR");
 					menu_Moderador();
 				} else {
-					cerrarSesion();
+					personaActual.setOnline(false);
+					personaActual = null;
+					usuarioActual = null;
+					clearConsole();
+					menu_principal();
 				}
 				break;
 			case 8:
-				cerrarSesion();
-				break;
-		}
-	}
+				personaActual.setOnline(false);
+				personaActual = null;
+				usuarioActual = null;
+				clearConsole();
+				menu_principal();
 
-	private void cerrarSesion() {
-		personaActual.setOnline(false);
-		personaActual = null;
-		usuarioActual = null;
-		clearConsole();
-		try{
-			menu_principal();
-		}
-		catch (NoSuchAlgorithmException e){
-			e.printStackTrace();
 		}
 	}
 
@@ -200,16 +196,55 @@ public class Interfaz {
 	}
 
 	private void menuRetos() {
-		clearConsole();
+		String reto;
+		System.out.println();
 		System.out.println("RETOS:");
-		for(Challenge c : usuarioActual.getDesafios()){
-			System.out.println(c.toString());
-			//wait for enter key to advance. if q is pressed, go back
-			System.out.println("Presiona enter para continuar o q para salir");
-			String input = sc.nextLine();
-			if(input.equals("q")){
+		System.out.println("1. Crear reto");
+		System.out.println("2. Marcar reto como completado");
+		System.out.println("3. Consultar retos");
+		System.out.println("4. Eliminar reto");
+		System.out.println("5. Salir");
+		System.out.println();
+
+		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
+		opcion = sc.nextInt();
+
+		switch (opcion) {
+			case 1:
+				System.out.println("Escriba el nombre del reto que desea crear: ");
+				reto = sc.next();
+				System.out.println("Escriba la descripción del reto: ");
+				String descripcion = sc.next();
+				System.out.println("Escriba el objetivo del reto: ");
+				int objetivo = sc.nextInt();
+				System.out.println("Escriba el tipo de reto: ");
+				String tipo = sc.next();
+				System.out.println("Escriba la recompensa del reto: ");
+				float recompensa = sc.nextFloat();
+				usuarioActual.makeChallenge(reto, descripcion, objetivo, tipo, recompensa);
+
 				break;
-			}
+			case 2:
+				System.out.println("Escriba el nombre del reto que desea marcar como completado: ");
+				reto = sc.next();
+				break;
+			case 3:
+				System.out.println("Retos creados: ");
+				// llamar a la lista para mostrar los retos creados
+				if (usuarioActual instanceof Usuario) {
+					usuarioActual.getDesafios();
+				}
+				break;
+			case 4:
+				System.out.println("Escriba el nombre del reto que desea eliminar: ");
+				reto = sc.next();
+				// coleccion.eliminar(reto);
+				break;
+			case 5:
+				System.out.println("Saliendo...");
+				// llamar al menu de perfil de usuario
+				break;
+
 		}
 
 	}
@@ -351,6 +386,7 @@ public class Interfaz {
 		System.out.println("8. Eliminar libro de una lista");
 		System.out.println("9. Salir");
 
+
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
 
@@ -358,12 +394,24 @@ public class Interfaz {
 			case 1:
 				System.out.println("Escriba el nombre de la lista que desea crear: ");
 				nombreLista = sc.next();
-				listas.construirLista(nombreLista);
+				try {
+					listas.construirLista(nombreLista);
+					usuarioActual.gestionColecciones.construirLista(nombreLista);
+					System.out.println(nombreLista + " creada");
+				} catch (Exception e) {
+					System.out.println("La lista ya existe");
+				}
 				break;
 			case 2:
 				System.out.println("Seleccione la lista que desea eliminar: ");
 				nombreLista = sc.next();
-				listas.eliminarLista(nombreLista);
+				try {
+					listas.eliminarLista(nombreLista);
+					usuarioActual.gestionColecciones.eliminarLista(nombreLista);
+					System.out.println(nombreLista + " eliminada");
+				} catch (Exception e) {
+					System.out.println("La lista no existe");
+				}
 				break;
 			case 3:
 				System.out.println("Seleccione la lista a la que desea cambiarle el nombre: ");
@@ -378,7 +426,6 @@ public class Interfaz {
 				if (listas.cambiarNombreLista(nombreListaAntiguo,
 						nombreLista) == GestionColecciones.COLECCION_MODIFICADA_CORRECTAMENTE) {
 					System.out.println("El nombre de la lista ha sido modificado correctamente");
-					
 				}
 				break;
 			case 4:
@@ -393,9 +440,21 @@ public class Interfaz {
 					titulo = sc.next();
 					System.out.println("Escriba el nombre de la lista a la que desea añadirlo: ");
 					nombreLista = sc.next();
-					listas.agregarlibro(nombreLista, titulo);
+					//validar que la lista existe
 					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.COLECCION_NO_EXISTE) {
 						System.out.println("La lista no existe");
+					}
+					//el libro esta en la base de datos pero no en la lista, se agrega
+					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.LIBRO_AGREGADO_CORRECTAMENTE) {
+						System.out.println("El libro ha sido añadido correctamente");
+					}
+					//el libro ya esta en la lista
+					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.LIBRO_YA_EXISTE) {
+						System.out.println("El libro ya existe en la lista");
+					}
+					//el libro no esta en la base de datos
+					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.LIBRO_NO_EXISTE) {
+						System.out.println("El libro no esta disponible en la base de datos");
 					}
 				} catch (Exception e) {
 					System.out.println("El libro no existe");
@@ -410,7 +469,22 @@ public class Interfaz {
 					nombreLista = sc.next();
 					System.out.println("Seleccione el libro que desea mover: ");
 					titulo = sc.next();
-					listas.moverLibroDeColeccion(nombreListaAntiguo, nombreLista, titulo);
+					//validar que la lista existe
+					if (listas.moverLibroDeColeccion(nombreListaAntiguo, nombreLista, titulo) == GestionColecciones.COLECCION_NO_EXISTE) {
+						System.out.println("La lista no existe");
+					}
+					//el libro no esta en la base de datos
+					if (listas.moverLibroDeColeccion(nombreListaAntiguo, nombreLista, titulo) == GestionColecciones.LIBRO_NO_EXISTE) {
+						System.out.println("El libro no esta disponible en la base de datos");
+					}
+					//el libro esta en la base de datos pero ya existe en la lista a la que lo quiere mover
+					if (listas.moverLibroDeColeccion(nombreListaAntiguo, nombreLista, titulo) == GestionColecciones.LIBRO_YA_EXISTE) {
+						System.out.println("El libro ya existe en la lista a la que lo quiere mover");
+					}
+					//el libro esta en la base de datos y no existe en la lista a la que lo quiere mover
+					if (listas.moverLibroDeColeccion(nombreListaAntiguo, nombreLista, titulo) == GestionColecciones.LIBRO_MOVIDO_CORRECTAMENTE) {
+						System.out.println("El libro ha sido movido correctamente");
+					}
 				} catch (Exception e) {
 					System.out.println("El libro no existe");
 				}
@@ -418,6 +492,7 @@ public class Interfaz {
 			case 7:
 				System.out.println("Libros agregados: ");
 				coleccion.consultarLibrosEnLista();
+				System.out.println(coleccion.consultarLibrosEnLista());
 				break;
 			case 8:
 				System.out.println("Escriba el nombre del libro que desea eliminar: ");
@@ -425,8 +500,17 @@ public class Interfaz {
 				System.out.println("Seleccione la lista de la que desea eliminar el libro: ");
 				nombreLista = sc.next();
 				listas.eliminarLibro(nombreLista, titulo);
-				if (listas.eliminarLibro(nombreLista, titulo) == 2) {
+				//validar que la lista existe
+				if (listas.eliminarLibro(nombreLista, titulo) == GestionColecciones.COLECCION_NO_EXISTE) {
 					System.out.println("La lista no existe");
+				}
+				//el libro no esta en la lista
+				if (listas.eliminarLibro(nombreLista, titulo) == GestionColecciones.LIBRO_NO_EXISTE) {
+					System.out.println("El libro no existe en la lista");
+				}
+				//el libro esta en la lista
+				if (listas.eliminarLibro(nombreLista, titulo) == GestionColecciones.LIBRO_ELIMINADO_CORRECTAMENTE) {
+					System.out.println("El libro ha sido eliminado correctamente");
 				}
 				break;
 			case 9:
@@ -442,29 +526,25 @@ public class Interfaz {
 	public void checkTimeWhenLogin() {
 		Date lastChallenge = usuarioActual.getLastChallenge();
 		Date now = new Date(System.currentTimeMillis());
-		// revisar si el usuario está baneado después de reducir el tiempo restante de
-		// la condena
+		// revisar si el usuario está baneado después de reducir el tiempo restante de la condena
 		if ((now.getTime() - usuarioActual.getLastLogin().getTime()) < (24 * 60 * 60 * 1000)) {
 			// pasó 1 día. disminuir la condena y si es 0, desbanear
 			if (usuarioActual.dayPassed()) {
 				usuarioActual.unban();
 			}
 		}
-		// revisar todos los desafíos. si alguno expiró, eliminarlo. Si no, disminuir el
-		// tiempo restante
+		//revisar todos los desafíos. si alguno expiró, eliminarlo. Si no, disminuir el tiempo restante
 		for (Challenge c : usuarioActual.getDesafios()) {
 			if (c.getTimeRemaining() < (usuarioActual.getLastLogin().getTime() - now.getTime())) {
 				usuarioActual.getDesafios().remove(c);
-			} else {
-				c.setTimeRemaining(
-						(int) (c.getTimeRemaining() - (usuarioActual.getLastLogin().getTime() - now.getTime())));
 			}
+			else{
+				c.setTimeRemaining((int)(c.getTimeRemaining() - (usuarioActual.getLastLogin().getTime() - now.getTime())));}
 		}
 		// actualizar la fecha de ultimo inicio de sesión
 		usuarioActual.setLastLogin(now);
 
-		// revisar si el usuario tiene menos de 3 desafíos y si pasaron 7 días desde el
-		// último desafío
+		// revisar si el usuario tiene menos de 3 desafíos y si pasaron 7 días desde el último desafío
 		if (lastChallenge.getTime() < (now.getTime() - 604800000) && usuarioActual.getDesafios().size() < 3) {
 			// pasaron 7 días desde el último desafío
 			int tipo = (int) (Math.random() * 3);
@@ -503,41 +583,6 @@ public class Interfaz {
 
 	public void menu_Administrador() {
 		// mostrar las opciones que tiene el administrador
-		System.out.println("ADMINISTRADOR:");
-		System.out.println("1. Gestionar Libros");
-		System.out.println("2. Gestionar Usuarios");
-		System.out.println("3. Crear nuevo moderador");
-		System.out.println("4. Cerrar sesión");
-		int opcion = sc.nextInt();
-		switch (opcion) {
-			case 1:
-				try {
-					Funciones.menuDBLibro();
-				} catch (Exception e) {
-					System.out.println("Error");
-				}
-				break;
-			case 2:
-				menu_Moderador();
-				break;
-			case 3:
-				System.out.println("Ingrese el nombre del nuevo moderador");
-				String nombre = sc.next();
-				System.out.println("Ingrese el apellido del nuevo moderador");
-				String apellido = sc.next();
-				System.out.println("ingrese el nombre de usuario del nuevo moderador");
-				String username = sc.next();
-				System.out.println("ingrese la contraseña del nuevo moderador");
-				String password = sc.next();
-				System.out.println("ingrese el correo del nuevo moderador");
-				String correo = sc.next();
-				
-				//todo crear el Moderador y guardarlo en la BDD
-			break;
-			case 4:
-			cerrarSesion();
-
-		}
 	}
 
 	public void menu_Moderador() {
@@ -557,7 +602,7 @@ public class Interfaz {
 				System.out.println("1. Suspender usuario");
 				System.out.println(user.isBanned ? "2. Eliminar veto" : "2. vetar usuario");
 				System.out.println("3. Ver reseñas");
-				System.out.println("4. Cambiar usuario");
+				System.out.println("4. Volver");
 				int opcion = sc.nextInt();
 				switch (opcion) {
 					case 1:
@@ -611,7 +656,6 @@ public class Interfaz {
 
 						break;
 					case 4:
-					cerrarSesion();
 						break;
 					default:
 						System.out.println("Opción no válida");
@@ -625,43 +669,30 @@ public class Interfaz {
 
 	private int parseTime(String duration) {
 		String[] parts = duration.split(" ");
-
-		//obtener la cantidad de tiempo
 		int amount = Integer.parseInt(parts[0]);
-
-		//pasar a minuscula y eliminar acentos
 		String unit = parts[1].toLowerCase(null);
 		unit = Normalizer.normalize(unit, Normalizer.Form.NFD);
 		unit = unit.replaceAll("[^\\p{ASCII}]", "");
-		String[] seccion = unit.split("");
-
-		//eliminar el plural
-		if(seccion[seccion.length-1].equals("s")){
-			unit = unit.substring(0, unit.length()-1);
-		}
 		switch (unit) {
-			case "día":
+			case "días":
 				break;
-			case "semana":
+			case "semanas":
 				amount *= 7;
 				break;
-			case "mese":
+			case "meses":
 				amount *= 30;
 				break;
-			case "año":
+			case "años":
 				amount *= 365;
 				break;
 			default:
 				System.out.println("Unidad de tiempo no válida");
 				break;
 		}
-
-		//la cantidad de tiempo en dias
 		return amount;
 	}
 
 	public void limpiarConDelay() {
-		//espera 2 segundos y limpia la consola
 		try {
 			Thread.sleep(timeout);
 			clearConsole();
@@ -671,7 +702,6 @@ public class Interfaz {
 	}
 
 	public static void clearConsole() {
-		//limpia la consola
 		try {
 			final String os = System.getProperty("os.name");
 			if (os.contains("Windows")) {
