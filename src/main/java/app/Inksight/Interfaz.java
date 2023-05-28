@@ -400,7 +400,11 @@ public class Interfaz {
 			case 4:
 				System.out.println("Saliendo...");
 				// llamar al menu de perfil de usuario
-
+				try {
+					menu_PerfilUsuario();
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				}
 				break;
 		}
 	}
@@ -462,7 +466,11 @@ public class Interfaz {
 				break;
 			case 4:
 				System.out.println("Saliendo...");
-
+				try {
+					menu_PerfilUsuario();
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				}
 				// llamar al menu de perfil de usuario
 				break;
 	}
