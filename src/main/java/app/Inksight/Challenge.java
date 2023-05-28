@@ -100,6 +100,6 @@ public class Challenge {
                 "Descripción: " + this.description + "\n" +
                 "Progreso: " + this.progress + "/" + this.target + "\n"+
                 "Recompensa: " + this.reward + "\n" +
-                "Tiempo restante: " + this.timeRemaining/(24*60*60*1000) + "días";
+                ((this.timeRemaining<(24*60*60*1000))?("Tiempo restante: " + this.timeRemaining/(24*60*60*1000) + " días"):(""));
     }
 }

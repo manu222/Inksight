@@ -141,12 +141,6 @@ public class Interfaz {
 		}
 	}
 
-	private static void validarNombre(String nombre) {
-		// comprobar si el String nombre existe en el archivo de texto
-		// boolean valid = usuarios.validarNombre(nombre);
-		// if(nombre.equals(usuarioActual.first_name)){}
-
-	}
 
 	public void menu_PerfilUsuario() throws NoSuchAlgorithmException {
 		System.out.println(usuarioActual.getFirst_name());
@@ -273,6 +267,7 @@ public class Interfaz {
 		clearConsole();
 		System.out.println("RETOS:");
 		for (Challenge c : usuarioActual.getDesafios()) {
+			clearConsole();
 			System.out.println(c.toString());
 			// wait for enter key to advance. if q is pressed, go back
 			System.out.println("Presiona enter para continuar o q para salir");
@@ -281,7 +276,11 @@ public class Interfaz {
 				break;
 			}
 		}
-
+		try {
+			menu_PerfilUsuario();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void menu_Amigo() {

@@ -1,7 +1,47 @@
 {
   "listaAmigos": [],
   "listaRecomendados": [],
-  "desafios": [],
+  "desafios": [
+    {
+      "challengeID": "1",
+      "title": "Leer 5 libros",
+      "description": "Leer 5 libros",
+      "type": "libros",
+      "target": 5,
+      "progress": 0,
+      "reward": 100.0,
+      "completed": false,
+      "timeSensitive": false,
+      "timeLimit": 0,
+      "timeRemaining": 267441
+    },
+    {
+      "challengeID": "2",
+      "title": "Leer 5 libros",
+      "description": "Leer 5 libros",
+      "type": "libros",
+      "target": 5,
+      "progress": 0,
+      "reward": 100.0,
+      "completed": false,
+      "timeSensitive": false,
+      "timeLimit": 0,
+      "timeRemaining": 52417
+    },
+    {
+      "challengeID": "3",
+      "title": "Leer 5 libros",
+      "description": "Leer 5 libros",
+      "type": "libros",
+      "target": 5,
+      "progress": 0,
+      "reward": 100.0,
+      "completed": false,
+      "timeSensitive": false,
+      "timeLimit": 0,
+      "timeRemaining": 0
+    }
+  ],
   "stats": {
     "numBooks": 0,
     "numPages": 0,
@@ -11,8 +51,8 @@
     "quiereLeerHistorico": 0,
     "tasaFinalizacion": 0.0
   },
-  "lastChallenge": "May 28, 2023, 1:02:07 PM",
-  "lastLogin": "May 28, 2023, 3:11:25 PM",
+  "lastChallenge": "May 28, 2023, 4:12:59 PM",
+  "lastLogin": "May 28, 2023, 4:12:59 PM",
   "gestionColecciones": {
     "listaColecciones": [
       {
