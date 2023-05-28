@@ -24,7 +24,9 @@ public class GestionColecciones {
 		construirLista(LISTA_NO_LEIDOS);
 		construirLista(LISTA_LEYENDO);
 	}
-
+	public GestionColecciones(List<ColeccionLibro> cl){
+		this.listaColecciones=cl;
+	}
 	public List<String> consultarListaColecciones(){
 		List<String> nombres = new ArrayList<>();
 		for (int i = 0; i < listaColecciones.size(); i++) {
@@ -79,13 +81,14 @@ public class GestionColecciones {
 //	
 //	}
 
-	public int eliminarLibro(String coleccionbuscada,String titulo) {
+	public int eliminarLibro(String coleccionbuscada,String titulo) throws IOException {
 		ColeccionLibro coleccionactual = obtenerColeccion(coleccionbuscada);
 		if(coleccionactual == null) {
 			// no se encuentra la coleccion;
 			return GestionColecciones.COLECCION_NO_EXISTE;
-		}else {	
-			int resultado = coleccionactual.eliminar(titulo);
+		}else {
+			DB db = new DB();
+			int resultado = coleccionactual.eliminar(db.buscarUnLibro(titulo).getTitle());
 			return resultado;
 		}
 
@@ -135,8 +138,10 @@ public class GestionColecciones {
 		if(coleccionOrigen == null || coleccionNueva == null) {
 			// no se encuentra la coleccion;
 			return GestionColecciones.COLECCION_NO_EXISTE;
-		}else {	
-			int respuesta = coleccionOrigen.mover(coleccionNueva, titulo);
+		}else {
+			DB db = new DB();
+			db.buscarUnLibro(titulo);
+			int respuesta = coleccionOrigen.mover(coleccionNueva, db.buscarUnLibro(titulo).getTitle());
 			return respuesta;
 		}
 	}

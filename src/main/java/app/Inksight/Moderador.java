@@ -22,6 +22,9 @@ public class Moderador extends Persona {
         p.suspend(dias);
     }
     public void addBanDuration(Usuario p,int dias){
+        if (dias>0){
+            p.setIsBanned(true);
+        }
         p.addBanDuration(dias);
     }
 }

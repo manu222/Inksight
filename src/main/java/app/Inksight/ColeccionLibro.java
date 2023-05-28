@@ -64,7 +64,15 @@ public class ColeccionLibro {
 		return librosEnLista;
 		
 	}	
-	
+	public boolean contiene(Libro chk){
+		boolean out= false;
+		for (Libro l: listaLibros) {
+			if (l.equals(chk)){
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public int eliminar(String tituloAEliminar) {
 		Iterator<LibroAmpliado> copia = listaLibros.iterator();

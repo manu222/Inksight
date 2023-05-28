@@ -18,12 +18,15 @@ public class Usuario extends Persona {
     private Date lastLogin;
     public GestionColecciones gestionColecciones;
 
+
     public Usuario(String nombreUser, String correo, String pass, String first_name, String last_name, String location,
-                   HashSet<String> listaAmigos) {
+                   HashSet<String> listaAmigos,int daysUntilUnban) {
         super(nombreUser, correo, pass, first_name, last_name, location);
         this.desafios = new LinkedList<>();
         this.listaAmigos = new HashSet<>();
+        this.daysUntilUnban=daysUntilUnban;
         this.stats = new Stats();
+        listaReviews=new ArrayList<>();
         gestionColecciones = new GestionColecciones();
         lastChallenge = new Date(System.currentTimeMillis());
         listaRecomendados = new HashSet<>();
@@ -31,11 +34,13 @@ public class Usuario extends Persona {
     }
 
     public Usuario(String nombreUser, String correo, String pass, String first_name, String last_name, String location,
-                   boolean online, int followers, Stats stats, HashSet<String> listaAmigos, List<Challenge> desafios) {
+                   boolean online, int followers, Stats stats, HashSet<String> listaAmigos, List<Challenge> desafios,int daysUntilUnban) {
         super(nombreUser, correo, pass, first_name, last_name, location, online, followers, stats);
         this.desafios = desafios;
         this.listaAmigos = new HashSet<>();
+        this.daysUntilUnban=daysUntilUnban;
         this.stats = stats;
+        listaReviews=new ArrayList<>();
         gestionColecciones = new GestionColecciones();
         lastChallenge = new Date(System.currentTimeMillis());
         listaRecomendados = new HashSet<>();
@@ -192,23 +197,17 @@ public class Usuario extends Persona {
 
     public boolean addReview(Scanner sc) throws IOException {
         List<Review> reviews = this.getListaReviews();
-        if (reviews.size() == 0) {
-            reviews.add(Review.hacerReview(sc));
-            return reviews.add(Review.hacerReview(sc));
-        } else {
-            Review primerReviewVacio = null;
-            for (Review review : reviews) {
-                if (review == null) {
-                    reviews.add(Review.hacerReview(sc));
-                    return reviews.add(Review.hacerReview(sc));
 
+
+        if (reviews.add(Review.hacerReview(sc))){
+            for(Challenge c : desafios){
+                if(c.getType().equals("review")){
+                    if(c.addProgress(1)){
+                        this.stats.addXp(c.getReward());
+                    }
                 }
             }
-        }
-        for(Challenge c : desafios){
-            if(c.getType().equals("review")){
-                c.addProgress(1);
-            }
+            return  true;
         }
         return false;
     }
@@ -216,19 +215,16 @@ public class Usuario extends Persona {
 
 
     public HashSet<String> getListaAmigos() {
-        if (listaAmigos.size() <= 0) {
-            System.out.println("No hay amigos");
-            return null;
-        }
-        HashSet<String> listaAmigos = this.getListaAmigos();
-        Iterator<String> it = listaAmigos.iterator();
-        int n = 1;
-        while(it.hasNext()){
-            System.out.println("Amigo n:" + n + " Username: " + it.next());
-        }
         return listaAmigos;
     }
-
+    public void printListaAmigos(){
+        if (getListaAmigos().size()==0 || listaAmigos==null){
+            System.out.println("No tienes amigos");
+        }
+        for (String s : listaAmigos){
+            System.out.println(s);
+        }
+    }
     public int getnAmigos() {
         try {
             return listaAmigos.size();
@@ -282,6 +278,10 @@ public class Usuario extends Persona {
     public void eliminarReview(Review review) {
         listaReviews.remove(review);
     }
+
+    public boolean borrarReview(Review review) {
+        return this.listaReviews.remove(review);
+    }
     // </reviews>
 
     // <libros>
@@ -290,7 +290,11 @@ public class Usuario extends Persona {
         stats.addBook(libro);
         // 2. mover a la lista de libros leídos y eliminar de la lista de leyendo
         try{
-            gestionColecciones.moverLibroDeColeccion("leyendo", "leidos", libro.getTitle());
+            if (gestionColecciones.obtenerColeccion("leyendo").contiene(libro)) {
+                gestionColecciones.moverLibroDeColeccion("leyendo", "leidos", libro.getTitle());
+            }else {
+                gestionColecciones.obtenerColeccion("leidos").anadir(libro.getTitle());
+            }
         }catch(Exception e){
             System.out.println("No se ha podido marcar el libro como leído. Intentelo de nuevo más tarde");
         }
@@ -325,5 +329,7 @@ public class Usuario extends Persona {
     }
 
     // </libros>
-
+    public void setIsBanned(boolean b){
+        this.isBanned=b;
+    }
 }

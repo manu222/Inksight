@@ -8,6 +8,7 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,18 +19,17 @@ import java.util.*;
 public class DB {
     private Libro libro;
 
-    static private Libro libroError = null;
+    static public Libro libroError = new Libro(-1,"error","error",-1,"error","error");
     static final String ruta = "src/main/java/app/Inksight/books.json";
     static final String rutaData = "src/main/data";
     static final String rutaUsers = rutaData + "/Users";
     Gson gson = new Gson();
 
     public DB() {
-        this.libro = libro;
-        this.libroError= new Libro(-1,"error","error",-1,"error","error");
+
     }
 
-    public static void promptAddLibro() {
+    public static void promptAddLibro() throws NoSuchAlgorithmException {
 
         Scanner sc = new Scanner(System.in);
         int id;
@@ -49,7 +49,9 @@ public class DB {
         System.out.print("Codigo xx-xx:");
         String code = sc.nextLine();
         addLibro(titulo, autores, pages, date, code);
-
+        System.out.println("Libro Añadido \n");
+        Interfaz i = new Interfaz();
+        i.menu_Administrador();
           
 
     }
@@ -373,7 +375,7 @@ public class DB {
             } else if (type.equalsIgnoreCase("moderador")) {
                 newUser = new Moderador(userName, correo, pass, fn, ln, ciudad);
             } else {
-                newUser = new Usuario(userName, correo, pass, fn, ln, ciudad, false, 0, stats, listaAmigos, desafios);
+                newUser = new Usuario(userName, correo, pass, fn, ln, ciudad, false, 0, stats, listaAmigos, desafios,0);
             }
 
             try {

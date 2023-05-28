@@ -127,7 +127,6 @@ public class Persona {
         return daysUntilUnban==0;
     }
 
-
     public String getAuthLevel() {
         return authLevel;
     }

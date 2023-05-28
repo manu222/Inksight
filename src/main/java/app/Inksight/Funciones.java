@@ -1,12 +1,13 @@
 package app.Inksight;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 import static app.Inksight.DB.*;
 
 public class Funciones {
-    public static void menuDBLibro() throws IOException {
+    public static void menuDBLibro() throws IOException, NoSuchAlgorithmException {
 
         DB db= new DB();
         Scanner sc = new Scanner(System.in);
@@ -18,7 +19,6 @@ public class Funciones {
         System.out.println("3) Eliminar un libro");
         System.out.println("4) Buscar un libro por título");
         System.out.println("5) Salir");
-        System.out.println("6) Crear persona de ejemplo");
         opcion = sc.nextInt();
 
         switch (opcion) {
@@ -46,9 +46,6 @@ public class Funciones {
                 //System.out.println(db.buscarLibro(query));
                 break;
             case 5:
-                break;
-            case 6:
-                //db.createPersona();
                 break;
             default:
                 System.out.println("Opción no válida, por favor intenta de nuevo.");
