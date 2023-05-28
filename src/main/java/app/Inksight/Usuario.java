@@ -66,7 +66,6 @@ public class Usuario extends Persona {
             try {
                 FileWriter fw = new FileWriter(userJson, false);
                 gson.toJson(this, fw);
-                System.out.println(userJson);
                 fw.close();
             } catch (IOException e) {
                 System.out.println("Error al crear el archivo del usuario");

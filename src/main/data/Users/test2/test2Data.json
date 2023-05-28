@@ -1,0 +1,58 @@
+{
+  "listaAmigos": [],
+  "listaReviews": [],
+  "listaRecomendados": [],
+  "desafios": [
+    {
+      "challengeID": "1",
+      "title": "Aceptar una recomendación",
+      "description": "Lee un libro que haya sido recomendado por un amigo",
+      "type": "accept",
+      "target": 1,
+      "progress": 0,
+      "reward": 100.0,
+      "completed": false,
+      "timeSensitive": true,
+      "timeLimit": 7,
+      "timeRemaining": 0
+    }
+  ],
+  "stats": {
+    "numBooks": 0,
+    "numPages": 0,
+    "level": 0,
+    "xp": 0.0,
+    "xpToNextLevel": 1000.0,
+    "quiereLeerHistorico": 0,
+    "tasaFinalizacion": 0.0
+  },
+  "lastChallenge": "May 29, 2023, 12:48:11 AM",
+  "lastLogin": "May 29, 2023, 12:48:11 AM",
+  "gestionColecciones": {
+    "listaColecciones": [
+      {
+        "nombreColeccion": "leidos",
+        "listaLibros": []
+      },
+      {
+        "nombreColeccion": "no leidos",
+        "listaLibros": []
+      },
+      {
+        "nombreColeccion": "leyendo",
+        "listaLibros": []
+      }
+    ]
+  },
+  "nombreUser": "test2",
+  "correo": "test",
+  "pass": "c09e5870616af035fcfd28dd4ad76ee5387bdc462d4c777e72e93f64ce66e99f",
+  "first_name": "test",
+  "last_name": "test",
+  "location": "test",
+  "online": false,
+  "followers": 0,
+  "authLevel": "user",
+  "isBanned": false,
+  "daysUntilUnban": 0
+}

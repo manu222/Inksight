@@ -1,0 +1,45 @@
+{
+  "listaAmigos": [
+    "testUser2"
+  ],
+  "listaRecomendados": [],
+  "desafios": [],
+  "stats": {
+    "numBooks": 0,
+    "numPages": 0,
+    "level": 0,
+    "xp": 0.0,
+    "xpToNextLevel": 1000.0,
+    "quiereLeerHistorico": 0,
+    "tasaFinalizacion": 0.0
+  },
+  "lastChallenge": "May 28, 2023, 7:08:15 PM",
+  "lastLogin": "May 28, 2023, 9:13:49 PM",
+  "gestionColecciones": {
+    "listaColecciones": [
+      {
+        "nombreColeccion": "leidos",
+        "listaLibros": []
+      },
+      {
+        "nombreColeccion": "no leidos",
+        "listaLibros": []
+      },
+      {
+        "nombreColeccion": "leyendo",
+        "listaLibros": []
+      }
+    ]
+  },
+  "nombreUser": "testUser",
+  "correo": "test",
+  "pass": "c09e5870616af035fcfd28dd4ad76ee5387bdc462d4c777e72e93f64ce66e99f",
+  "first_name": "test",
+  "last_name": "test",
+  "location": "test",
+  "online": true,
+  "followers": 0,
+  "authLevel": "user",
+  "isBanned": false,
+  "daysUntilUnban": 0
+}

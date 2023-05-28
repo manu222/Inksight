@@ -780,7 +780,6 @@ public class Interfaz {
 		// revisar si el usuario tiene menos de 3 desafíos y si pasaron 7 días desde el
 		// último desafío
 		if (usuarioActual.getLastChallenge().getTime() <= (now.getTime() - 7*24*60*60*1000) && usuarioActual.getDesafios().size() < 3) {
-			System.out.println("in");
 			// pasaron 7 días desde el último desafío
 			int tipo = (int) (Math.random() * 7);
 			int difficulty;
@@ -850,14 +849,13 @@ public class Interfaz {
 			case 1:
 				try {
 					Funciones.menuDBLibro();
-
 				} catch (Exception e) {
 					System.out.println("Error");
 					menu_Administrador();
 				}
 				break;
 			case 2:
-				menu_Moderador();
+				menu_AdminMod();
 				break;
 			case 3:
 
@@ -977,6 +975,105 @@ public class Interfaz {
 			} else {
 				System.out.println("El usuario no puede ser moderado");
 				menu_Moderador();
+			}
+		}
+	}
+	public void menu_AdminMod() {
+		Admin admin = (Admin) personaActual;
+		// mostrar las opciones que tiene el moderador
+		sc.nextLine();
+		System.out.println("ingrese el nombre del usuario que desea moderar");
+		String nombreUsuario = sc.nextLine();
+		Persona victim = db.buscarUser(nombreUsuario);
+		boolean canBeBanned = victim instanceof Usuario;
+
+		if (victim == null) {
+			System.out.println("El usuario no existe");
+		} else {
+			if (canBeBanned) {
+				Usuario user = (Usuario) victim;
+				System.out.println("usuario: " + victim.getFirst_name() + " " + victim.getLast_name());
+				System.out.println("1. Suspender usuario");
+				System.out.println(user.isBanned ? "2. Eliminar veto" : "2. vetar usuario");
+				System.out.println("3. Ver reseñas");
+				System.out.println("4. Cambiar usuario");
+				int opcion = sc.nextInt();
+				sc.nextLine();
+				switch (opcion) {
+					case 1:
+						clearConsole();
+						System.out.println("Ingrese la duración del veto: (cantidad + (días|semanas|meses|años))");
+						String ans = sc.nextLine();
+						admin.addBanDuration(user, parseTime(ans));
+						System.out.println("Usuario vetado");
+						user.serializeToJson();
+						limpiarConDelay();
+						menu_AdminMod();
+						break;
+					case 2:
+						if (user.isBanned) {
+							clearConsole();
+							admin.unbanUser(user);
+							System.out.println("Veto eliminado");
+							user.serializeToJson();
+							limpiarConDelay();
+							menu_AdminMod();
+							break;
+						} else {
+							admin.banUser(user);
+							clearConsole();
+							System.out.println("Usuario vetado.");
+							user.serializeToJson();
+							limpiarConDelay();
+							menu_AdminMod();
+						}
+						break;
+					case 3:
+						clearConsole();
+						List<Review> lista = user.getListaReviews();
+						for (Review r : lista) {
+							System.out.println(r);
+							System.out.println("1. Eliminar reseña");
+							System.out.println("2. Eliminar texto de la reseña");
+							System.out.println("3. Ver siguiente");
+							System.out.println("4. para volver");
+
+							ans = sc.nextLine();
+							if (ans.equals("1")) {
+								clearConsole();
+								user.eliminarReview(r);
+								System.out.println("Reseña eliminada");
+								limpiarConDelay();
+								user.serializeToJson();
+								menu_AdminMod();
+							} else if (ans.equals("2")) {
+								clearConsole();
+								r.setDescripcion("");
+								System.out.println("Texto eliminado");
+								limpiarConDelay();
+								user.serializeToJson();
+								menu_AdminMod();
+							} else if (ans.equals("3")) {
+								clearConsole();
+							} else {
+								clearConsole();
+								menu_AdminMod();
+								break;
+							}
+						}
+
+						break;
+					case 4:
+						cerrarSesion();
+						break;
+					default:
+						System.out.println("Opción no válida");
+						menu_AdminMod();
+						break;
+				}
+			} else {
+				System.out.println("El usuario no puede ser moderado");
+				menu_AdminMod();
 			}
 		}
 	}

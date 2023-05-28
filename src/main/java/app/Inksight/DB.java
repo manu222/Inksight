@@ -383,18 +383,6 @@ public class DB {
                 FileWriter fw = new FileWriter(userJson);
                 gson.toJson(newUser, fw);
                 fw.close();
-
-                try {
-                    String contenido = leerArchivo(String.valueOf(userJson));
-                    System.out.println(contenido);
-                    Persona personaObj = gson.fromJson(contenido, Persona.class);
-                    System.out.println(personaObj.getFirst_name());
-                    System.out.println(personaObj.getLast_name());
-                    System.out.println(personaObj.getLocation());
-                    System.out.println(personaObj.getPass());
-                } catch (IOException e) {
-                    System.out.println("OcurriÃ³ un error al leer el archivo: " + e.getMessage());
-                }
             } catch (IOException e) {
                 System.out.println("Error al crear el archivo del usuario");
             }
