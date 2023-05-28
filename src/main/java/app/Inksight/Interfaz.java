@@ -115,7 +115,7 @@ public class Interfaz {
 		System.out.println(nombre);
 		System.out.println();
 		System.out.println("1. Estadisticas");
-		System.out.println("2. Retos");
+		System.out.println("2. Desafios");
 		System.out.println("3. Amigos");
 		System.out.println("4. Hacer reseña");
 		System.out.println("5. Libros");
@@ -139,7 +139,6 @@ public class Interfaz {
 				menu_Estadisticas();
 				break;
 			case 2:
-				System.out.println("RETOS");
 				menuRetos();
 				break;
 			case 3:
@@ -200,55 +199,16 @@ public class Interfaz {
 	}
 
 	private void menuRetos() {
-		String reto;
-		System.out.println();
+		clearConsole();
 		System.out.println("RETOS:");
-		System.out.println("1. Crear reto");
-		System.out.println("2. Marcar reto como completado");
-		System.out.println("3. Consultar retos");
-		System.out.println("4. Eliminar reto");
-		System.out.println("5. Salir");
-		System.out.println();
-
-		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
-		opcion = sc.nextInt();
-
-		switch (opcion) {
-			case 1:
-				System.out.println("Escriba el nombre del reto que desea crear: ");
-				reto = sc.next();
-				System.out.println("Escriba la descripción del reto: ");
-				String descripcion = sc.next();
-				System.out.println("Escriba el objetivo del reto: ");
-				int objetivo = sc.nextInt();
-				System.out.println("Escriba el tipo de reto: ");
-				String tipo = sc.next();
-				System.out.println("Escriba la recompensa del reto: ");
-				float recompensa = sc.nextFloat();
-				usuarioActual.makeChallenge(reto, descripcion, objetivo, tipo, recompensa);
-
+		for(Challenge c : usuarioActual.getDesafios()){
+			System.out.println(c.toString());
+			//wait for enter key to advance. if q is pressed, go back
+			System.out.println("Presiona enter para continuar o q para salir");
+			String input = sc.nextLine();
+			if(input.equals("q")){
 				break;
-			case 2:
-				System.out.println("Escriba el nombre del reto que desea marcar como completado: ");
-				reto = sc.next();
-				break;
-			case 3:
-				System.out.println("Retos creados: ");
-				// llamar a la lista para mostrar los retos creados
-				if (usuarioActual instanceof Usuario) {
-					usuarioActual.getDesafios();
-				}
-				break;
-			case 4:
-				System.out.println("Escriba el nombre del reto que desea eliminar: ");
-				reto = sc.next();
-				// coleccion.eliminar(reto);
-				break;
-			case 5:
-				System.out.println("Saliendo...");
-				// llamar al menu de perfil de usuario
-				break;
-
+			}
 		}
 
 	}
@@ -663,30 +623,43 @@ public class Interfaz {
 
 	private int parseTime(String duration) {
 		String[] parts = duration.split(" ");
+
+		//obtener la cantidad de tiempo
 		int amount = Integer.parseInt(parts[0]);
+
+		//pasar a minuscula y eliminar acentos
 		String unit = parts[1].toLowerCase(null);
 		unit = Normalizer.normalize(unit, Normalizer.Form.NFD);
 		unit = unit.replaceAll("[^\\p{ASCII}]", "");
+		String[] seccion = unit.split("");
+
+		//eliminar el plural
+		if(seccion[seccion.length-1].equals("s")){
+			unit = unit.substring(0, unit.length()-1);
+		}
 		switch (unit) {
-			case "días":
+			case "día":
 				break;
-			case "semanas":
+			case "semana":
 				amount *= 7;
 				break;
-			case "meses":
+			case "mese":
 				amount *= 30;
 				break;
-			case "años":
+			case "año":
 				amount *= 365;
 				break;
 			default:
 				System.out.println("Unidad de tiempo no válida");
 				break;
 		}
+
+		//la cantidad de tiempo en dias
 		return amount;
 	}
 
 	public void limpiarConDelay() {
+		//espera 2 segundos y limpia la consola
 		try {
 			Thread.sleep(timeout);
 			clearConsole();
@@ -696,6 +669,7 @@ public class Interfaz {
 	}
 
 	public static void clearConsole() {
+		//limpia la consola
 		try {
 			final String os = System.getProperty("os.name");
 			if (os.contains("Windows")) {

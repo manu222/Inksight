@@ -94,4 +94,12 @@ public class Challenge {
         this.timeRemaining = timeRemaining;
     }
 
+    @Override
+    public String toString(){
+        return "Desafío: " + this.title + "\n" +
+                "Descripción: " + this.description + "\n" +
+                "Progreso: " + this.progress + "/" + this.target + "\n"+
+                "Recompensa: " + this.reward + "\n" +
+                "Tiempo restante: " + this.timeRemaining/(24*60*60*1000) + "días";
+    }
 }
