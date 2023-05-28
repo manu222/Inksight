@@ -313,10 +313,10 @@ public class DB {
     }
 
     public Persona PersonaCast(Persona p ){
-        if(p instanceof Admin){
+        if(p.getAuthLevel().equalsIgnoreCase("admin")){
             return(Admin)p;
         }
-        if(p instanceof Moderador){
+        if(p.getAuthLevel().equalsIgnoreCase("moderador")){
             return(Moderador)p;
         }
         else return (Usuario)p;
