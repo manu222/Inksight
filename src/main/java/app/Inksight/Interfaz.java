@@ -19,7 +19,8 @@ public class Interfaz {
 	static HashSet<String> listaAmigos = new HashSet<>();
 	// Libro libro = new Libro(0,"","",0,"","");
 	// Libro libro = new Libro(libro);
-	Persona personaActual = new Usuario("", "", "", "", "", "", false, 0, stats, new HashSet<>(), new LinkedList<>(),0);
+	Persona personaActual = new Usuario("", "", "", "", "", "", false, 0, stats, new HashSet<>(), new LinkedList<>(),
+			0);
 	private Usuario usuarioActual = (Usuario) personaActual;
 
 	DB db = new DB();
@@ -42,11 +43,14 @@ public class Interfaz {
 		String correo;
 		switch (opcion) {
 			case 1:
+				clearConsole();
 				System.out.println("1) User");
 				System.out.println("2) Moderador");
 				System.out.println("3) Admin");
 
 				opcionUser = sc.nextInt();
+				sc.nextLine();
+				clearConsole();
 				if (opcionUser == 3) {
 					userType = "admin";
 				} else if (opcionUser == 2) {
@@ -56,12 +60,13 @@ public class Interfaz {
 				}
 
 				System.out.print("Ingrese un nombre de usuario: ");
-				nombreUser = sc.next();
+				nombreUser = sc.nextLine();
+				clearConsole();
 				System.out.print("Ingrese un correo electronico: ");
-				correo = sc.next();
+				correo = sc.nextLine();
 
 				// aviso de los requisitos que tiene que tener la contraseña
-				System.out.println("Tener en cuenta que: ");
+				System.out.println("ingrese una contraseña:");
 				System.out.println("Debe tener entre 8 y 20 caracteres");
 				System.out.println("Debe contener al menos un dígito");
 				System.out.println("Debe contener al menos una minúscula");
@@ -73,16 +78,18 @@ public class Interfaz {
 				boolean validPassword = false;
 				while (validPassword == false) {
 					System.out.print("Ingrese una contraseña valida: ");
-					pass = sc.next();
+					pass = sc.nextLine();
 					if (pass.matches(regex)) {
 						validPassword = true;
+						clearConsole();
 						System.out.println("Confirmar contraseña: ");
-						String contraseñaConfirmada = sc.next();
+						String contraseñaConfirmada = sc.nextLine();
 						if (pass.matches(contraseñaConfirmada)) {
 							DB db = new DB();
 							MessageDigest digest = MessageDigest.getInstance("SHA-256");
 							byte[] encodedhash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
 							String passHash = db.bytesToHex(encodedhash);
+							clearConsole();
 							personaActual = db.createPersona(nombreUser, correo, passHash, userType);
 						}
 						if (personaActual instanceof Usuario) {
@@ -101,12 +108,14 @@ public class Interfaz {
 				}
 				break;
 			case 2:
+				clearConsole();
 				boolean valid = false;
 				while (!valid) {
 					System.out.println("Ingresa nombre de usuario:");
-					nombreUser = sc.next();
+					nombreUser = sc.nextLine();
+					clearConsole();
 					System.out.println("Ingresa contraseña:");
-					String passLogin = sc.next();
+					String passLogin = sc.nextLine();
 					personaActual = DB.personaCast(DB.buscarUser(nombreUser));
 					if (personaActual instanceof Usuario) {
 						usuarioActual = (Usuario) personaActual;
@@ -118,8 +127,9 @@ public class Interfaz {
 					String passHash = DB.bytesToHex(encodedhash);
 
 					if (personaActual.getPass().equals(passHash)) {
-						valid=true;
-						permiso = ((personaActual instanceof Admin) ? "admin" : (personaActual instanceof Moderador ? "Moderador" : "usuario"));
+						valid = true;
+						permiso = ((personaActual instanceof Admin) ? "admin"
+								: (personaActual instanceof Moderador ? "Moderador" : "usuario"));
 						if (permiso.equals("usuario")) {
 							usuarioActual = (Usuario) personaActual;
 							usuarioActual.setOnline(true);
@@ -133,7 +143,7 @@ public class Interfaz {
 									System.out.println("El usuario está prohibido permanentemente.");
 								}
 								System.out.println("¿Desea iniciar sesión con otro usuario? (S/N)");
-								String respuesta = sc.next();
+								String respuesta = sc.nextLine();
 								if (respuesta.equals("S")) {
 									valid = false;
 								} else {
@@ -146,9 +156,9 @@ public class Interfaz {
 								menu_PerfilUsuario();
 							}
 
-						}else if (permiso.equals("admin")){
+						} else if (permiso.equals("admin")) {
 							menu_Administrador();
-						}else {
+						} else {
 							menu_Moderador();
 						}
 
@@ -168,6 +178,7 @@ public class Interfaz {
 	}
 
 	public void menu_PerfilUsuario() throws NoSuchAlgorithmException, IOException {
+		clearConsole();
 		System.out.println(usuarioActual.getFirst_name());
 		System.out.println();
 		System.out.println("1. Estadisticas");
@@ -188,14 +199,13 @@ public class Interfaz {
 
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
-
+		sc.nextLine();
 		switch (opcion) {
 			case 1:
 				System.out.println("ESTADISTICAS");
 				menu_Estadisticas();
 				break;
 			case 2:
-				System.out.println("RETOS");
 				menuRetos();
 				break;
 			case 3:
@@ -211,7 +221,7 @@ public class Interfaz {
 				boolean valid = false;
 				while (!valid) {
 					System.out.println("introduzca el titulo del libro o \"cancelar\"para abortar la operacion");
-					titulo = sc.next();
+					titulo = sc.nextLine();
 					valid = titulo.toLowerCase().trim().equals("cancelar");
 					// validar que el libro existe
 					if (!valid) {
@@ -269,17 +279,17 @@ public class Interfaz {
 	}
 
 	private void menu_Estadisticas() {
+		//HelloWorld("System.out.println");
 		clearConsole();
 		System.out.println("Nivel: " + usuarioActual.getStats().getLevel());
 		System.out.println("XP: " + usuarioActual.getStats().getXp());
 		System.out.println("Xp para siguiente nivel: " + usuarioActual.getStats().getXpToNextLevel());
 		System.out.println("Libros leidos: " + usuarioActual.getStats().getNumBooks());
 		System.out.println("Pgs leidas: " + usuarioActual.getStats().getNumPages());
-		// wait for enter key to advance. if q is pressed, go back
 		System.out.println("Ingrese cualquier caracter para salir");
 		String input;
 		try {
-			input = sc.next();
+			input = sc.nextLine();
 		} catch (Exception e) {
 			input = "a";
 		}
@@ -299,19 +309,24 @@ public class Interfaz {
 
 	private void menuRetos() {
 		clearConsole();
-		System.out.println("RETOS:");
-		for (Challenge c : usuarioActual.getDesafios()) {
-			clearConsole();
-			System.out.println(c.toString());
-			// wait for enter key to advance. if q is pressed, go back
-			System.out.println("Presiona enter para continuar o q para salir");
-			String input = sc.nextLine();
-			if (input.equals("q")) {
-				break;
+		if (usuarioActual.getDesafios().size() == 0) {
+			System.out.println("No tienes desafios pendientes");
+			limpiarConDelay();
+		} else {
+
+			for (Challenge c : usuarioActual.getDesafios()) {
+				System.out.println(c.toString());
+				// wait for enter key to advance. if q is pressed, go back
+				System.out.println("Presiona enter para continuar o q para salir");
+				String input = sc.nextLine();
+				if (input.equals("q")) {
+					break;
+				}
 			}
 		}
 		try {
 			try {
+				clearConsole();
 				menu_PerfilUsuario();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
@@ -322,6 +337,7 @@ public class Interfaz {
 	}
 
 	public void menu_Amigo() {
+		clearConsole();
 		System.out.println("1. Agregar amigo");
 		System.out.println("2. Borrar amigo");
 		System.out.println("3. Consultar amigos");
@@ -331,63 +347,42 @@ public class Interfaz {
 
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
-
+		sc.nextLine();
 		switch (opcion) {
 			case 1:
+				clearConsole();
 				System.out.print("Escriba el nombre del amigo que desea agregar: ");
-				String amigo = sc.next();
-				usuarioActual.addAmigo(amigo);
+				String amigo = sc.nextLine();
+				boolean existe = usuarioActual.addAmigo(amigo);
+
 				usuarioActual.serializeToJson();
 				// usuarioActual.buscarAmigo(amigo);
 				// comprobar si el nombre del amigo existe
-				boolean existe = usuarioActual.addAmigo(amigo);
-				;
 				if (existe) {
 					System.out.println("Amigo añadido de manera correcta");
+					Usuario UnewAmigo =  DB.buscarUser(amigo);
+					UnewAmigo.addAmigo(usuarioActual.getNombreUser());
+					UnewAmigo.serializeToJson();
 					limpiarConDelay();
 					clearConsole();
 					menu_Amigo();
 				}
 				if (!existe) {
 					System.out.println("Usuario no encontrado");
-					System.out.println("¿Desea agregarlo?");
-					System.out.println("1. Si");
-					System.out.println("2. No");
-					int numero = sc.nextInt();
-					if (numero == 1) {
-						usuarioActual.addAmigo(amigo);
-						// usuarioActual.anyadirAmigo(sc, usuarioActual);
-						boolean existe2 = usuarioActual.addAmigo(amigo);
-						;
-						if (existe2) {
-							System.out.println("Amigo añadido de manera correcta");
-						}
-						if (!existe2) {
-							System.out.println("Usuario no encontrado");
-						}
-						limpiarConDelay();
-						clearConsole();
-						menu_Amigo();
-
-					} else if (numero == 2) {
-						System.out.println("Amigo no agregado");
-						limpiarConDelay();
-						clearConsole();
-						menu_Amigo();
-					} else {
-						System.out.println("No has elegido una opción correcta");
-						limpiarConDelay();
-						clearConsole();
-						menu_Amigo();
-					}
+					limpiarConDelay();
+					menu_Amigo();
 				}
 
 				break;
 			case 2:
+				clearConsole();
 				System.out.println("Ingresa el nombre del amigo que quieras borrar: ");
-				amigo = sc.next();
+				amigo = sc.nextLine();
 				boolean borrado = usuarioActual.borrarAmigo(amigo);
 				if (borrado) {
+					Usuario Uamigo = DB.buscarUser(amigo);
+					Uamigo.borrarAmigo(usuarioActual.getNombreUser());
+					Uamigo.serializeToJson();
 					System.out.println("Usuario borrado de lista de amigos");
 					usuarioActual.serializeToJson();
 					limpiarConDelay();
@@ -398,7 +393,7 @@ public class Interfaz {
 				}
 
 				System.out.println("Ingresa el nombre del amigo que quieras borrar: ");
-				amigo = sc.next();
+				amigo = sc.nextLine();
 				borrado = usuarioActual.borrarAmigo(amigo);
 				if (borrado) {
 					System.out.println("Usuario borrado de lista de amigos");
@@ -414,14 +409,67 @@ public class Interfaz {
 				// nombre
 				break;
 			case 3:
+				clearConsole();
 				System.out.println("AMIGOS");
-				usuarioActual.printListaAmigos();
+				Usuario target;
+				for(String s :usuarioActual.getListaAmigos()){
+
+					System.out.println(s);
+					System.out.println("1. Ver perfil");
+					System.out.println("2. Ver reseñas");
+					System.out.println("3. siguiente");
+					System.out.println("4. salir");
+					int opcion = sc.nextInt();
+					sc.nextLine();
+					switch (opcion) {
+						case 1:
+							clearConsole();
+							 target = DB.buscarUser(s);
+							System.out.println("PERFIL");
+							System.out.println("Nombre: " + target.getFirst_name());
+							System.out.println("Apellido: " + target.getLast_name());
+							System.out.println(target.getStats());
+							System.out.println("1. Volver");
+							int opcion2 = sc.nextInt();
+							sc.nextLine();
+							if (opcion2 == 1) {
+								clearConsole();
+								menu_Amigo();
+							}
+							break;
+						case 2:
+							// se muestra la lista de reseñas
+							 target = DB.buscarUser(s);
+							clearConsole();
+							List<Review> lista = target.getListaReviews();
+						for (Review r : lista) {
+							System.out.println(r);
+							System.out.println("presione q para salir o cualquier tecla para ver la siguiente");
+							String opcion3 = sc.nextLine();
+							if (opcion3.equals("q")) {
+								clearConsole();
+								menu_Amigo();
+							}
+						}
+							break;
+						case 3:
+							clearConsole();
+							break;
+						case 4:
+							clearConsole();
+							menu_Amigo();
+							break;
+						}
+				}
+
 				clearConsole();
 				menu_Amigo();
 				// se muestra la lista de amigos
 				break;
 			case 4:
+				clearConsole();
 				System.out.println("Saliendo...");
+				limpiarConDelay();
 				// llamar al menu de perfil de usuario
 				try {
 					try {
@@ -447,11 +495,12 @@ public class Interfaz {
 		sc.nextLine();
 		switch (opcion) {
 			case 1:
-				if(!usuarioActual.addReview(sc)) {
+				clearConsole();
+				if (!usuarioActual.addReview(sc)) {
 					System.out.println("Fallo al guardar la Review");
 					limpiarConDelay();
 					menuReseñas();
-				}else{
+				} else {
 					System.out.println("Review Guardada");
 					usuarioActual.serializeToJson();
 					limpiarConDelay();
@@ -490,7 +539,7 @@ public class Interfaz {
 				break;
 
 			case 3:
-
+				clearConsole();
 				List<Review> reviews2 = usuarioActual.getListaReviews();
 				int c = 0;
 				for (Review review : reviews2) {
@@ -502,7 +551,9 @@ public class Interfaz {
 
 				break;
 			case 4:
+				clearConsole();
 				System.out.println("Saliendo...");
+				limpiarConDelay();
 				try {
 					menu_PerfilUsuario();
 				} catch (NoSuchAlgorithmException e) {
@@ -524,34 +575,39 @@ public class Interfaz {
 
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
-
+		sc.nextLine();
 		switch (opcion) {
 			case 1:
+				clearConsole();
 				System.out.println("Selecciona el libro que deseas agregar: ");
-				titulo = sc.next();
+				titulo = sc.nextLine();
 				// validar que el libro existe
 				break;
 			case 2:
+				clearConsole();
 				System.out.println("Selecciona el libro que deseas mover: ");
-				titulo = sc.next();
+				titulo = sc.nextLine();
 				System.out.println("Selecciona la lista a la que deseas moverlo o crea una nueva: ");
-				nombreLista = sc.next();
+				nombreLista = sc.nextLine();
 				// validar que la lista existe o crearla
 				break;
 			case 3:
+				clearConsole();
 				System.out.println("Selecciona el libro que deseas eliminar: ");
-				titulo = sc.next();
+				titulo = sc.nextLine();
 				break;
 			case 4:
+				clearConsole();
 				System.out.println("Selecciona el libro que deseas consultar: ");
-				titulo = sc.next();
+				titulo = sc.nextLine();
 				// mostrar la información del libro
 				break;
 			case 5:
+				clearConsole();
 				System.out.println("Selecciona el libro al que deseas cambiarle el nombre: ");
-				titulo = sc.next();
+				titulo = sc.nextLine();
 				System.out.println("Escribe el nuevo nombre: ");
-				titulo = sc.next();
+				titulo = sc.nextLine();
 				// validar que el libro existe
 				break;
 		}
@@ -559,6 +615,7 @@ public class Interfaz {
 	}
 
 	public void menu_Lista() throws IOException {
+		clearConsole();
 		listas = usuarioActual.gestionColecciones;
 		System.out.println();
 		System.out.println("1. Crear lista ");
@@ -572,9 +629,10 @@ public class Interfaz {
 
 		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
 		opcion = sc.nextInt();
-
+		sc.nextLine();
 		switch (opcion) {
 			case 1:
+				clearConsole();
 				System.out.println("Escriba el nombre de la lista que desea crear: ");
 				nombreLista = sc.nextLine();
 				try {
@@ -587,6 +645,7 @@ public class Interfaz {
 				usuarioActual.serializeToJson();
 				break;
 			case 2:
+				clearConsole();
 				System.out.println("Seleccione la lista que desea eliminar: ");
 				nombreLista = sc.nextLine();
 				try {
@@ -599,7 +658,7 @@ public class Interfaz {
 				usuarioActual.serializeToJson();
 				break;
 			case 3:
-				sc.nextLine();
+				clearConsole();
 				System.out.println("Seleccione la lista a la que desea cambiarle el nombre: ");
 				nombreListaAntiguo = sc.nextLine();
 				System.out.println("Escriba el nuevo nombre: ");
@@ -610,15 +669,16 @@ public class Interfaz {
 				}
 				if (respuesta == GestionColecciones.COLECCION_MODIFICADA_CORRECTAMENTE) {
 					System.out.println("El nombre de la lista ha sido modificado correctamente");
-				}else {
+				} else {
 					System.out.println("No se pudo modificar la lista");
 				}
 				usuarioActual.serializeToJson();
 				break;
 			case 4:
+				clearConsole();
 				System.out.println("LISTAS");
-				sc.nextLine();
 				for (String s : listas.consultarListaColecciones()) {
+					clearConsole();
 					System.out.println(s);
 					System.out.println("1. para ver los libros en la lista");
 					System.out.println("2. para siguiente lista");
@@ -626,7 +686,7 @@ public class Interfaz {
 					// wait for input to show next list
 					String in = sc.nextLine();
 
-					if (in.equalsIgnoreCase("1")){
+					if (in.equalsIgnoreCase("1")) {
 
 						for (Libro l : usuarioActual.gestionColecciones.obtenerColeccion(s).getListaLibros()) {
 							System.out.println(l.getTitle());
@@ -634,7 +694,7 @@ public class Interfaz {
 
 					} else {
 						if (in.equalsIgnoreCase("2")) {
-						}else{
+						} else {
 							break;
 						}
 					}
@@ -643,24 +703,25 @@ public class Interfaz {
 				// mostrar todas las listas que tiene el usuario
 				break;
 			case 5:
+				clearConsole();
 				try {
 					System.out.println("Escriba el nombre del libro que deseas añadir: ");
-					titulo = sc.next();
+					titulo = sc.nextLine();
 					System.out.println("Escriba el nombre de la lista a la que desea añadirlo: ");
-					nombreLista = sc.next();
-					//validar que la lista existe
+					nombreLista = sc.nextLine();
+					// validar que la lista existe
 					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.COLECCION_NO_EXISTE) {
 						System.out.println("La lista no existe");
 					}
-					//el libro esta en la base de datos pero no en la lista, se agrega
+					// el libro esta en la base de datos pero no en la lista, se agrega
 					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.LIBRO_AGREGADO_CORRECTAMENTE) {
 						System.out.println("El libro ha sido añadido correctamente");
 					}
-					//el libro ya esta en la lista
+					// el libro ya esta en la lista
 					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.LIBRO_YA_EXISTE) {
 						System.out.println("El libro ya existe en la lista");
 					}
-					//el libro no esta en la base de datos
+					// el libro no esta en la base de datos
 					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.LIBRO_NO_EXISTE) {
 						System.out.println("El libro no esta disponible en la base de datos");
 					}
@@ -670,6 +731,7 @@ public class Interfaz {
 				usuarioActual.serializeToJson();
 				break;
 			case 6:
+				clearConsole();
 				try {
 					sc.nextLine();
 					System.out.println("Seleccione la lista de la que desea mover el libro: ");
@@ -678,21 +740,23 @@ public class Interfaz {
 					nombreLista = sc.nextLine();
 					System.out.println("Seleccione el libro que desea mover: ");
 					titulo = sc.nextLine();
-					//validar que la lista existe
+					// validar que la lista existe
 					int respuesta2 = listas.moverLibroDeColeccion(nombreListaAntiguo, nombreLista, titulo);
 
-					if ( respuesta2 == GestionColecciones.COLECCION_NO_EXISTE) {
+					if (respuesta2 == GestionColecciones.COLECCION_NO_EXISTE) {
 						System.out.println("La lista no existe");
 					}
-					//el libro no esta en la base de datos
+					// el libro no esta en la base de datos
 					if (respuesta2 == GestionColecciones.LIBRO_NO_EXISTE) {
 						System.out.println("El libro no esta disponible en la base de datos");
 					}
-					//el libro esta en la base de datos pero ya existe en la lista a la que lo quiere mover
+					// el libro esta en la base de datos pero ya existe en la lista a la que lo
+					// quiere mover
 					if (respuesta2 == GestionColecciones.LIBRO_YA_EXISTE) {
 						System.out.println("El libro ya existe en la lista a la que lo quiere mover");
 					}
-					//el libro esta en la base de datos y no existe en la lista a la que lo quiere mover
+					// el libro esta en la base de datos y no existe en la lista a la que lo quiere
+					// mover
 					if (respuesta2 == GestionColecciones.COLECCION_MODIFICADA_CORRECTAMENTE) {
 						System.out.println("El libro ha sido movido correctamente");
 					}
@@ -702,29 +766,31 @@ public class Interfaz {
 				usuarioActual.serializeToJson();
 				break;
 			case 7:
-				sc.nextLine();
+				clearConsole();
 				System.out.println("Escriba el nombre del libro que desea eliminar: ");
 				titulo = sc.nextLine();
 				System.out.println("Seleccione la lista de la que desea eliminar el libro: ");
 				nombreLista = sc.nextLine();
-				//validar que la lista existe
-				int respuesta3 =listas.eliminarLibro(nombreLista, titulo);
+				// validar que la lista existe
+				int respuesta3 = listas.eliminarLibro(nombreLista, titulo);
 				if (respuesta3 == GestionColecciones.COLECCION_NO_EXISTE) {
 					System.out.println("La lista no existe");
 				}
-				//el libro no esta en la lista
+				// el libro no esta en la lista
 				if (respuesta3 == GestionColecciones.LIBRO_NO_EXISTE) {
 					System.out.println("El libro no existe en la lista");
 				}
-				//el libro esta en la lista
+				// el libro esta en la lista
 				if (respuesta3 == GestionColecciones.LIBRO_ELIMINADO_CORRECTAMENTE) {
 					System.out.println("El libro ha sido eliminado correctamente");
 				}
 				usuarioActual.serializeToJson();
 				break;
 			case 8:
+				clearConsole();
 				System.out.println("Saliendo...");
 				// llamar al menu de perfil de usuario
+				limpiarConDelay();
 				try {
 					menu_PerfilUsuario();
 				} catch (NoSuchAlgorithmException e) {
@@ -756,13 +822,17 @@ public class Interfaz {
 			usuarioActual.setLastLogin(now);
 			usuarioActual.setLastChallenge(new Date(0));
 		}
+
 		// revisar si el usuario está baneado después de reducir el tiempo restante de
 		// la condena
-		if ((now.getTime() - usuarioActual.getLastLogin().getTime()) < (24 * 60 * 60 * 1000)) {
+		if ((now.getTime() - usuarioActual.getLastLogin().getTime()) < (24 * 60 * 60 * 1000)&&usuarioActual.isBanned()) {
 			// pasó 1 día. disminuir la condena y si es 0, desbanear
-			if (usuarioActual.dayPassed()) {
-				usuarioActual.unban();
+			for(int i =0; i<(int)((now.getTime() - usuarioActual.getLastLogin().getTime())/(24 * 60 * 60 * 1000));i++){
+				if (usuarioActual.dayPassed()) {
+					usuarioActual.unban();
+				}
 			}
+			usuarioActual.setLastLogin(now);
 		}
 		// revisar todos los desafíos. si alguno expiró, eliminarlo. Si no, disminuir el
 		// tiempo restante
@@ -775,11 +845,12 @@ public class Interfaz {
 			}
 		}
 		// actualizar la fecha de ultimo inicio de sesión
-		usuarioActual.setLastLogin(now);
+		if(!usuarioActual.isBanned)usuarioActual.setLastLogin(now);
 
 		// revisar si el usuario tiene menos de 3 desafíos y si pasaron 7 días desde el
 		// último desafío
-		if (usuarioActual.getLastChallenge().getTime() <= (now.getTime() - 7*24*60*60*1000) && usuarioActual.getDesafios().size() < 3) {
+		if (usuarioActual.getLastChallenge().getTime() <= (now.getTime() - 7 * 24 * 60 * 60 * 1000)
+				&& usuarioActual.getDesafios().size() < 3) {
 			// pasaron 7 días desde el último desafío
 			int tipo = (int) (Math.random() * 7);
 			int difficulty;
@@ -790,36 +861,37 @@ public class Interfaz {
 				case 0:
 					difficulty = (int) (Math.random() * 2);
 					usuarioActual.makeChallenge("Leer" + difficulty * 5 + "libros",
-							"Leer una determinada cantidad de libros", difficulty * 5, "libros", 50 * difficulty * 5,true,7);
+							"Leer una determinada cantidad de libros", difficulty * 5, "libros", 50 * difficulty * 5,
+							true, 7);
 					break;
 				case 1:
 					usuarioActual.makeChallenge("Leer 100 páginas", "Leer 100 páginas en una semana", 100, "paginas",
-							100,true,7);
+							100, true, 7);
 					break;
 				case 2:
 					usuarioActual.makeChallenge("Aceptar una recomendación",
-							"Lee un libro que haya sido recomendado por un amigo", 1, "accept", 100,true,7);
+							"Lee un libro que haya sido recomendado por un amigo", 1, "accept", 100, true, 7);
 					break;
 				case 3:
 					usuarioActual.makeChallenge("Aceptar 2 recomendaciones",
-							"Lee 2 libros que hayan sido recomendados por un amigo", 2, "accept", 250,true,7);
+							"Lee 2 libros que hayan sido recomendados por un amigo", 2, "accept", 250, true, 7);
 					break;
 				case 4:
 				case 5:
 					usuarioActual.makeChallenge("Recomienda un libro",
 							"Expresa tu opinión sobre un libro. Comparte tu opinion con el mundo", 1,
-							"recommend", 50,true,7);
+							"recommend", 50, true, 7);
 					break;
 				case 6:
 					usuarioActual.makeChallenge("Recomienda un libro",
 							"Expresa tu opinión sobre un libro. Comparte tu opinion con el mundo", 1,
-							"recommend", 50,true,7);
+							"recommend", 50, true, 7);
 					break;
 				case 7:
 					difficulty = ((int) (Math.random() * 10)) * 10;
 					usuarioActual.makeChallenge("Leer un libro de más de " + difficulty
 							+ " páginas", "Lee un libro de más de " + difficulty + " páginas", 1,
-							"book_length", difficulty,true,7);
+							"book_length", difficulty, true, 7);
 					break;
 			}
 		}
@@ -838,6 +910,7 @@ public class Interfaz {
 	}
 
 	public void menu_Administrador() throws NoSuchAlgorithmException {
+		clearConsole();
 		// mostrar las opciones que tiene el administrador
 		System.out.println("ADMINISTRADOR:");
 		System.out.println("1. Gestionar Libros");
@@ -845,8 +918,10 @@ public class Interfaz {
 		System.out.println("3. Crear nuevo moderador");
 		System.out.println("4. Cerrar sesión");
 		int opcion = sc.nextInt();
+		sc.nextLine();
 		switch (opcion) {
 			case 1:
+				clearConsole();
 				try {
 					Funciones.menuDBLibro();
 				} catch (Exception e) {
@@ -855,22 +930,23 @@ public class Interfaz {
 				}
 				break;
 			case 2:
+				clearConsole();
 				menu_AdminMod();
 				break;
 			case 3:
-
+				clearConsole();
 				System.out.println("ingrese el nombre de usuario del nuevo moderador");
-				String username = sc.next();
+				String username = sc.nextLine();
 				System.out.println("ingrese la contraseña del nuevo moderador");
-				String password = sc.next();
+				String password = sc.nextLine();
 				System.out.println("ingrese el correo del nuevo moderador");
-				String correo = sc.next();
+				String correo = sc.nextLine();
 
 				MessageDigest digest = MessageDigest.getInstance("SHA-256");
 				byte[] encodedhash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
 				String passHash = db.bytesToHex(encodedhash);
 
-				db.createPersona(username,correo,passHash,"moderador");
+				db.createPersona(username, correo, passHash, "moderador");
 
 				break;
 			case 4:
@@ -880,6 +956,7 @@ public class Interfaz {
 	}
 
 	public void menu_Moderador() {
+		clearConsole();
 		Moderador mod = (Moderador) personaActual;
 		// mostrar las opciones que tiene el moderador
 		sc.nextLine();
@@ -978,13 +1055,15 @@ public class Interfaz {
 			}
 		}
 	}
+
 	public void menu_AdminMod() {
+		clearConsole();
 		Admin admin = (Admin) personaActual;
 		// mostrar las opciones que tiene el moderador
 		sc.nextLine();
 		System.out.println("ingrese el nombre del usuario que desea moderar");
 		String nombreUsuario = sc.nextLine();
-		Persona victim = db.buscarUser(nombreUsuario);
+		Persona victim = DB.buscarUser(nombreUsuario);
 		boolean canBeBanned = victim instanceof Usuario;
 
 		if (victim == null) {
@@ -1077,7 +1156,6 @@ public class Interfaz {
 			}
 		}
 	}
-
 
 	private int parseTime(String duration) {
 		String[] parts = duration.split(" ");

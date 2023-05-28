@@ -58,7 +58,7 @@ public class Review {
         }
 
         public String toString() {
-            return  "\ntitle= " + libro.title + "\npuntuacion=" + puntuacion + " \nReseña: "+descripcion;
+            return  "\nLibro: " + libro.title + "\nPuntaje:" + puntuacion + "\nReseña: "+descripcion;
         }
 
 

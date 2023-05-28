@@ -304,14 +304,23 @@ public class Usuario extends Persona {
                 case "paginas":
                     //si el progreso añadido completa el desafío, devuelve true y suma 1 al contador
                     completedCount += challenge.addProgress(libro.getNumPages()) ? 1 : 0;
+                    if(challenge.isCompleted()){
+                                this.stats.addXp(challenge.getReward());
+                            }
                     break;
                 case "libros":
                     completedCount += challenge.addProgress(1) ? 1 : 0;
+                    if(challenge.isCompleted()){
+                                this.stats.addXp(challenge.getReward());
+                            }
                     break;
                 case "accept":
                     for (Libro l : listaRecomendados) {
                         if (libro.equals(l)) {
                             completedCount += challenge.addProgress(1) ? 1 : 0;
+                            if(challenge.isCompleted()){
+                                this.stats.addXp(challenge.getReward());
+                            }
                         }
                     }
                     break;
@@ -320,6 +329,7 @@ public class Usuario extends Persona {
                         challenge.markAsCompleted();
                         completedCount++;
                     }
+                    break;
                     // se pueden añadir más tipos
             }
         }

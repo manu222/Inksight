@@ -62,4 +62,12 @@ public class Stats {
         return xpToNextLevel;
     }
 
+    public String toString() {
+        return "Estadisticas:" +
+                "\nLibros leidos: " + numBooks +
+                "\nPaginas leidas: " + numPages +
+                "\nnivel: " + level +
+                "\nxp: " + xp +
+                "/" + xpToNextLevel;
+    }
 }

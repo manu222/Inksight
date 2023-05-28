@@ -1,0 +1,60 @@
+{
+  "listaAmigos": [
+    "Paula"
+  ],
+  "listaReviews": [],
+  "listaRecomendados": [],
+  "desafios": [
+    {
+      "challengeID": "1",
+      "title": "Recomienda un libro",
+      "description": "Expresa tu opinión sobre un libro. Comparte tu opinion con el mundo",
+      "type": "recommend",
+      "target": 1,
+      "progress": 0,
+      "reward": 50.0,
+      "completed": false,
+      "timeSensitive": true,
+      "timeLimit": 7,
+      "timeRemaining": 2870973
+    }
+  ],
+  "stats": {
+    "numBooks": 0,
+    "numPages": 0,
+    "level": 0,
+    "xp": 0.0,
+    "xpToNextLevel": 1000.0,
+    "quiereLeerHistorico": 0,
+    "tasaFinalizacion": 0.0
+  },
+  "lastChallenge": "May 29, 2023, 12:57:38 AM",
+  "lastLogin": "May 29, 2023, 1:45:27 AM",
+  "gestionColecciones": {
+    "listaColecciones": [
+      {
+        "nombreColeccion": "leidos",
+        "listaLibros": []
+      },
+      {
+        "nombreColeccion": "no leidos",
+        "listaLibros": []
+      },
+      {
+        "nombreColeccion": "leyendo",
+        "listaLibros": []
+      }
+    ]
+  },
+  "nombreUser": "Lucas",
+  "correo": "lucas@mail.com",
+  "pass": "c09e5870616af035fcfd28dd4ad76ee5387bdc462d4c777e72e93f64ce66e99f",
+  "first_name": "Lucas",
+  "last_name": "Cohen",
+  "location": "Buenos",
+  "online": true,
+  "followers": 0,
+  "authLevel": "user",
+  "isBanned": false,
+  "daysUntilUnban": 0
+}
