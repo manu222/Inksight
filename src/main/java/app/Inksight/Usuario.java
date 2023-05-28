@@ -315,10 +315,4 @@ public class Usuario extends Persona {
 
     // </libros>
 
-
-    // hazerlo de un amigo al azar/uno que yo escsoga
-    // amigo al azar
-    // checkear si tiene algo en la lista de reviews, si esta vacia otro amigo
-    // random, si no dame tu mejor review
-
 }

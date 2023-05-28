@@ -312,14 +312,14 @@ public class DB {
         return new String(contenidoBytes);
     }
 
-    public static Persona personaCast(Persona p){
-        if(p.getAuthLevel().equalsIgnoreCase("admin")){
-            return(Admin)p;
+    public static Persona personaCast(Usuario u){
+        if(u.getAuthLevel().equalsIgnoreCase("admin")){
+            return new Admin(u.getNombreUser(),u.getCorreo(),u.getPass(),u.getFirst_name(),u.getLast_name(),u.getLocation());
         }
-        if(p.getAuthLevel().equalsIgnoreCase("moderador")){
-            return(Moderador)p;
+        if(u.getAuthLevel().equalsIgnoreCase("moderador")){
+            return new Moderador(u.getNombreUser(),u.getCorreo(),u.getPass(),u.getFirst_name(),u.getLast_name(),u.getLocation());
         }
-        else return (Usuario)p;
+        else return u;
     }
     public Persona createPersona(String userName, String correo, String pass, String type) {
 
@@ -402,7 +402,7 @@ public class DB {
         }
 
     }
-    public static Persona buscarUser(String userName){
+    public static Usuario buscarUser(String userName){
         Gson gson = new Gson();
 
         // Comprobar si la carpeta data existe, si no existe, crearla

@@ -87,6 +87,9 @@ public class Persona {
         this.followers = followers;
     }
 
+    public String getCorreo() {
+        return correo;
+    }
     // --------------------Moderation--------------------
     public void ban() {
         isBanned = true;
