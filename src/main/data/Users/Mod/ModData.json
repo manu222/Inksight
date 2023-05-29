@@ -1,0 +1,13 @@
+{
+  "nombreUser": "Mod",
+  "correo": "mod@gmail.com",
+  "pass": "c09e5870616af035fcfd28dd4ad76ee5387bdc462d4c777e72e93f64ce66e99f",
+  "first_name": "Mod",
+  "last_name": "Mod",
+  "location": "Madrid",
+  "online": true,
+  "followers": 0,
+  "authLevel": "moderador",
+  "isBanned": false,
+  "daysUntilUnban": 0
+}

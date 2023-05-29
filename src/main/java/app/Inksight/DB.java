@@ -403,6 +403,7 @@ public class DB {
      * @return the persona
      */
     public static Persona personaCast(Usuario u){
+        if(u==null)return null;
         if(u.getAuthLevel().equalsIgnoreCase("admin")){
             return new Admin(u.getNombreUser(),u.getCorreo(),u.getPass(),u.getFirst_name(),u.getLast_name(),u.getLocation());
         }

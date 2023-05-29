@@ -2,13 +2,38 @@
   "listaAmigos": [
     "Paula"
   ],
-  "listaReviews": [],
+  "listaReviews": [
+    {
+      "libro": {
+        "bookID": 2986,
+        "title": "Alicia en el pais de las maravillas",
+        "authors": "Lewis Carroll",
+        "numPages": 300,
+        "publication_date": "14/06/1997",
+        "languageCode": "es-es"
+      },
+      "descripcion": "no me gusta mucho",
+      "puntuacion": 1.0
+    },
+    {
+      "libro": {
+        "bookID": 1,
+        "title": "Harry Potter and the Half-Blood Prince (Harry Potter  #6)",
+        "authors": "J.K. Rowling/Mary GrandPrÃ©",
+        "numPages": 652,
+        "publication_date": "9/16/2006",
+        "languageCode": "en-us"
+      },
+      "descripcion": "genial",
+      "puntuacion": 4.0
+    }
+  ],
   "listaRecomendados": [],
   "desafios": [
     {
       "challengeID": "1",
       "title": "Recomienda un libro",
-      "description": "Expresa tu opinión sobre un libro. Comparte tu opinion con el mundo",
+      "description": "Expresa tu opiniï¿½n sobre un libro. Comparte tu opinion con el mundo",
       "type": "recommend",
       "target": 1,
       "progress": 0,
@@ -16,7 +41,7 @@
       "completed": false,
       "timeSensitive": true,
       "timeLimit": 7,
-      "timeRemaining": 2870973
+      "timeRemaining": 45635778
     }
   ],
   "stats": {
@@ -29,7 +54,7 @@
     "tasaFinalizacion": 0.0
   },
   "lastChallenge": "May 29, 2023, 12:57:38 AM",
-  "lastLogin": "May 29, 2023, 1:45:27 AM",
+  "lastLogin": "May 29, 2023, 1:38:07 PM",
   "gestionColecciones": {
     "listaColecciones": [
       {

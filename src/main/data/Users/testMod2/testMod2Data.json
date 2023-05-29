@@ -1,0 +1,13 @@
+{
+  "nombreUser": "testMod2",
+  "correo": "test",
+  "pass": "c09e5870616af035fcfd28dd4ad76ee5387bdc462d4c777e72e93f64ce66e99f",
+  "first_name": "test",
+  "last_name": "test",
+  "location": "test",
+  "online": true,
+  "followers": 0,
+  "authLevel": "moderador",
+  "isBanned": false,
+  "daysUntilUnban": 0
+}
