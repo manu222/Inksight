@@ -59,22 +59,44 @@ public class DB {
 
         Scanner sc = new Scanner(System.in);
         int id;
+        int pages=0;
         System.out.print("Titulo:");
         String titulo = sc.nextLine();
 
         System.out.print("authors:");
         String autores = sc.nextLine();
+        boolean valid= false;
+        while (!valid) {
+            System.out.print("Numero Hojas:");
+            try {
+                pages = sc.nextInt();
+                valid = pages>0;
+            } catch (InputMismatchException e) {
 
-        System.out.print("Numero Hojas:");
-        int pages = sc.nextInt();
-        sc.nextLine();
+            }
+            sc.nextLine();
+        }
+        valid=false;
+        String in="";
+        int[] cantDias = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        while (!valid) {
+            Interfaz.clearConsole();
+            System.out.print("Fecha publicacion dd/mm/aaaa:");
+             in = sc.nextLine();
+            String[] parts = in.split("/");
+            if (parts.length==3){
+                try {
+                    int[] partsNum = {Integer.parseInt(parts[0]),Integer.parseInt(parts[1]),Integer.parseInt(parts[2])};
+                    if (partsNum[0]>0 && partsNum[0]<=31 && partsNum[1]>0 && partsNum[1]<=12 && partsNum[2]>0 && partsNum[0]<=cantDias[partsNum[1]-1]){
+                        valid=true;
+                    }
+                }catch (Exception e){}
+            }
 
-        System.out.print("Fecha publicacion dd/mm/aaaa:");
-        String date = sc.nextLine();
-
+        }
         System.out.print("Codigo xx-xx:");
         String code = sc.nextLine();
-        addLibro(titulo, autores, pages, date, code);
+        addLibro(titulo, autores, pages, in, code);
         System.out.println("Libro Añadido \n");
         Interfaz i = new Interfaz();
         i.menu_Administrador();
@@ -148,28 +170,18 @@ public class DB {
                 boolean seguir = true;
                 while (seguir) {
                 System.out.println("¿Qué quieres editar?");
-                System.out.println("1) ID");
-                System.out.println("2) Título");
-                System.out.println("3) Autores");
-                System.out.println("4) Páginas");
-                System.out.println("5) Fecha");
-                System.out.println("6) Código de idioma");
+
+                System.out.println("1) Título");
+                System.out.println("2) Autores");
+                System.out.println("3) Páginas");
+                System.out.println("4) Fecha");
+                System.out.println("5) Código de idioma");
                 System.out.println("OTRO) SALIR");
                 int opcion = sc.nextInt();
 
                     switch (opcion) {
-                        case 1:
-                            System.out.println("Introduce nueva ID:");
-                            int newId = sc.nextInt();
-                            for (Libro libro : libros) {
-                                if (libro.getbookID() == id) {
-                                    libro.setID(newId);
-                                    break;
-                                }
-                           }
 
-                            break;
-                        case 2:
+                        case 1:
                             System.out.println("Introduce nuevo título:");
                             sc.nextLine();
                             String newTitle = sc.nextLine();
@@ -180,7 +192,7 @@ public class DB {
                                 }
                             }
                             break;
-                        case 3:
+                        case 2:
                             System.out.println("Introduce autor/es:");
                             sc.nextLine();
                             String newAuthors = sc.nextLine();
@@ -191,9 +203,19 @@ public class DB {
                                 }
                             }
                             break;
-                        case 4:
-                            System.out.println("Introduce páginas del libro:");
-                            int newPages = sc.nextInt();
+                        case 3:
+                            int newPages = 0;
+                            boolean valid= false;
+                            while (!valid) {
+                                System.out.println("Introduce páginas del libro:");
+                                try {
+                                    newPages = sc.nextInt();
+                                    valid = newPages>0;
+                                } catch (InputMismatchException e) {
+
+                                }
+                                sc.nextLine();
+                            }
                             for (Libro libro : libros) {
                                 if (libro.getbookID() == id) {
                                     libro.setNumPages(newPages);
@@ -201,10 +223,26 @@ public class DB {
                                 }
                             }
                             break;
-                        case 5:
-                            System.out.println("Introduce fecha de publicación:");
-                            sc.nextLine();
-                            String newFecha = sc.nextLine();
+                        case 4:
+                            String newFecha = "";
+                            valid=false;
+
+                            int[] cantDias = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+                            while (!valid) {
+                                Interfaz.clearConsole();
+                                System.out.print("Fecha publicacion dd/mm/aaaa:");
+                                newFecha = sc.nextLine();
+                                String[] parts = newFecha.split("/");
+                                if (parts.length==3){
+                                    try {
+                                        int[] partsNum = {Integer.parseInt(parts[0]),Integer.parseInt(parts[1]),Integer.parseInt(parts[2])};
+                                        if (partsNum[0]>0 && partsNum[0]<=31 && partsNum[1]>0 && partsNum[1]<=12 && partsNum[2]>0 && partsNum[0]<=cantDias[partsNum[1]-1]){
+                                            valid=true;
+                                        }
+                                    }catch (Exception e){}
+                                }
+
+                            }
                             for (Libro libro : libros) {
                                 if (libro.getbookID() == id) {
                                     libro.setPublication_date(newFecha);
@@ -212,7 +250,7 @@ public class DB {
                                 }
                             }
                             break;
-                        case 6:
+                        case 5:
                             System.out.println("Introduce código de idioma (XX-XX):");
                             sc.nextLine();
                             String newCode = sc.nextLine();

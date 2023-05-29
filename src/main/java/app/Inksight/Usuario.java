@@ -320,7 +320,9 @@ public class Usuario extends Persona {
         }
         return reviewsList.get(0);
     }
-
+public boolean eliminarMultiplesReviews(List<Review> reviews){
+        return this.listaReviews.removeAll(reviews);
+}
     /**
      * Add review boolean.
      *

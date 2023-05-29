@@ -1,6 +1,19 @@
 {
   "listaAmigos": [],
-  "listaReviews": [],
+  "listaReviews": [
+    {
+      "libro": {
+        "bookID": 3000,
+        "title": "pepe",
+        "authors": "pepe",
+        "numPages": 100,
+        "publication_date": "22/22/2001",
+        "languageCode": "es-es"
+      },
+      "descripcion": "god",
+      "puntuacion": 5.0
+    }
+  ],
   "listaRecomendados": [],
   "desafios": [
     {
@@ -14,7 +27,7 @@
       "completed": false,
       "timeSensitive": true,
       "timeLimit": 7,
-      "timeRemaining": 0
+      "timeRemaining": 5446665
     }
   ],
   "stats": {
@@ -27,7 +40,7 @@
     "tasaFinalizacion": 0.0
   },
   "lastChallenge": "May 29, 2023, 11:52:18 PM",
-  "lastLogin": "May 29, 2023, 11:52:18 PM",
+  "lastLogin": "May 30, 2023, 1:22:57 AM",
   "gestionColecciones": {
     "listaColecciones": [
       {
@@ -41,6 +54,10 @@
       {
         "nombreColeccion": "leyendo",
         "listaLibros": []
+      },
+      {
+        "nombreColeccion": "asd",
+        "listaLibros": []
       }
     ]
   },
@@ -50,7 +67,7 @@
   "first_name": "test",
   "last_name": "test",
   "location": "test",
-  "online": false,
+  "online": true,
   "followers": 0,
   "authLevel": "user",
   "isBanned": false,

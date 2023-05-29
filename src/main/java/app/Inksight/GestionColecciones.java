@@ -195,10 +195,16 @@ public class GestionColecciones {
      *
      * @param nombreColeccionEliminar the nombre coleccion eliminar
      */
-    public void eliminarLista(String nombreColeccionEliminar) {
+    public boolean eliminarLista(String nombreColeccionEliminar) {
 		//meter condiciones en caso de que no exista la lista 
 		ColeccionLibro coleccionActual = obtenerColeccion(nombreColeccionEliminar);
-		listaColecciones.remove(coleccionActual);
+		for (ColeccionLibro c:listaColecciones) {
+			if (c.getNombreColeccion().equalsIgnoreCase(nombreColeccionEliminar)){
+				return false;
+			}
+		}
+		return listaColecciones.remove(coleccionActual);
+
 	}
 
 

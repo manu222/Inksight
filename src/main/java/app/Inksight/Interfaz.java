@@ -612,14 +612,26 @@ public class Interfaz {
 	 * @throws IOException the io exception
 	 */
 	public void menu_Reviews() throws IOException {
-		System.out.println("RESEÑAS");
-		System.out.println("1. Hacer reseña");
-		System.out.println("2. Borrar Review");
-		System.out.println("3. Ver Reviews");
-		System.out.println("4. Salir");
-		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
-		opcion = sc.nextInt();
-		sc.nextLine();
+		boolean valid =false;
+		opcion=0;
+		while (!valid) {
+			clearConsole();
+			System.out.println("RESEÑAS");
+			System.out.println("1. Hacer reseña");
+			System.out.println("2. Borrar Review");
+			System.out.println("3. Ver Reviews");
+			System.out.println("4. Salir");
+			System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
+			try {
+				opcion = sc.nextInt();
+				valid = opcion>=1 && opcion<=4;
+
+			}catch (InputMismatchException e){
+				System.out.println("Intente de nuevo, opcion invalida");
+
+			}
+			sc.nextLine();
+		}
 		switch (opcion) {
 			case 1:
 				clearConsole();
@@ -637,26 +649,37 @@ public class Interfaz {
 			// validar que el libro existe
 
 			case 2:
-				clearConsole();
 				List<Review> del = new ArrayList<Review>();
-				for (Review review : usuarioActual.getListaReviews()) {
-					System.out.println(review.toString());
-					System.out.println("1.Eliminar");
-					System.out.println("2.Siguiente");
-					System.out.println("3.Salir");
-					int opcion = sc.nextInt();
-					sc.nextLine();
-					switch (opcion) {
-						case 1:
-							del.add(review);
-							System.out.println("Review borrada");
-							break;
-						case 2:
-							break;
-						case 3:
-							usuarioActual.getListaReviews().removeAll(del);
-							menu_Reviews();
-							break;
+				boolean valid2=false;
+				int opcion = 0;
+				while (!valid2) {
+					clearConsole();
+					for (Review review : usuarioActual.getListaReviews()) {
+						System.out.println(review.toString());
+						System.out.println("1.Eliminar");
+						System.out.println("2.Siguiente");
+						System.out.println("3.Salir");
+						try {
+							opcion = sc.nextInt();
+							valid2 = opcion>=1 && opcion<=3;
+							sc.nextLine();
+						}catch (InputMismatchException e){
+							System.out.println("Opcion invalida");
+							sc.nextLine();
+						}
+
+						switch (opcion) {
+							case 1:
+								del.add(review);
+								System.out.println("Review borrada");
+								break;
+							case 2:
+								break;
+							case 3:
+								usuarioActual.getListaReviews().removeAll(del);
+								menu_Reviews();
+								break;
+						}
 					}
 				}
 				usuarioActual.getListaReviews().removeAll(del);
@@ -743,8 +766,9 @@ public class Interfaz {
 				System.out.println("Seleccione la lista que desea eliminar: ");
 				nombreLista = sc.nextLine();
 				try {
-					listas.eliminarLista(nombreLista);
-					usuarioActual.gestionColecciones.eliminarLista(nombreLista);
+					if (!usuarioActual.gestionColecciones.eliminarLista(nombreLista)){
+						throw new Exception();
+					}
 					System.out.println(nombreLista + " eliminada");
 				} catch (Exception e) {
 					System.out.println("La lista no existe");
@@ -1098,17 +1122,18 @@ public class Interfaz {
 				int opcion = 0;
 				while (!valid) {
 					System.out.println("usuario: " + victim.getFirst_name() + " " + victim.getLast_name());
-					System.out.println(user.getDaysUntilUnban()>0?"1. Suspender usuario":"quitar suspensión");
+					System.out.println(user.getDaysUntilUnban()>0?"1. quitar suspensión":"1. Suspender usuario");
 					System.out.println(user.isBanned ? "2. Eliminar veto" : "2. vetar usuario");
 					System.out.println("3. Ver reseñas");
 					System.out.println("4. Cambiar usuario a moderar");
 					try {
 						opcion = sc.nextInt();
-						sc.nextLine();
-						valid = true;
+						valid = opcion>=1 && opcion<=4;
+
 					} catch (Exception e) {
 						System.out.println("Ingrese una opción válida");
 					}
+					sc.nextLine();
 				}
 				switch (opcion) {
 					case 1:
@@ -1118,6 +1143,8 @@ public class Interfaz {
 						user.serializeToJson();
 						clearConsole();
 						System.out.println("Usuario reincorporado");
+						limpiarConDelay();
+						menu_Moderador();
 						break;
 					}
 						clearConsole();
@@ -1165,25 +1192,23 @@ public class Interfaz {
 								System.out.println("Reseña eliminada");
 								limpiarConDelay();
 								user.serializeToJson();
-								menu_AdminMod();
 							} else if (ans.equals("2")) {
 								clearConsole();
 								r.setDescripcion("");
 								System.out.println("Texto eliminado");
 								limpiarConDelay();
 								user.serializeToJson();
-								menu_AdminMod();
 							} else if (ans.equals("3")) {
 								clearConsole();
 							} else {
 								clearConsole();
-								user.getListaReviews().removeAll(del);
+								user.eliminarMultiplesReviews(del);
 								user.serializeToJson();
-								menu_AdminMod();
+								menu_Moderador();
 								break;
 							}
 						}
-						user.getListaReviews().removeAll(del);
+						user.eliminarMultiplesReviews(del);
 						user.serializeToJson();
 						menu_Moderador();
 						break;
