@@ -309,28 +309,6 @@ public class DB {
         return this.libroError;
     }
 
-    /**
-     * Buscar libros list.
-     *
-     * @param query the query
-     * @return the list
-     * @throws IOException the io exception
-     */
-/*public static Libro buscarLibroPorId(List<Libro> libros,int id) throws IOException {
-        Gson gson = new Gson();
-
-        Type listType = new TypeToken<List<Libro>>() {}.getType();
-        List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
-
-        System.out.println("Resultados de la búsqueda para '" + id + "':");
-        for (Libro libro : libros) {
-            // convertimos el título del libro a minúsculas para hacer la comparación
-            if (libro.getbookID()==id) {
-                return libro;
-            }
-        }
-        return libroError;
-    }*/
     public List<Libro> buscarLibros(String query) throws IOException {
         Gson gson = new Gson();
         query = query.toLowerCase(); // convertimos la consulta a minúsculas

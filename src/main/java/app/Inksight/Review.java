@@ -1,6 +1,7 @@
 package app.Inksight;
 
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -49,10 +50,17 @@ public class Review {
      */
     public static Review hacerReview(Scanner sc) throws IOException {
             Interfaz.clearConsole();
+            DB db = new DB();
 
             System.out.println("Cual es el titulo del libro?");
+
             String titulo = sc.nextLine();
-            System.out.println("titulo "+titulo);
+
+            if (db.buscarLibro(titulo).getTitle().equalsIgnoreCase("error")){
+                return null;
+            }
+
+            System.out.println("titulo: "+db.buscarLibro(titulo).getTitle());
 
             System.out.println("Escribe tu review del libro:");
             String texto = sc.nextLine();
@@ -60,33 +68,25 @@ public class Review {
             float puntuacion= -1f;
             while (!valid) {
                 System.out.println("ingrese la puntuacion del libro");
-                try{
+                try {
                     puntuacion = sc.nextFloat();
-                    if (puntuacion >= 0 && puntuacion <= 5) {
-                        valid = true;
-                    } else {
-                        System.out.println("La puntuacion debe ser entre 1 y 5");
-                    }
-                }catch(Exception e){
-                    valid = false;
+                    valid = puntuacion>=1 && puntuacion<=5;
+                }catch(InputMismatchException e){
                     System.out.println("La puntuacion debe ser entre 1 y 5");
+                    sc.nextLine();
                 }
             }
-            DB db = new DB();
             Review review = new Review (DB.libroError, "", -1);
 
-            if(db.buscarLibro(titulo) != null){
+
                 Libro libro = db.buscarLibro(titulo);
 
                 review = new Review(libro,texto,puntuacion);
                 System.out.println("Review hecha de manera correcta.");
                 return review;
 
-            }
-            else{
-                System.out.println("Libro no encontrado");
-                return review;
-            }
+
+
         }
 
         public String toString() {

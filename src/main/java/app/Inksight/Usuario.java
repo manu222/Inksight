@@ -331,8 +331,8 @@ public class Usuario extends Persona {
     public boolean addReview(Scanner sc) throws IOException {
         List<Review> reviews = this.getListaReviews();
 
-
-        if (reviews.add(Review.hacerReview(sc))){
+            Review r = Review.hacerReview(sc);
+        if (r != null && !r.getLibro().getTitle().equalsIgnoreCase("error") && reviews.add(r)){
             for(Challenge c : desafios){
                 if(c.getType().equals("review")){
                     if(c.addProgress(1)){
@@ -341,6 +341,8 @@ public class Usuario extends Persona {
                 }
             }
             return  true;
+        }else {
+            System.out.println("No se encontro el libro");
         }
         return false;
     }
@@ -400,19 +402,19 @@ public class Usuario extends Persona {
     public boolean borrarAmigo(String amigo){
         DB db = new DB();
         Persona user =  db.buscarUser(amigo);
+        boolean contains = false;
         if(user != null){
-            HashSet<String> listaAmigos = this.getListaAmigos();
-            Iterator<String> it = listaAmigos.iterator();
-            while(it.hasNext()){
-                String str = it.next();
-                if(str.equals(amigo)){
-                    it.remove();
+            for(String s : this.getListaAmigos()){
+                if(s.equalsIgnoreCase(amigo)){
+                    this.listaAmigos.remove(s);
+                    contains = true;
                 }
             }
-            return true;
+            return contains;
         }
         return false;
     }
+
 
 
     /**

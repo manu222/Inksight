@@ -88,9 +88,14 @@ public class GestionColecciones {
      *
      * @param nombreNuevaLista the nombre nueva lista
      */
-    public void construirLista(String nombreNuevaLista) {
+    public boolean construirLista(String nombreNuevaLista) {
 		ColeccionLibro coleccion = new ColeccionLibro(nombreNuevaLista);
-		listaColecciones.add(coleccion);
+		for (ColeccionLibro c:listaColecciones) {
+			if (c.getNombreColeccion().equalsIgnoreCase(nombreNuevaLista)){
+				return false;
+			}
+		}
+		return listaColecciones.add(coleccion);
 	}
 
     /**

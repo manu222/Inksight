@@ -5,12 +5,12 @@
   "desafios": [
     {
       "challengeID": "1",
-      "title": "Aceptar una recomendación",
-      "description": "Lee un libro que haya sido recomendado por un amigo",
+      "title": "Aceptar 2 recomendaciones",
+      "description": "Lee 2 libros que hayan sido recomendados por un amigo",
       "type": "accept",
-      "target": 1,
+      "target": 2,
       "progress": 0,
-      "reward": 100.0,
+      "reward": 250.0,
       "completed": false,
       "timeSensitive": true,
       "timeLimit": 7,
@@ -26,8 +26,8 @@
     "quiereLeerHistorico": 0,
     "tasaFinalizacion": 0.0
   },
-  "lastChallenge": "May 29, 2023, 12:48:11 AM",
-  "lastLogin": "May 29, 2023, 12:48:11 AM",
+  "lastChallenge": "May 29, 2023, 11:52:18 PM",
+  "lastLogin": "May 29, 2023, 11:52:18 PM",
   "gestionColecciones": {
     "listaColecciones": [
       {
@@ -44,7 +44,7 @@
       }
     ]
   },
-  "nombreUser": "test2",
+  "nombreUser": "User",
   "correo": "test",
   "pass": "c09e5870616af035fcfd28dd4ad76ee5387bdc462d4c777e72e93f64ce66e99f",
   "first_name": "test",

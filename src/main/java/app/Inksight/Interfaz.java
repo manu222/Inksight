@@ -47,15 +47,10 @@ public class Interfaz {
 	 * The Timeout.
 	 */
 	int timeout = 2000;
-	/**
-	 * The Lista amigos.
-	 */
-	static HashSet<String> listaAmigos = new HashSet<>();
+
 	/**
 	 * The Persona actual.
 	 */
-	// Libro libro = new Libro(0,"","",0,"","");
-	// Libro libro = new Libro(libro);
 	Persona personaActual = new Usuario("", "", "", "", "", "", false, 0, stats, new HashSet<>(), new LinkedList<>(),
 			0);
 	private Usuario usuarioActual = (Usuario) personaActual;
@@ -86,29 +81,39 @@ public class Interfaz {
 			System.out.println("2. Iniciar sesión");
 
 			System.out.print("Elija la opción deseada: ");
-			
+
 			try{
-			opcion = sc.nextInt();
-			sc.nextLine();
-			ok=true;
+				opcion = sc.nextInt();
+				ok = opcion >= 1 && opcion <= 2;
+				sc.nextLine();
 			}catch(InputMismatchException e){
+				System.out.println("Intente de nuevo, opcion invalida");
+				sc.nextLine();
 			}
 		}
 
-		int opcionUser;
+		int opcionUser = 0;
 		String userType;
 		String nombreUser;
 		String pass;
 		String correo;
 		switch (opcion) {
 			case 1:
-				clearConsole();
-				System.out.println("1) User");
-				System.out.println("2) Moderador");
-				System.out.println("3) Admin");
+				boolean ok2=false;
+				while (!ok2){
+					System.out.println("1) User");
+					System.out.println("2) Moderador");
+					System.out.println("3) Admin");
+					try {
+						opcionUser=sc.nextInt();
+						ok2= opcionUser >= 1 && opcionUser <= 3;
+						sc.nextLine();
+					}catch (InputMismatchException e){
+						System.out.println("Intente de nuevo, opcion invalida");
+						sc.nextLine();
+					}
+				}
 
-				opcionUser = sc.nextInt();
-				sc.nextLine();
 				clearConsole();
 				if (opcionUser == 3) {
 					userType = "admin";
@@ -120,6 +125,11 @@ public class Interfaz {
 
 				System.out.print("Ingrese un nombre de usuario: ");
 				nombreUser = sc.nextLine();
+				if(DB.buscarUser(nombreUser)!=null) {
+					System.out.println("El nombre de usuario ya existe");
+					limpiarConDelay();
+					menu_principal();
+				}
 				clearConsole();
 				System.out.print("Ingrese un correo electronico: ");
 				correo = sc.nextLine();
@@ -135,15 +145,15 @@ public class Interfaz {
 
 				String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
 				boolean validPassword = false;
-				while (validPassword == false) {
+				while (!validPassword) {
 					System.out.print("Ingrese una contraseña valida: ");
 					pass = sc.nextLine();
 					if (pass.matches(regex)) {
 						validPassword = true;
 						clearConsole();
 						System.out.println("Confirmar contraseña: ");
-						String contraseñaConfirmada = sc.nextLine();
-						if (pass.matches(contraseñaConfirmada)) {
+						String passConfirmada = sc.nextLine();
+						if (pass.matches(passConfirmada)) {
 							DB db = new DB();
 							MessageDigest digest = MessageDigest.getInstance("SHA-256");
 							byte[] encodedhash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
@@ -214,7 +224,7 @@ public class Interfaz {
 									}
 									System.out.println("¿Desea iniciar sesión con otro usuario? (S/N)");
 									String respuesta = sc.nextLine();
-									if (respuesta.equals("S")) {
+									if (respuesta.split("")[0].equalsIgnoreCase("S")) {
 										valid = false;
 									} else {
 										System.exit(0);
@@ -235,7 +245,6 @@ public class Interfaz {
 					}
 				}
 				break;
-
 		}
 	}
 
@@ -247,27 +256,35 @@ public class Interfaz {
 	 */
 	public void menu_PerfilUsuario() throws NoSuchAlgorithmException, IOException {
 		clearConsole();
-		System.out.println(usuarioActual.getFirst_name());
-		System.out.println();
-		System.out.println("1. Estadisticas");
-		System.out.println("2. Desafios");
-		System.out.println("3. Amigos");
-		System.out.println("4. Reseñas");
-		System.out.println("5. Marcar libro como leido");
-		System.out.println("6. Listas");
-		if (personaActual instanceof Admin) {
-			System.out.println("7. Administrador");
-			System.out.println("8. Cambiar de usuario");
-		} else if (personaActual instanceof Moderador) {
-			System.out.println("7. Buscar usuario (moderador)");
-			System.out.println("8. Cambiar de usuario");
-		} else {
-			System.out.println("7. Cambiar de usuario");
-		}
+		boolean valid3=false;
+		while (!valid3) {
+			System.out.println(usuarioActual.getFirst_name());
+			System.out.println();
+			System.out.println("1. Estadisticas");
+			System.out.println("2. Desafios");
+			System.out.println("3. Amigos");
+			System.out.println("4. Reseñas");
+			System.out.println("5. Marcar libro como leido");
+			System.out.println("6. Listas");
+			if (personaActual instanceof Admin) {
+				System.out.println("7. Administrador");
+				System.out.println("8. Cambiar de usuario");
+			} else if (personaActual instanceof Moderador) {
+				System.out.println("7. Buscar usuario (moderador)");
+				System.out.println("8. Cambiar de usuario");
+			} else {
+				System.out.println("7. Cambiar de usuario");
+			}
+			try {
+				System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
+				opcion = sc.nextInt();
+				valid3= opcion >= 1 && opcion <= 7;
 
-		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
-		opcion = sc.nextInt();
-		sc.nextLine();
+			}catch (InputMismatchException e){
+				System.out.println("Ingrese algo valido");
+			}
+			sc.nextLine();
+		}
 		switch (opcion) {
 			case 1:
 				System.out.println("ESTADISTICAS");
@@ -282,13 +299,13 @@ public class Interfaz {
 				break;
 			case 4:
 				clearConsole();
-				menuReseñas();
+				menu_Reviews();
 
 				break;
 			case 5:
 				boolean valid = false;
 				while (!valid) {
-					System.out.println("introduzca el titulo del libro o \"cancelar\"para abortar la operacion");
+					System.out.println("introduzca el titulo del libro o 'cancelar' para abortar la operacion");
 					titulo = sc.nextLine();
 					valid = titulo.toLowerCase().trim().equals("cancelar");
 					// validar que el libro existe
@@ -297,12 +314,21 @@ public class Interfaz {
 						try {
 							l = db.buscarLibro(titulo);
 							valid = true;
+							if(!l.getTitle().equalsIgnoreCase("error")){
+								//existe el libro
+								usuarioActual.libroTerminado(l);
+								usuarioActual.serializeToJson();
+							}
+							else{
+								System.out.println("Libro no encontrado");
+								limpiarConDelay();
+								break;
+							}
 						} catch (IOException e) {
 							System.out.println("Libro no encontrado");
 							break;
 						}
-						usuarioActual.libroTerminado(l);
-						usuarioActual.serializeToJson();
+
 						System.out.println("Libro marcado como leido");
 					}
 				}
@@ -328,6 +354,7 @@ public class Interfaz {
 				cerrarSesion();
 				break;
 		}
+		menu_PerfilUsuario();
 	}
 
 	private void cerrarSesion() {
@@ -409,23 +436,24 @@ public class Interfaz {
 	 */
 	public void menu_Amigo() {
 		clearConsole();
-		System.out.println("1. Agregar amigo");
-		System.out.println("2. Borrar amigo");
-		System.out.println("3. Consultar amigos");
-		System.out.println("4. Salir");
+		boolean valid4=false;
+		while (!valid4) {
+			System.out.println("1. Agregar amigo");
+			System.out.println("2. Borrar amigo");
+			System.out.println("3. Consultar amigos");
+			System.out.println("4. Salir");
 
-		System.out.println();
-
-		boolean valid = false;
-		while (!valid) {
 			System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
-			try {
-				opcion = sc.nextInt();
-				valid = true;
-			} catch (Exception e) {
-				System.out.println("Inserte un numero valido");
-			}
-			sc.nextLine();
+				try {
+					opcion = sc.nextInt();
+					valid4 = opcion>=1 && opcion<=4;
+					sc.nextLine();
+				} catch (InputMismatchException e) {
+					System.out.println("Intente de nuevo, opcion invalida");
+					sc.nextLine();
+				}
+
+
 		}
 		switch (opcion) {
 			case 1:
@@ -492,28 +520,43 @@ public class Interfaz {
 				System.out.println("AMIGOS");
 				Usuario target;
 				for (String s : usuarioActual.getListaAmigos()) {
+					boolean valid5=false;
+					while (!valid5) {
+						System.out.println(s);
+						System.out.println("1. Ver perfil");
+						System.out.println("2. Ver reseñas");
+						System.out.println("3. siguiente");
+						System.out.println("4. salir");
+						try {
+							opcion = sc.nextInt();
+							valid5 = opcion >= 1 && opcion <= 4;
+							sc.nextLine();
+						} catch (InputMismatchException e) {
+							System.out.println("Ingrese una opcion valida");
+							sc.nextLine();
+						}
 
-					System.out.println(s);
-					System.out.println("1. Ver perfil");
-					System.out.println("2. Ver reseñas");
-					System.out.println("3. siguiente");
-					System.out.println("4. salir");
-					int opcion = sc.nextInt();
-					sc.nextLine();
+					}
 					switch (opcion) {
 						case 1:
-							clearConsole();
-							target = DB.buscarUser(s);
-							System.out.println("PERFIL");
-							System.out.println("Nombre: " + target.getFirst_name());
-							System.out.println("Apellido: " + target.getLast_name());
-							System.out.println(target.getStats());
-							System.out.println("1. Volver");
-							int opcion2 = sc.nextInt();
-							sc.nextLine();
-							if (opcion2 == 1) {
+							boolean valid6=false;
+							while (!valid6) {
 								clearConsole();
-								menu_Amigo();
+								target = DB.buscarUser(s);
+								System.out.println("PERFIL");
+								System.out.println("Nombre: " + target.getFirst_name());
+								System.out.println("Apellido: " + target.getLast_name());
+								System.out.println(target.getStats());
+								System.out.println("1. Volver");
+								int opcion;
+								try {
+									opcion = sc.nextInt();
+									valid6 = opcion == 1;
+								} catch (InputMismatchException e) {
+									System.out.println("Intente de nuevo, opcion invalida");
+									sc.nextLine();
+								}
+
 							}
 							break;
 						case 2:
@@ -568,7 +611,7 @@ public class Interfaz {
 	 *
 	 * @throws IOException the io exception
 	 */
-	public void menuReseñas() throws IOException {
+	public void menu_Reviews() throws IOException {
 		System.out.println("RESEÑAS");
 		System.out.println("1. Hacer reseña");
 		System.out.println("2. Borrar Review");
@@ -583,12 +626,12 @@ public class Interfaz {
 				if (!usuarioActual.addReview(sc)) {
 					System.out.println("Fallo al guardar la Review");
 					limpiarConDelay();
-					menuReseñas();
+					menu_Reviews();
 				} else {
 					System.out.println("Review Guardada");
 					usuarioActual.serializeToJson();
 					limpiarConDelay();
-					menuReseñas();
+					menu_Reviews();
 				}
 				break;
 			// validar que el libro existe
@@ -612,14 +655,14 @@ public class Interfaz {
 							break;
 						case 3:
 							usuarioActual.getListaReviews().removeAll(del);
-							menuReseñas();
+							menu_Reviews();
 							break;
 					}
 				}
 				usuarioActual.getListaReviews().removeAll(del);
 				usuarioActual.serializeToJson();
 				limpiarConDelay();
-				menuReseñas();
+				menu_Reviews();
 				break;
 
 			case 3:
@@ -631,7 +674,7 @@ public class Interfaz {
 					c++;
 				}
 				limpiarConDelay();
-				menuReseñas();
+				menu_Reviews();
 
 				break;
 			case 4:
@@ -649,89 +692,51 @@ public class Interfaz {
 
 	}
 
-	private void menu_Libro() {
-		System.out.println();
-		System.out.println("1. Agregar libro ");
-		System.out.println("2. Mover libro a una lista");
-		System.out.println("3. Eliminar libro");
-		System.out.println("4. Libro terminado");
-		System.out.println("5. Salir");
-
-		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
-		opcion = sc.nextInt();
-		sc.nextLine();
-		switch (opcion) {
-			case 1:
-				clearConsole();
-				System.out.println("Selecciona el libro que deseas agregar: ");
-				titulo = sc.nextLine();
-				// validar que el libro existe
-				break;
-			case 2:
-				clearConsole();
-				System.out.println("Selecciona el libro que deseas mover: ");
-				titulo = sc.nextLine();
-				System.out.println("Selecciona la lista a la que deseas moverlo o crea una nueva: ");
-				nombreLista = sc.nextLine();
-				// validar que la lista existe o crearla
-				break;
-			case 3:
-				clearConsole();
-				System.out.println("Selecciona el libro que deseas eliminar: ");
-				titulo = sc.nextLine();
-				break;
-			case 4:
-				clearConsole();
-				System.out.println("Selecciona el libro que deseas consultar: ");
-				titulo = sc.nextLine();
-				// mostrar la información del libro
-				break;
-			case 5:
-				clearConsole();
-				System.out.println("Selecciona el libro al que deseas cambiarle el nombre: ");
-				titulo = sc.nextLine();
-				System.out.println("Escribe el nuevo nombre: ");
-				titulo = sc.nextLine();
-				// validar que el libro existe
-				break;
-		}
-
-	}
-
 	/**
 	 * Menu lista.
 	 *
 	 * @throws IOException the io exception
 	 */
 	public void menu_Lista() throws IOException {
-		clearConsole();
-		listas = usuarioActual.gestionColecciones;
-		System.out.println();
-		System.out.println("1. Crear lista ");
-		System.out.println("2. Eliminar lista");
-		System.out.println("3. Cambiar nombre de una lista");
-		System.out.println("4. Consultar todas las listas");
-		System.out.println("5. Añadir libro a una lista");
-		System.out.println("6. Mover libro de una lista a otra");
-		System.out.println("7. Eliminar libro de una lista");
-		System.out.println("8. Salir");
+		boolean valid7 = false;
+		while (!valid7) {
+			clearConsole();
+			listas = usuarioActual.gestionColecciones;
+			System.out.println();
+			System.out.println("1. Crear lista ");
+			System.out.println("2. Eliminar lista");
+			System.out.println("3. Cambiar nombre de una lista");
+			System.out.println("4. Consultar todas las listas");
+			System.out.println("5. Añadir libro a una lista");
+			System.out.println("6. Mover libro de una lista a otra");
+			System.out.println("7. Eliminar libro de una lista");
+			System.out.println("8. Salir");
 
-		System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
-		opcion = sc.nextInt();
-		sc.nextLine();
+			System.out.println("¿Qué deseas hacer? Inserta la opcion deseada");
+			try{
+				opcion = sc.nextInt();
+				valid7 = opcion>=1 && opcion<=8;
+				sc.nextLine();
+			}catch (InputMismatchException e){
+				System.out.println("Ingresa opcion valida");
+				sc.nextLine();
+			}
+		}
 		switch (opcion) {
 			case 1:
 				clearConsole();
 				System.out.println("Escriba el nombre de la lista que desea crear: ");
 				nombreLista = sc.nextLine();
 				try {
-					listas.construirLista(nombreLista);
-					usuarioActual.gestionColecciones.construirLista(nombreLista);
+					if (!usuarioActual.gestionColecciones.construirLista(nombreLista)){
+						throw new Exception();
+					}
 					System.out.println(nombreLista + " creada");
 				} catch (Exception e) {
 					System.out.println("La lista ya existe");
 				}
 				usuarioActual.serializeToJson();
+				limpiarConDelay();
 				break;
 			case 2:
 				clearConsole();
@@ -745,6 +750,7 @@ public class Interfaz {
 					System.out.println("La lista no existe");
 				}
 				usuarioActual.serializeToJson();
+				limpiarConDelay();
 				break;
 			case 3:
 				clearConsole();
@@ -762,12 +768,12 @@ public class Interfaz {
 					System.out.println("No se pudo modificar la lista");
 				}
 				usuarioActual.serializeToJson();
+				limpiarConDelay();
 				break;
 			case 4:
-				clearConsole();
-				System.out.println("LISTAS");
 				for (String s : listas.consultarListaColecciones()) {
 					clearConsole();
+					System.out.println("LISTA:");
 					System.out.println(s);
 					System.out.println("1. para ver los libros en la lista");
 					System.out.println("2. para siguiente lista");
@@ -776,14 +782,12 @@ public class Interfaz {
 					String in = sc.nextLine();
 
 					if (in.equalsIgnoreCase("1")) {
-
 						for (Libro l : usuarioActual.gestionColecciones.obtenerColeccion(s).getListaLibros()) {
 							System.out.println(l.getTitle());
 						}
-
+						System.out.println("------------------");
 					} else {
-						if (in.equalsIgnoreCase("2")) {
-						} else {
+						if (!in.equalsIgnoreCase("2")) {
 							break;
 						}
 					}
@@ -818,6 +822,7 @@ public class Interfaz {
 					System.out.println("El libro no existe");
 				}
 				usuarioActual.serializeToJson();
+				limpiarConDelay();
 				break;
 			case 6:
 				clearConsole();
@@ -853,6 +858,7 @@ public class Interfaz {
 					System.out.println("El libro no existe");
 				}
 				usuarioActual.serializeToJson();
+				limpiarConDelay();
 				break;
 			case 7:
 				clearConsole();
@@ -874,6 +880,8 @@ public class Interfaz {
 					System.out.println("El libro ha sido eliminado correctamente");
 				}
 				usuarioActual.serializeToJson();
+				limpiarConDelay();
+				menu_Lista();
 				break;
 			case 8:
 				clearConsole();
@@ -1016,14 +1024,24 @@ public class Interfaz {
 	 * @throws NoSuchAlgorithmException the no such algorithm exception
 	 */
 	public void menu_Administrador() throws NoSuchAlgorithmException {
-		clearConsole();
-		// mostrar las opciones que tiene el administrador
-		System.out.println("ADMINISTRADOR:");
-		System.out.println("1. Gestionar Libros");
-		System.out.println("2. Gestionar Usuarios");
-		System.out.println("3. Cerrar sesión");
-		int opcion = sc.nextInt();
-		sc.nextLine();
+		boolean valid = false;
+		int opcion=0;
+		while (!valid) {
+			clearConsole();
+			// mostrar las opciones que tiene el administrador
+			System.out.println("ADMINISTRADOR:");
+			System.out.println("1. Gestionar Libros");
+			System.out.println("2. Gestionar Usuarios");
+			System.out.println("3. Cerrar sesión");
+			try {
+				opcion=sc.nextInt();
+				valid = opcion>=1 && opcion<=3;
+				sc.nextLine();
+			}catch (InputMismatchException e){
+				System.out.println("Intente de nuevo, opcion invalida");
+				sc.nextLine();
+			}
+		}
 		switch (opcion) {
 			case 1:
 				clearConsole();
@@ -1132,6 +1150,7 @@ public class Interfaz {
 					case 3:
 						clearConsole();
 						List<Review> lista = user.getListaReviews();
+						List<Review> del = new ArrayList<Review>();
 						for (Review r : lista) {
 							System.out.println(r);
 							System.out.println("1. Eliminar reseña");
@@ -1142,31 +1161,31 @@ public class Interfaz {
 							ans = sc.nextLine();
 							if (ans.equals("1")) {
 								clearConsole();
-								user.eliminarReview(r);
+								del.add(r);
 								System.out.println("Reseña eliminada");
 								limpiarConDelay();
 								user.serializeToJson();
-								menu_Moderador();
+								menu_AdminMod();
 							} else if (ans.equals("2")) {
 								clearConsole();
 								r.setDescripcion("");
 								System.out.println("Texto eliminado");
 								limpiarConDelay();
 								user.serializeToJson();
-								menu_Moderador();
+								menu_AdminMod();
 							} else if (ans.equals("3")) {
 								clearConsole();
 							} else {
 								clearConsole();
-								menu_Moderador();
+								user.getListaReviews().removeAll(del);
+								user.serializeToJson();
+								menu_AdminMod();
 								break;
 							}
-							clearConsole();
 						}
-						System.out.println("no hay más reseñas");
-						limpiarConDelay();
+						user.getListaReviews().removeAll(del);
+						user.serializeToJson();
 						menu_Moderador();
-
 						break;
 					case 4:
 						menu_Moderador();
@@ -1201,21 +1220,31 @@ public class Interfaz {
 			}
 		}
 		Persona victim = DB.buscarUser(nombreUsuario);
-		boolean canBeBanned = (victim.getAuthLevel().equals("user") || (victim.getAuthLevel().equals("moderador")));
 
 		if (victim == null) {
 			System.out.println("El usuario no existe");
+			menu_AdminMod();
 		} else {
+			boolean canBeBanned = (victim.getAuthLevel().equals("user") || (victim.getAuthLevel().equals("moderador")));
 			if (canBeBanned) {
-				clearConsole();
 				Usuario user = (Usuario) victim;
-				System.out.println("usuario: " + victim.getFirst_name() + " " + victim.getLast_name());
-					System.out.println(user.getDaysUntilUnban()>0?"1. Quitar suspensio de usuario":"1.suspender usuario");
+				boolean valid=false;
+				int opcion = 0;
+				while (!valid) {
+					clearConsole();
+					System.out.println("usuario: " + victim.getFirst_name() + " " + victim.getLast_name());
+					System.out.println(user.getDaysUntilUnban() > 0 ? "1. Quitar suspensión de usuario" : "1. suspender usuario");
 					System.out.println(user.isBanned ? "2. Eliminar veto" : "2. vetar usuario");
 					System.out.println("3. Ver reseñas");
 					System.out.println("4. Cambiar usuario a moderar");
-				int opcion = sc.nextInt();
-				sc.nextLine();
+					try {
+						opcion = sc.nextInt();
+						valid = opcion>=1 && opcion<=4;
+					}catch (InputMismatchException e){
+						System.out.println("Ingrese una opción válida");
+						sc.nextLine();
+					}
+				}
 				switch (opcion) {
 					case 1:
 						if(user.getDaysUntilUnban()>0){
@@ -1230,7 +1259,13 @@ public class Interfaz {
 						clearConsole();
 						System.out.println("Ingrese la duración del veto: (cantidad + (días|semanas|meses|años))");
 						String ans = sc.nextLine();
-						admin.addBanDuration(user, parseTime(ans));
+						int duration = parseTime(ans);
+						if(duration==0){
+							System.out.println("Duración no válida");
+							menu_AdminMod();
+							break;
+						}
+						admin.addBanDuration(user, duration);
 						System.out.println("Usuario vetado");
 						user.serializeToJson();
 						limpiarConDelay();
@@ -1256,47 +1291,59 @@ public class Interfaz {
 						break;
 					case 3:
 						clearConsole();
-						List<Review> lista = user.getListaReviews();
-						for (Review r : lista) {
-							System.out.println(r);
-							System.out.println("1. Eliminar reseña");
-							System.out.println("2. Eliminar texto de la reseña");
-							System.out.println("3. Ver siguiente");
-							System.out.println("4. para volver");
+						if (victim.getAuthLevel().equalsIgnoreCase("moderador")){
+							System.out.println("Un moderador no puede hacer reseñas");
+							limpiarConDelay();
+						}else {
+							List<Review> lista = user.getListaReviews();
+							List<Review> del = new ArrayList<Review>();
+							for (Review r : lista) {
+								System.out.println(r);
+								System.out.println("1. Eliminar reseña");
+								System.out.println("2. Eliminar texto de la reseña");
+								System.out.println("3. Ver siguiente");
+								System.out.println("4. para volver");
 
-							ans = sc.nextLine();
-							if (ans.equals("1")) {
-								clearConsole();
-								user.eliminarReview(r);
-								System.out.println("Reseña eliminada");
-								limpiarConDelay();
-								user.serializeToJson();
-								menu_AdminMod();
-							} else if (ans.equals("2")) {
-								clearConsole();
-								r.setDescripcion("");
-								System.out.println("Texto eliminado");
-								limpiarConDelay();
-								user.serializeToJson();
-								menu_AdminMod();
-							} else if (ans.equals("3")) {
-								clearConsole();
-							} else {
-								clearConsole();
-								menu_AdminMod();
-								break;
+								ans = sc.nextLine();
+								if (ans.equals("1")) {
+									clearConsole();
+									del.add(r);
+									System.out.println("Reseña eliminada");
+									limpiarConDelay();
+									user.serializeToJson();
+									menu_AdminMod();
+								} else if (ans.equals("2")) {
+									clearConsole();
+									r.setDescripcion("");
+									System.out.println("Texto eliminado");
+									limpiarConDelay();
+									user.serializeToJson();
+									menu_AdminMod();
+								} else if (ans.equals("3")) {
+									clearConsole();
+								} else {
+									clearConsole();
+									user.getListaReviews().removeAll(del);
+									user.serializeToJson();
+									menu_AdminMod();
+									break;
+								}
 							}
+							user.getListaReviews().removeAll(del);
+							user.serializeToJson();
 						}
-
 						break;
 					case 4:
-						cerrarSesion();
+						sc.nextLine();
+						clearConsole();
+						menu_AdminMod();
 						break;
 					default:
 						System.out.println("Opción no válida");
 						menu_AdminMod();
 						break;
 				}
+				menu_AdminMod();
 			} else {
 				System.out.println("El usuario no puede ser moderado");
 				menu_AdminMod();
@@ -1306,11 +1353,20 @@ public class Interfaz {
 
 	private int parseTime(String duration) {
 		String[] parts = duration.split(" ");
+		int amount;
 		if (parts.length == 1) {
 			parts = new String[] { parts[0], "dias" };
 		}
+		if(parts.length>1){
+			amount=0;
+		}
 		// obtener la cantidad de tiempo
-		int amount = Integer.parseInt(parts[0]);
+		try{
+			amount=Integer.parseInt(parts[0]);
+		}
+		catch(Exception e){
+			amount=0;
+		}
 
 		// pasar a minuscula y eliminar acentos
 		String unit = parts[1].toLowerCase();
@@ -1328,6 +1384,7 @@ public class Interfaz {
 			case "semana":
 				amount *= 7;
 				break;
+			case "mes":
 			case "mese":
 				amount *= 30;
 				break;
