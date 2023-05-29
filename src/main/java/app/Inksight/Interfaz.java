@@ -7,25 +7,70 @@ import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
 import java.util.*;
 
+/**
+ * The type Interfaz.
+ */
 public class Interfaz {
+	/**
+	 * The Sc.
+	 */
 	static Scanner sc = new Scanner(System.in);
+	/**
+	 * The Titulo.
+	 */
 	String titulo;
+	/**
+	 * The Nombre lista.
+	 */
 	String nombreLista;
+	/**
+	 * The Nombre lista antiguo.
+	 */
 	String nombreListaAntiguo;
+	/**
+	 * The Opcion.
+	 */
 	int opcion;
+	/**
+	 * The Listas.
+	 */
 	GestionColecciones listas = new GestionColecciones();
+	/**
+	 * The Stats.
+	 */
 	Stats stats = new Stats();
+	/**
+	 * The Timeout.
+	 */
 	int timeout = 2000;
+	/**
+	 * The Lista amigos.
+	 */
 	static HashSet<String> listaAmigos = new HashSet<>();
-	// Libro libro = new Libro(0,"","",0,"","");
+	/**
+	 * The Persona actual.
+	 */
+// Libro libro = new Libro(0,"","",0,"","");
 	// Libro libro = new Libro(libro);
 	Persona personaActual = new Usuario("", "", "", "", "", "", false, 0, stats, new HashSet<>(), new LinkedList<>(),
 			0);
 	private Usuario usuarioActual = (Usuario) personaActual;
 
+	/**
+	 * The Db.
+	 */
 	DB db = new DB();
+	/**
+	 * The Permiso.
+	 */
 	String permiso;
 
+	/**
+	 * Menu principal.
+	 *
+	 * @throws NoSuchAlgorithmException the no such algorithm exception
+	 * @throws IOException              the io exception
+	 */
 	public void menu_principal() throws NoSuchAlgorithmException, IOException {
 		System.out.println();
 		System.out.println("-----INKSIGHT-----");
@@ -177,6 +222,12 @@ public class Interfaz {
 		}
 	}
 
+	/**
+	 * Menu perfil usuario.
+	 *
+	 * @throws NoSuchAlgorithmException the no such algorithm exception
+	 * @throws IOException              the io exception
+	 */
 	public void menu_PerfilUsuario() throws NoSuchAlgorithmException, IOException {
 		clearConsole();
 		System.out.println(usuarioActual.getFirst_name());
@@ -336,6 +387,9 @@ public class Interfaz {
 		}
 	}
 
+	/**
+	 * Menu amigo.
+	 */
 	public void menu_Amigo() {
 		clearConsole();
 		System.out.println("1. Agregar amigo");
@@ -484,6 +538,11 @@ public class Interfaz {
 		}
 	}
 
+	/**
+	 * Menu reseñas.
+	 *
+	 * @throws IOException the io exception
+	 */
 	public void menuReseñas() throws IOException {
 		System.out.println("RESEÑAS");
 		System.out.println("1. Hacer reseña");
@@ -614,6 +673,11 @@ public class Interfaz {
 
 	}
 
+	/**
+	 * Menu lista.
+	 *
+	 * @throws IOException the io exception
+	 */
 	public void menu_Lista() throws IOException {
 		clearConsole();
 		listas = usuarioActual.gestionColecciones;
@@ -810,6 +874,9 @@ public class Interfaz {
 		}
 	}
 
+	/**
+	 * Check time when login.
+	 */
 	public void checkTimeWhenLogin() {
 		Date lastChallenge = usuarioActual.getLastChallenge();
 		Date now = new Date(System.currentTimeMillis());
@@ -898,6 +965,9 @@ public class Interfaz {
 
 	}
 
+	/**
+	 * Menu recomendaciones.
+	 */
 	public void menu_Recomendaciones() {
 		// mostrar las recomendaciones que tiene el usuario por parte de sus amigos
 		System.out.println("RECOMENDACIONES");
@@ -905,10 +975,18 @@ public class Interfaz {
 
 	}
 
+	/**
+	 * Menu logros.
+	 */
 	public void menu_Logros() {
 		// mostrar los logros que tiene el usuario
 	}
 
+	/**
+	 * Menu administrador.
+	 *
+	 * @throws NoSuchAlgorithmException the no such algorithm exception
+	 */
 	public void menu_Administrador() throws NoSuchAlgorithmException {
 		clearConsole();
 		// mostrar las opciones que tiene el administrador
@@ -955,6 +1033,9 @@ public class Interfaz {
 		}
 	}
 
+	/**
+	 * Menu moderador.
+	 */
 	public void menu_Moderador() {
 		clearConsole();
 		Moderador mod = (Moderador) personaActual;
@@ -1056,6 +1137,9 @@ public class Interfaz {
 		}
 	}
 
+	/**
+	 * Menu admin mod.
+	 */
 	public void menu_AdminMod() {
 		clearConsole();
 		Admin admin = (Admin) personaActual;
@@ -1194,6 +1278,9 @@ public class Interfaz {
 		return amount;
 	}
 
+	/**
+	 * Limpiar con delay.
+	 */
 	public void limpiarConDelay() {
 		// espera 2 segundos y limpia la consola
 		try {
@@ -1204,6 +1291,9 @@ public class Interfaz {
 		}
 	}
 
+	/**
+	 * Clear console.
+	 */
 	public static void clearConsole() {
 		// limpia la consola
 		try {
@@ -1217,18 +1307,6 @@ public class Interfaz {
 		} catch (final Exception e) {
 			System.out.println(e.getLocalizedMessage());
 		}
-	}
-
-	public static void main(String[] args) throws NoSuchAlgorithmException {
-
-		Interfaz interfaz = new Interfaz();
-		try {
-			interfaz.menu_principal();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		// interfaz.menu_Estadisticas();
-
 	}
 
 }

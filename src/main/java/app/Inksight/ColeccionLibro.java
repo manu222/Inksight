@@ -6,17 +6,32 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * The type Coleccion libro.
+ */
 public class ColeccionLibro {
 
 	private String nombreColeccion;
 	private List<LibroAmpliado> listaLibros;
-	
-	public ColeccionLibro(String nombreColeccion) {
+
+    /**
+     * Instantiates a new Coleccion libro.
+     *
+     * @param nombreColeccion the nombre coleccion
+     */
+    public ColeccionLibro(String nombreColeccion) {
 		this.nombreColeccion = nombreColeccion;
 		listaLibros = new ArrayList<>();
 	}
 
-	public int anadir(String titulo) throws IOException {
+    /**
+     * Anadir int.
+     *
+     * @param titulo the titulo
+     * @return the int
+     * @throws IOException the io exception
+     */
+    public int anadir(String titulo) throws IOException {
 
 		Date hoy = new Date(System.currentTimeMillis());
 		boolean yaexistiaellibro = false;
@@ -56,15 +71,27 @@ public class ColeccionLibro {
 
 	}
 
-	public List<Libro> consultarLibrosEnLista(){
+    /**
+     * Consultar libros en lista list.
+     *
+     * @return the list
+     */
+    public List<Libro> consultarLibrosEnLista(){
 		List<Libro> librosEnLista = new ArrayList<>(listaLibros.size());
 		for(int i = 0; i < librosEnLista.size();i++) {
 			librosEnLista.add((Libro)listaLibros.get(i));
 		}
 		return librosEnLista;
 		
-	}	
-	public boolean contiene(Libro chk){
+	}
+
+    /**
+     * Contiene boolean.
+     *
+     * @param chk the chk
+     * @return the boolean
+     */
+    public boolean contiene(Libro chk){
 		boolean out= false;
 		for (Libro l: listaLibros) {
 			if (l.equals(chk)){
@@ -73,8 +100,14 @@ public class ColeccionLibro {
 		}
 		return false;
 	}
-	
-	public int eliminar(String tituloAEliminar) {
+
+    /**
+     * Eliminar int.
+     *
+     * @param tituloAEliminar the titulo a eliminar
+     * @return the int
+     */
+    public int eliminar(String tituloAEliminar) {
 		Iterator<LibroAmpliado> copia = listaLibros.iterator();
 
 		while (copia.hasNext()) {
@@ -88,10 +121,15 @@ public class ColeccionLibro {
 		return GestionColecciones.LIBRO_NO_EXISTE;
 	}
 
-	
-	
-	
-	public int mover(ColeccionLibro coleccionNueva, String titulo) {
+
+    /**
+     * Mover int.
+     *
+     * @param coleccionNueva the coleccion nueva
+     * @param titulo         the titulo
+     * @return the int
+     */
+    public int mover(ColeccionLibro coleccionNueva, String titulo) {
 
 		for (int i = 0; i < listaLibros.size(); i++) {
 			LibroAmpliado libroactual = listaLibros.get(i);
@@ -113,20 +151,40 @@ public class ColeccionLibro {
 		return GestionColecciones.LIBRO_NO_EXISTE;
 	}
 
-	//metodos por defecto
+    /**
+     * Gets nombre coleccion.
+     *
+     * @return the nombre coleccion
+     */
+//metodos por defecto
 	public String getNombreColeccion() {
 		return nombreColeccion;
 	}
 
-	public void setNombreColeccion(String nombreColeccion) {
+    /**
+     * Sets nombre coleccion.
+     *
+     * @param nombreColeccion the nombre coleccion
+     */
+    public void setNombreColeccion(String nombreColeccion) {
 		this.nombreColeccion = nombreColeccion;
 	}
 
-	public List<LibroAmpliado> getListaLibros() {
+    /**
+     * Gets lista libros.
+     *
+     * @return the lista libros
+     */
+    public List<LibroAmpliado> getListaLibros() {
 		return listaLibros;
 	}
 
-	public void setListaLibros(List<LibroAmpliado> listaLibros) {
+    /**
+     * Sets lista libros.
+     *
+     * @param listaLibros the lista libros
+     */
+    public void setListaLibros(List<LibroAmpliado> listaLibros) {
 		this.listaLibros = listaLibros;
 	}
 

@@ -3,31 +3,77 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Gestion colecciones.
+ */
 public class GestionColecciones {
-	public static final int LIBRO_AGREGADO_CORRECTAMENTE = 0; 
-	public static final int LIBRO_YA_EXISTE = 1; 
-	public static final int COLECCION_NO_EXISTE = 2; 
-	public static final int LIBRO_ELIMINADO_CORRECTAMENTE = 3; 
-	public static final int LIBRO_NO_EXISTE = 4; 
-	public static final int COLECCION_MODIFICADA_CORRECTAMENTE = 5; 
-	
-	List<ColeccionLibro> listaColecciones = new ArrayList<>();
-	public static final String LISTA_NO_LEIDOS = "no leidos"; 
-	public static final String LISTA_LEIDOS = "leidos"; 
-	public static final String LISTA_LEYENDO = "leyendo"; 
+    /**
+     * The constant LIBRO_AGREGADO_CORRECTAMENTE.
+     */
+    public static final int LIBRO_AGREGADO_CORRECTAMENTE = 0;
+    /**
+     * The constant LIBRO_YA_EXISTE.
+     */
+    public static final int LIBRO_YA_EXISTE = 1;
+    /**
+     * The constant COLECCION_NO_EXISTE.
+     */
+    public static final int COLECCION_NO_EXISTE = 2;
+    /**
+     * The constant LIBRO_ELIMINADO_CORRECTAMENTE.
+     */
+    public static final int LIBRO_ELIMINADO_CORRECTAMENTE = 3;
+    /**
+     * The constant LIBRO_NO_EXISTE.
+     */
+    public static final int LIBRO_NO_EXISTE = 4;
+    /**
+     * The constant COLECCION_MODIFICADA_CORRECTAMENTE.
+     */
+    public static final int COLECCION_MODIFICADA_CORRECTAMENTE = 5;
 
-	
-	
-	
-	public GestionColecciones() {
+    /**
+     * The Lista colecciones.
+     */
+    List<ColeccionLibro> listaColecciones = new ArrayList<>();
+    /**
+     * The constant LISTA_NO_LEIDOS.
+     */
+    public static final String LISTA_NO_LEIDOS = "no leidos";
+    /**
+     * The constant LISTA_LEIDOS.
+     */
+    public static final String LISTA_LEIDOS = "leidos";
+    /**
+     * The constant LISTA_LEYENDO.
+     */
+    public static final String LISTA_LEYENDO = "leyendo";
+
+
+    /**
+     * Instantiates a new Gestion colecciones.
+     */
+    public GestionColecciones() {
 		construirLista(LISTA_LEIDOS);
 		construirLista(LISTA_NO_LEIDOS);
 		construirLista(LISTA_LEYENDO);
 	}
-	public GestionColecciones(List<ColeccionLibro> cl){
+
+    /**
+     * Instantiates a new Gestion colecciones.
+     *
+     * @param cl the cl
+     */
+    public GestionColecciones(List<ColeccionLibro> cl){
 		this.listaColecciones=cl;
 	}
-	public List<String> consultarListaColecciones(){
+
+    /**
+     * Consultar lista colecciones list.
+     *
+     * @return the list
+     */
+    public List<String> consultarListaColecciones(){
 		List<String> nombres = new ArrayList<>();
 		for (int i = 0; i < listaColecciones.size(); i++) {
 			ColeccionLibro coleccionactual = listaColecciones.get(i);
@@ -35,14 +81,25 @@ public class GestionColecciones {
 		}
 		return nombres;
 	}
-	
-	
-	public void construirLista(String nombreNuevaLista) {
+
+
+    /**
+     * Construir lista.
+     *
+     * @param nombreNuevaLista the nombre nueva lista
+     */
+    public void construirLista(String nombreNuevaLista) {
 		ColeccionLibro coleccion = new ColeccionLibro(nombreNuevaLista);
 		listaColecciones.add(coleccion);
 	}
 
-	public ColeccionLibro obtenerColeccion(String coleccionbuscada) {
+    /**
+     * Obtener coleccion coleccion libro.
+     *
+     * @param coleccionbuscada the coleccionbuscada
+     * @return the coleccion libro
+     */
+    public ColeccionLibro obtenerColeccion(String coleccionbuscada) {
 		for (int i = 0; i < listaColecciones.size(); i++) {
 			ColeccionLibro coleccionactual = listaColecciones.get(i);
 			if (coleccionactual.getNombreColeccion().equals(coleccionbuscada)) {
@@ -51,8 +108,16 @@ public class GestionColecciones {
 		}
 		return null;
 	}
-	
-	public int agregarlibro(String coleccionbuscada,String titulo) throws IOException {
+
+    /**
+     * Agregarlibro int.
+     *
+     * @param coleccionbuscada the coleccionbuscada
+     * @param titulo           the titulo
+     * @return the int
+     * @throws IOException the io exception
+     */
+    public int agregarlibro(String coleccionbuscada,String titulo) throws IOException {
 		ColeccionLibro coleccionactual = obtenerColeccion(coleccionbuscada);
 		if(coleccionactual == null) {
 			// no se encuentra la coleccion;
@@ -81,7 +146,15 @@ public class GestionColecciones {
 //	
 //	}
 
-	public int eliminarLibro(String coleccionbuscada,String titulo) throws IOException {
+    /**
+     * Eliminar libro int.
+     *
+     * @param coleccionbuscada the coleccionbuscada
+     * @param titulo           the titulo
+     * @return the int
+     * @throws IOException the io exception
+     */
+    public int eliminarLibro(String coleccionbuscada,String titulo) throws IOException {
 		ColeccionLibro coleccionactual = obtenerColeccion(coleccionbuscada);
 		if(coleccionactual == null) {
 			// no se encuentra la coleccion;
@@ -110,18 +183,28 @@ public class GestionColecciones {
 //		}
 //
 //	}
-	
-	
 
-	public void eliminarLista(String nombreColeccionEliminar) {
+
+    /**
+     * Eliminar lista.
+     *
+     * @param nombreColeccionEliminar the nombre coleccion eliminar
+     */
+    public void eliminarLista(String nombreColeccionEliminar) {
 		//meter condiciones en caso de que no exista la lista 
 		ColeccionLibro coleccionActual = obtenerColeccion(nombreColeccionEliminar);
 		listaColecciones.remove(coleccionActual);
 	}
 
 
-
-	public int cambiarNombreLista(String nombreantiguo, String nuevonombre) {
+    /**
+     * Cambiar nombre lista int.
+     *
+     * @param nombreantiguo the nombreantiguo
+     * @param nuevonombre   the nuevonombre
+     * @return the int
+     */
+    public int cambiarNombreLista(String nombreantiguo, String nuevonombre) {
 		ColeccionLibro coleccionactual = obtenerColeccion(nombreantiguo);
 		if(coleccionactual == null) {
 			// no se encuentra la coleccion;
@@ -132,7 +215,16 @@ public class GestionColecciones {
 		}
 	}
 
-	public int moverLibroDeColeccion(String nombreColeccionOrigen, String nombreColeccionNueva, String titulo) throws IOException {
+    /**
+     * Mover libro de coleccion int.
+     *
+     * @param nombreColeccionOrigen the nombre coleccion origen
+     * @param nombreColeccionNueva  the nombre coleccion nueva
+     * @param titulo                the titulo
+     * @return the int
+     * @throws IOException the io exception
+     */
+    public int moverLibroDeColeccion(String nombreColeccionOrigen, String nombreColeccionNueva, String titulo) throws IOException {
 		ColeccionLibro coleccionOrigen = obtenerColeccion(nombreColeccionOrigen);
 		ColeccionLibro coleccionNueva = obtenerColeccion(nombreColeccionNueva);
 		if(coleccionOrigen == null || coleccionNueva == null) {

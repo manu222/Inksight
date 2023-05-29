@@ -20,8 +20,8 @@
   "desafios": [
     {
       "challengeID": "1",
-      "title": "Leer 100 páginas",
-      "description": "Leer 100 páginas en una semana",
+      "title": "Leer 100 pï¿½ginas",
+      "description": "Leer 100 pï¿½ginas en una semana",
       "type": "paginas",
       "target": 100,
       "progress": 300,
@@ -29,7 +29,7 @@
       "completed": true,
       "timeSensitive": true,
       "timeLimit": 7,
-      "timeRemaining": 2168952
+      "timeRemaining": 2908992
     }
   ],
   "stats": {
@@ -42,7 +42,7 @@
     "tasaFinalizacion": 0.0
   },
   "lastChallenge": "May 29, 2023, 1:07:24 AM",
-  "lastLogin": "May 29, 2023, 1:43:31 AM",
+  "lastLogin": "May 29, 2023, 1:55:51 AM",
   "gestionColecciones": {
     "listaColecciones": [
       {

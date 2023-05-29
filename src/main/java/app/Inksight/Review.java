@@ -3,19 +3,51 @@ package app.Inksight;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * The type Review.
+ */
 public class Review {
-        Libro libro;
-        String descripcion;
-        float puntuacion;
+    /**
+     * The Libro.
+     */
+    Libro libro;
+    /**
+     * The Descripcion.
+     */
+    String descripcion;
+    /**
+     * The Puntuacion.
+     */
+    float puntuacion;
 
-        Review(Libro libro, String descripcion, float puntuacion) {
+    /**
+     * Instantiates a new Review.
+     *
+     * @param libro       the libro
+     * @param descripcion the descripcion
+     * @param puntuacion  the puntuacion
+     */
+    Review(Libro libro, String descripcion, float puntuacion) {
             this.libro = libro;
             this.descripcion = descripcion;
             this.puntuacion = puntuacion;
         }
-        public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
 
-        public static Review hacerReview(Scanner sc) throws IOException {
+    /**
+     * Sets descripcion.
+     *
+     * @param descripcion the descripcion
+     */
+    public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
+
+    /**
+     * Hacer review review.
+     *
+     * @param sc the sc
+     * @return the review
+     * @throws IOException the io exception
+     */
+    public static Review hacerReview(Scanner sc) throws IOException {
             Interfaz.clearConsole();
 
             System.out.println("Cual es el titulo del libro?");
@@ -62,23 +94,48 @@ public class Review {
         }
 
 
-        public void setLibro(Libro libro) {
+    /**
+     * Sets libro.
+     *
+     * @param libro the libro
+     */
+    public void setLibro(Libro libro) {
             this.libro = libro;
         }
 
-        public void setPuntuacion(int puntuacion) {
+    /**
+     * Sets puntuacion.
+     *
+     * @param puntuacion the puntuacion
+     */
+    public void setPuntuacion(int puntuacion) {
             this.puntuacion = puntuacion;
         }
 
-        public String getDescripcion() {
+    /**
+     * Gets descripcion.
+     *
+     * @return the descripcion
+     */
+    public String getDescripcion() {
             return descripcion;
         }
 
-        public Libro getLibro() {
+    /**
+     * Gets libro.
+     *
+     * @return the libro
+     */
+    public Libro getLibro() {
             return libro;
         }
 
-        public float getPuntuacion() {
+    /**
+     * Gets puntuacion.
+     *
+     * @return the puntuacion
+     */
+    public float getPuntuacion() {
             return puntuacion;
         }
 

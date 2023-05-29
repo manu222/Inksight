@@ -8,17 +8,47 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * The type Usuario.
+ */
 public class Usuario extends Persona {
+    /**
+     * The Lista amigos.
+     */
     HashSet<String> listaAmigos;
+    /**
+     * The Lista reviews.
+     */
     List<Review> listaReviews;
+    /**
+     * The Lista recomendados.
+     */
     Set<Libro> listaRecomendados;
     private List<Challenge> desafios;
+    /**
+     * The Stats.
+     */
     Stats stats;
     private Date lastChallenge;
     private Date lastLogin;
+    /**
+     * The Gestion colecciones.
+     */
     public GestionColecciones gestionColecciones;
 
 
+    /**
+     * Instantiates a new Usuario.
+     *
+     * @param nombreUser     the nombre user
+     * @param correo         the correo
+     * @param pass           the pass
+     * @param first_name     the first name
+     * @param last_name      the last name
+     * @param location       the location
+     * @param listaAmigos    the lista amigos
+     * @param daysUntilUnban the days until unban
+     */
     public Usuario(String nombreUser, String correo, String pass, String first_name, String last_name, String location,
                    HashSet<String> listaAmigos,int daysUntilUnban) {
         super(nombreUser, correo, pass, first_name, last_name, location);
@@ -33,6 +63,22 @@ public class Usuario extends Persona {
         authLevel = "user";
     }
 
+    /**
+     * Instantiates a new Usuario.
+     *
+     * @param nombreUser     the nombre user
+     * @param correo         the correo
+     * @param pass           the pass
+     * @param first_name     the first name
+     * @param last_name      the last name
+     * @param location       the location
+     * @param online         the online
+     * @param followers      the followers
+     * @param stats          the stats
+     * @param listaAmigos    the lista amigos
+     * @param desafios       the desafios
+     * @param daysUntilUnban the days until unban
+     */
     public Usuario(String nombreUser, String correo, String pass, String first_name, String last_name, String location,
                    boolean online, int followers, Stats stats, HashSet<String> listaAmigos, List<Challenge> desafios,int daysUntilUnban) {
         super(nombreUser, correo, pass, first_name, last_name, location, online, followers, stats);
@@ -47,6 +93,9 @@ public class Usuario extends Persona {
         authLevel = "user";
     }
 
+    /**
+     * Serialize to json.
+     */
     public void serializeToJson() {
         // Comprobar si la carpeta data existe, si no existe, crearla
         File dataDir = new File(DB.rutaData);
@@ -73,19 +122,44 @@ public class Usuario extends Persona {
         }
     }
 
+    /**
+     * Gets stats.
+     *
+     * @return the stats
+     */
     public Stats getStats() {
         return this.stats;
     }
 
+    /**
+     * Gets last login.
+     *
+     * @return the last login
+     */
     public Date getLastLogin() {
         return lastLogin;
     }
 
+    /**
+     * Sets last login.
+     *
+     * @param lastLogin the last login
+     */
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
     }
 
-    // <desafios>
+    /**
+     * Make challenge challenge.
+     *
+     * @param title       the title
+     * @param description the description
+     * @param target      the target
+     * @param type        the type
+     * @param reward      the reward
+     * @return the challenge
+     */
+// <desafios>
     public Challenge makeChallenge(String title, String description, int target, String type, float reward) {
         Challenge challenge = new Challenge("" + (desafios.size() + 1), title, description, target, type, reward, false,
                 0);
@@ -94,6 +168,18 @@ public class Usuario extends Persona {
         return challenge;
     }
 
+    /**
+     * Make challenge challenge.
+     *
+     * @param title         the title
+     * @param description   the description
+     * @param target        the target
+     * @param type          the type
+     * @param reward        the reward
+     * @param timeSensitive the time sensitive
+     * @param timeLimit     the time limit
+     * @return the challenge
+     */
     public Challenge makeChallenge(String title, String description, int target, String type, float reward,
                                    boolean timeSensitive, int timeLimit) {
         Challenge challenge = new Challenge("" + (desafios.size() + 1), title, description, target, type, reward,
@@ -103,10 +189,20 @@ public class Usuario extends Persona {
         return challenge;
     }
 
+    /**
+     * Add challenge.
+     *
+     * @param challenge the challenge
+     */
     public void addChallenge(Challenge challenge) {
         this.desafios.add(challenge);
     }
 
+    /**
+     * Mark as completed.
+     *
+     * @param challengeID the challenge id
+     */
     public void markAsCompleted(String challengeID) {
         for (Challenge challenge : desafios) {
             if (challenge.getChallengeID().equals(challengeID)) {
@@ -116,19 +212,38 @@ public class Usuario extends Persona {
         }
     }
 
+    /**
+     * Gets desafios.
+     *
+     * @return the desafios
+     */
     public List<Challenge> getDesafios() {
         return this.desafios;
     }
 
+    /**
+     * Gets last challenge.
+     *
+     * @return the last challenge
+     */
     public Date getLastChallenge() {
         return lastChallenge;
     }
+
+    /**
+     * Sets last challenge.
+     *
+     * @param now the now
+     */
     public void setLastChallenge(Date now) {
         this.lastChallenge = now;
     }
     // </desafios>
 
-    // <recomendaciones>
+    /**
+     * Make recomendacion.
+     */
+// <recomendaciones>
     public void makeRecomendacion (){//Recibes como recomendacion la mejor review de un amigo al azar, y se añade esa review a tu lista de recomendados
         Random rand = new Random();
         HashSet<String> listaAmigos = getListaAmigos();
@@ -159,7 +274,13 @@ public class Usuario extends Persona {
     }
     // </recomendaciones>
 
-    // <amigos>
+    /**
+     * Add amigo boolean.
+     *
+     * @param nombre the nombre
+     * @return the boolean
+     */
+// <amigos>
     public boolean addAmigo(String nombre) {//añade amigo a lista de amigos
 
 
@@ -177,6 +298,12 @@ public class Usuario extends Persona {
 
     }
 
+    /**
+     * Sort by puntuacion review.
+     *
+     * @param reviewsList the reviews list
+     * @return the review
+     */
     public static Review sortByPuntuacion(List<Review> reviewsList) {
         int n = reviewsList.size();
         Review temp;
@@ -194,6 +321,13 @@ public class Usuario extends Persona {
         return reviewsList.get(0);
     }
 
+    /**
+     * Add review boolean.
+     *
+     * @param sc the sc
+     * @return the boolean
+     * @throws IOException the io exception
+     */
     public boolean addReview(Scanner sc) throws IOException {
         List<Review> reviews = this.getListaReviews();
 
@@ -212,10 +346,18 @@ public class Usuario extends Persona {
     }
 
 
-
+    /**
+     * Gets lista amigos.
+     *
+     * @return the lista amigos
+     */
     public HashSet<String> getListaAmigos() {
         return listaAmigos;
     }
+
+    /**
+     * Print lista amigos.
+     */
     public void printListaAmigos(){
         if (getListaAmigos().size()==0 || listaAmigos==null){
             System.out.println("No tienes amigos");
@@ -224,6 +366,12 @@ public class Usuario extends Persona {
             System.out.println(s);
         }
     }
+
+    /**
+     * Gets amigos.
+     *
+     * @return the amigos
+     */
     public int getnAmigos() {
         try {
             return listaAmigos.size();
@@ -233,11 +381,22 @@ public class Usuario extends Persona {
     }
     // </amigos>
 
-    // <reviews>
+    /**
+     * Gets lista reviews.
+     *
+     * @return the lista reviews
+     */
+// <reviews>
     public List<Review> getListaReviews() {
         return listaReviews;
     }
 
+    /**
+     * Borrar amigo boolean.
+     *
+     * @param amigo the amigo
+     * @return the boolean
+     */
     public boolean borrarAmigo(String amigo){
         DB db = new DB();
         Persona user =  db.buscarUser(amigo);
@@ -256,7 +415,12 @@ public class Usuario extends Persona {
     }
 
 
-
+    /**
+     * Buscar amigo string.
+     *
+     * @param amigo the amigo
+     * @return the string
+     */
     public String buscarAmigo(String amigo) {//pide string de lo que buscas
 
         String actual = "";
@@ -274,16 +438,33 @@ public class Usuario extends Persona {
 
     }
 
+    /**
+     * Eliminar review.
+     *
+     * @param review the review
+     */
     public void eliminarReview(Review review) {
         listaReviews.remove(review);
     }
 
+    /**
+     * Borrar review boolean.
+     *
+     * @param review the review
+     * @return the boolean
+     */
     public boolean borrarReview(Review review) {
         return this.listaReviews.remove(review);
     }
     // </reviews>
 
-    // <libros>
+    /**
+     * Libro terminado int.
+     *
+     * @param libro the libro
+     * @return the int
+     */
+// <libros>
     public int libroTerminado(Libro libro) {
         // 1. actualizar stats
         stats.addBook(libro);
@@ -337,7 +518,12 @@ public class Usuario extends Persona {
         return completedCount;
     }
 
-    // </libros>
+    /**
+     * Set is banned.
+     *
+     * @param b the b
+     */
+// </libros>
     public void setIsBanned(boolean b){
         this.isBanned=b;
     }

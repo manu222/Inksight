@@ -6,7 +6,16 @@ import java.util.Scanner;
 
 import static app.Inksight.DB.*;
 
+/**
+ * The type Funciones.
+ */
 public class Funciones {
+    /**
+     * Menu db libro.
+     *
+     * @throws IOException              the io exception
+     * @throws NoSuchAlgorithmException the no such algorithm exception
+     */
     public static void menuDBLibro() throws IOException, NoSuchAlgorithmException {
 
         DB db= new DB();

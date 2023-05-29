@@ -16,19 +16,45 @@ import java.util.Scanner;
 import java.util.LinkedList;
 import java.util.*;
 
+/**
+ * The type Db.
+ */
 public class DB {
     private Libro libro;
 
+    /**
+     * The Libro error.
+     */
     static public Libro libroError = new Libro(-1,"error","error",-1,"error","error");
+    /**
+     * The Ruta.
+     */
     static final String ruta = "src/main/java/app/Inksight/books.json";
+    /**
+     * The Ruta data.
+     */
     static final String rutaData = "src/main/data";
+    /**
+     * The Ruta users.
+     */
     static final String rutaUsers = rutaData + "/Users";
+    /**
+     * The Gson.
+     */
     Gson gson = new Gson();
 
+    /**
+     * Instantiates a new Db.
+     */
     public DB() {
 
     }
 
+    /**
+     * Prompt add libro.
+     *
+     * @throws NoSuchAlgorithmException the no such algorithm exception
+     */
     public static void promptAddLibro() throws NoSuchAlgorithmException {
 
         Scanner sc = new Scanner(System.in);
@@ -57,7 +83,16 @@ public class DB {
     }
 
 
-
+    /**
+     * Add libro libro.
+     *
+     * @param titulo  the titulo
+     * @param autores the autores
+     * @param pages   the pages
+     * @param date    the date
+     * @param code    the code
+     * @return the libro
+     */
     public static Libro addLibro(String titulo, String autores, int pages, String date, String code){
 
         File file = new File(ruta);
@@ -93,7 +128,12 @@ public class DB {
         return libroError; 
     }
 
-        public static void updateLibro() throws IOException {
+    /**
+     * Update libro.
+     *
+     * @throws IOException the io exception
+     */
+    public static void updateLibro() throws IOException {
         Scanner sc = new Scanner(System.in);
         File file = new File(ruta);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -204,6 +244,11 @@ public class DB {
     }
 
 
+    /**
+     * Eliminar libro.
+     *
+     * @throws IOException the io exception
+     */
     public static void eliminarLibro() throws IOException {
 
         Scanner sc = new Scanner(System.in);
@@ -240,6 +285,13 @@ public class DB {
         }
     }
 
+    /**
+     * Buscar libro libro.
+     *
+     * @param query the query
+     * @return the libro
+     * @throws IOException the io exception
+     */
     public Libro buscarLibro(String query) throws IOException {
         Gson gson = new Gson();
         query = query.toLowerCase(); // convertimos la consulta a minúsculas
@@ -256,7 +308,15 @@ public class DB {
         }
         return this.libroError;
     }
-    /*public static Libro buscarLibroPorId(List<Libro> libros,int id) throws IOException {
+
+    /**
+     * Buscar libros list.
+     *
+     * @param query the query
+     * @return the list
+     * @throws IOException the io exception
+     */
+/*public static Libro buscarLibroPorId(List<Libro> libros,int id) throws IOException {
         Gson gson = new Gson();
 
         Type listType = new TypeToken<List<Libro>>() {}.getType();
@@ -287,10 +347,24 @@ public class DB {
         }
         return queryReturn;
     }
+
+    /**
+     * Buscar un libro libro.
+     *
+     * @param query the query
+     * @return the libro
+     * @throws IOException the io exception
+     */
     public Libro buscarUnLibro(String query) throws IOException {
         List<Libro> res = buscarLibros(query);
         return (res.equals(null)||res.size()==0)?null:res.get(0);
     }
+
+    /**
+     * Leer libros.
+     *
+     * @throws IOException the io exception
+     */
     public static void leerLibros() throws IOException {
         Gson gson = new Gson();
         Type listType = new TypeToken<List<Libro>>() {}.getType();
@@ -308,12 +382,26 @@ public class DB {
         }
         System.out.println("Numero de libros: "+contador+ "\n");
     }
+
+    /**
+     * Leer archivo string.
+     *
+     * @param rutaArchivo the ruta archivo
+     * @return the string
+     * @throws IOException the io exception
+     */
     public static String leerArchivo(String rutaArchivo) throws IOException {
         Path ruta = Paths.get(rutaArchivo);
         byte[] contenidoBytes = Files.readAllBytes(ruta);
         return new String(contenidoBytes);
     }
 
+    /**
+     * Persona cast persona.
+     *
+     * @param u the u
+     * @return the persona
+     */
     public static Persona personaCast(Usuario u){
         if(u.getAuthLevel().equalsIgnoreCase("admin")){
             return new Admin(u.getNombreUser(),u.getCorreo(),u.getPass(),u.getFirst_name(),u.getLast_name(),u.getLocation());
@@ -323,6 +411,16 @@ public class DB {
         }
         else return u;
     }
+
+    /**
+     * Create persona persona.
+     *
+     * @param userName the user name
+     * @param correo   the correo
+     * @param pass     the pass
+     * @param type     the type
+     * @return the persona
+     */
     public Persona createPersona(String userName, String correo, String pass, String type) {
 
 
@@ -392,6 +490,13 @@ public class DB {
         }
 
     }
+
+    /**
+     * Buscar user usuario.
+     *
+     * @param userName the user name
+     * @return the usuario
+     */
     public static Usuario buscarUser(String userName){
         Gson gson = new Gson();
 
@@ -435,6 +540,13 @@ public class DB {
         }
         return null;
     }
+
+    /**
+     * Bytes to hex string.
+     *
+     * @param hash the hash
+     * @return the string
+     */
     public static String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
         for (int i = 0; i < hash.length; i++) {
