@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class Main {
     /**
-     * The entry point of application.
+     * The entry point of ap plication.
      *
      * @param args the input arguments
      * @throws IOException              the io exception

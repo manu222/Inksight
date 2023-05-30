@@ -1,19 +1,6 @@
 {
   "listaAmigos": [],
-  "listaReviews": [
-    {
-      "libro": {
-        "bookID": 3000,
-        "title": "pepe",
-        "authors": "pepe",
-        "numPages": 100,
-        "publication_date": "22/22/2001",
-        "languageCode": "es-es"
-      },
-      "descripcion": "god",
-      "puntuacion": 5.0
-    }
-  ],
+  "listaReviews": [],
   "listaRecomendados": [],
   "desafios": [
     {

@@ -1206,7 +1206,7 @@ public class Interfaz {
 							System.out.println("1. Eliminar reseña");
 							System.out.println("2. Eliminar texto de la reseña");
 							System.out.println("3. Ver siguiente");
-							System.out.println("4. para volver");
+							System.out.println("4. para volver u otro");
 
 							ans = sc.nextLine();
 							if (ans.equals("1")) {
@@ -1351,6 +1351,7 @@ public class Interfaz {
 							System.out.println("Un moderador no puede hacer reseñas");
 							limpiarConDelay();
 						} else {
+							clearConsole();
 							List<Review> lista = user.getListaReviews();
 							List<Review> del = new ArrayList<Review>();
 							for (Review r : lista) {
@@ -1358,7 +1359,7 @@ public class Interfaz {
 								System.out.println("1. Eliminar reseña");
 								System.out.println("2. Eliminar texto de la reseña");
 								System.out.println("3. Ver siguiente");
-								System.out.println("4. para volver");
+								System.out.println("4. para volver u otro");
 
 								ans = sc.nextLine();
 								if (ans.equals("1")) {
@@ -1367,19 +1368,17 @@ public class Interfaz {
 									System.out.println("Reseña eliminada");
 									limpiarConDelay();
 									user.serializeToJson();
-									menu_AdminMod();
 								} else if (ans.equals("2")) {
 									clearConsole();
 									r.setDescripcion("");
 									System.out.println("Texto eliminado");
 									limpiarConDelay();
 									user.serializeToJson();
-									menu_AdminMod();
 								} else if (ans.equals("3")) {
 									clearConsole();
 								} else {
 									clearConsole();
-									user.getListaReviews().removeAll(del);
+									user.eliminarMultiplesReviews(del);
 									user.serializeToJson();
 									menu_AdminMod();
 									break;
