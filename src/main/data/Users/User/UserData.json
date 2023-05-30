@@ -1,6 +1,43 @@
 {
   "listaAmigos": [],
-  "listaReviews": [],
+  "listaReviews": [
+    {
+      "libro": {
+        "bookID": 2992,
+        "title": "un mundo feliz",
+        "authors": "paula",
+        "numPages": 123,
+        "publication_date": "12/12/1989",
+        "languageCode": "es-es"
+      },
+      "descripcion": "maravilloso",
+      "puntuacion": 5.0
+    },
+    {
+      "libro": {
+        "bookID": 1577,
+        "title": "Animal Farm / 1984",
+        "authors": "George Orwell/Christopher Hitchens",
+        "numPages": 400,
+        "publication_date": "6/1/2003",
+        "languageCode": "en-us"
+      },
+      "descripcion": "",
+      "puntuacion": 3.0
+    },
+    {
+      "libro": {
+        "bookID": 2993,
+        "title": "1984",
+        "authors": "xx",
+        "numPages": 2,
+        "publication_date": "31/12/1980",
+        "languageCode": "es-es"
+      },
+      "descripcion": "malisimo porque no me diste un 10",
+      "puntuacion": 1.1
+    }
+  ],
   "listaRecomendados": [],
   "desafios": [
     {
@@ -14,7 +51,7 @@
       "completed": false,
       "timeSensitive": true,
       "timeLimit": 7,
-      "timeRemaining": 26032409
+      "timeRemaining": 34035967
     }
   ],
   "stats": {
@@ -27,7 +64,7 @@
     "tasaFinalizacion": 0.0
   },
   "lastChallenge": "May 29, 2023, 11:52:18 PM",
-  "lastLogin": "May 30, 2023, 7:05:57 AM",
+  "lastLogin": "May 30, 2023, 9:19:20 AM",
   "gestionColecciones": {
     "listaColecciones": [
       {
@@ -81,36 +118,6 @@
             "numPages": 300,
             "publication_date": "14/06/1997",
             "languageCode": "es-es"
-          },
-          {
-            "fechaInclusion": "May 30, 2023, 4:22:26 AM",
-            "recomendado": false,
-            "bookID": 3000,
-            "title": "pepe",
-            "authors": "pepe",
-            "numPages": 120300,
-            "publication_date": "22/2/2222",
-            "languageCode": "es-es"
-          },
-          {
-            "fechaInclusion": "May 30, 2023, 4:22:49 AM",
-            "recomendado": false,
-            "bookID": 1,
-            "title": "Harry Potter and the Half-Blood Prince (Harry Potter  #6)",
-            "authors": "J.K. Rowling/Mary GrandPré",
-            "numPages": 652,
-            "publication_date": "9/16/2006",
-            "languageCode": "en-us"
-          },
-          {
-            "fechaInclusion": "May 30, 2023, 7:01:52 AM",
-            "recomendado": false,
-            "bookID": 2985,
-            "title": "The Flanders Panel",
-            "authors": "Arturo Pérez-Reverte/Margaret Jull Costa",
-            "numPages": 295,
-            "publication_date": "6/7/2004",
-            "languageCode": "en-us"
           }
         ]
       }

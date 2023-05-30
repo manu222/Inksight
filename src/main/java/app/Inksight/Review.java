@@ -2,6 +2,7 @@ package app.Inksight;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -51,16 +52,29 @@ public class Review {
     public static Review hacerReview(Scanner sc) throws IOException {
             Interfaz.clearConsole();
             DB db = new DB();
-
+            int finalID=-1;
             System.out.println("Cual es el titulo del libro?");
 
             String titulo = sc.nextLine();
-
-            if (db.buscarLibro(titulo).getTitle().equalsIgnoreCase("error")){
+            List<Libro> res = db.buscarLibros(titulo);
+            if (res.get(0).getTitle().equalsIgnoreCase("error")){
+                System.out.println("no se han encontrado libros con ese criterio");
                 return null;
-            }
+            }else {
+                Interfaz.clearConsole();
+                for (Libro l : res){
+                    System.out.println("Titulo:"+l.getTitle()+" |ID: "+ l.getbookID());
+                }
+               boolean valid = false;
 
-            System.out.println("titulo: "+db.buscarLibro(titulo).getTitle());
+                while(!valid) {
+                    System.out.println("ingrese la ID del libro deseado");
+                    try{
+                        finalID= Integer.parseInt(sc.nextLine());
+                        valid=true;
+                    }catch (Exception e ){}
+                }
+            }
 
             System.out.println("Escribe tu review del libro:");
             String texto = sc.nextLine();
@@ -79,7 +93,7 @@ public class Review {
             Review review = new Review (DB.libroError, "", -1);
 
 
-                Libro libro = db.buscarLibro(titulo);
+                Libro libro = db.buscarLibroPorId(finalID);
 
                 review = new Review(libro,texto,puntuacion);
                 System.out.println("Review hecha de manera correcta.");

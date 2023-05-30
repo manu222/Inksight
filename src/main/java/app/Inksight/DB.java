@@ -344,6 +344,20 @@ public class DB {
         }
         return this.libroError;
     }
+    public Libro buscarLibroPorId(int query) throws IOException {
+        Gson gson = new Gson(); // convertimos la consulta a minúsculas
+        Type listType = new TypeToken<List<Libro>>() {
+        }.getType();
+        List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
+        List<Libro> queryReturn = new ArrayList<>();
+        for (Libro libro : libros) {
+            // convertimos el título del libro a minúsculas para hacer la comparación
+            if (libro.getbookID()==query) {
+                return libro;
+            }
+        }
+        return libroError;
+    }
 
     public List<Libro> buscarLibros(String query) throws IOException {
         Gson gson = new Gson();
@@ -360,6 +374,9 @@ public class DB {
                     || libro.getTitle().toLowerCase().matches(".*" + query + ".*")) {
                 queryReturn.add(libro);
             }
+        }
+        if(queryReturn.get(0)==null){
+            queryReturn.add(libroError);
         }
         return queryReturn;
     }
