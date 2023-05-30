@@ -25,7 +25,7 @@ public class DB {
     /**
      * The Libro error.
      */
-    static public Libro libroError = new Libro(-1,"error","error",-1,"error","error");
+    static public Libro libroError = new Libro(-1, "error", "error", -1, "error", "error");
     /**
      * The Ruta.
      */
@@ -59,38 +59,41 @@ public class DB {
 
         Scanner sc = new Scanner(System.in);
         int id;
-        int pages=0;
+        int pages = 0;
         System.out.print("Titulo:");
         String titulo = sc.nextLine();
 
         System.out.print("authors:");
         String autores = sc.nextLine();
-        boolean valid= false;
+        boolean valid = false;
         while (!valid) {
             System.out.print("Numero Hojas:");
             try {
                 pages = sc.nextInt();
-                valid = pages>0;
+                valid = pages > 0;
             } catch (InputMismatchException e) {
 
             }
             sc.nextLine();
         }
-        valid=false;
-        String in="";
-        int[] cantDias = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        valid = false;
+        String in = "";
+        int[] cantDias = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
         while (!valid) {
             Interfaz.clearConsole();
             System.out.print("Fecha publicacion dd/mm/aaaa:");
-             in = sc.nextLine();
+            in = sc.nextLine();
             String[] parts = in.split("/");
-            if (parts.length==3){
+            if (parts.length == 3) {
                 try {
-                    int[] partsNum = {Integer.parseInt(parts[0]),Integer.parseInt(parts[1]),Integer.parseInt(parts[2])};
-                    if (partsNum[0]>0 && partsNum[0]<=31 && partsNum[1]>0 && partsNum[1]<=12 && partsNum[2]>0 && partsNum[0]<=cantDias[partsNum[1]-1]){
-                        valid=true;
+                    int[] partsNum = { Integer.parseInt(parts[0]), Integer.parseInt(parts[1]),
+                            Integer.parseInt(parts[2]) };
+                    if (partsNum[0] > 0 && partsNum[0] <= 31 && partsNum[1] > 0 && partsNum[1] <= 12 && partsNum[2] > 0
+                            && partsNum[0] <= cantDias[partsNum[1] - 1]) {
+                        valid = true;
                     }
-                }catch (Exception e){}
+                } catch (Exception e) {
+                }
             }
 
         }
@@ -100,10 +103,8 @@ public class DB {
         System.out.println("Libro Añadido \n");
         Interfaz i = new Interfaz();
         i.menu_Administrador();
-          
 
     }
-
 
     /**
      * Add libro libro.
@@ -115,7 +116,7 @@ public class DB {
      * @param code    the code
      * @return the libro
      */
-    public static Libro addLibro(String titulo, String autores, int pages, String date, String code){
+    public static Libro addLibro(String titulo, String autores, int pages, String date, String code) {
 
         File file = new File(ruta);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -123,16 +124,16 @@ public class DB {
             try {
                 // Read the JSON file into a string
                 Reader reader = Files.newBufferedReader(Paths.get(ruta));
-                Type listType = new TypeToken<List<Libro>>() {}.getType();
+                Type listType = new TypeToken<List<Libro>>() {
+                }.getType();
                 List<Libro> Libros = gson.fromJson(new FileReader(ruta), listType);
 
                 // Convert the JSON string to a Java object
                 Libro[] obj = gson.fromJson(reader, Libro[].class);
                 // Print the data from the Java object
-                int id = obj.length+1;
+                int id = obj.length + 1;
                 Libro libro = new Libro(id, titulo, autores, pages, date, code);
                 Libros.add(libro);
-
 
                 FileWriter writer = new FileWriter(ruta);
                 gson.toJson(Libros, writer);
@@ -147,7 +148,7 @@ public class DB {
             return libroError;
             // Handle the case where the file does not exist or cannot be read
         }
-        return libroError; 
+        return libroError;
     }
 
     /**
@@ -159,25 +160,42 @@ public class DB {
         Scanner sc = new Scanner(System.in);
         File file = new File(ruta);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        boolean valid = false;
+        int id = Integer.MAX_VALUE;
+        while(!valid){
+            System.out.print("Introduce la id del libro a modificar:");
+            try{
+                id = Integer.parseInt(sc.nextLine());
+                valid = true;
+            }catch(Exception e){
 
-        System.out.print("Introduce la id del libro a modificar:");
-        int id = sc.nextInt();
+            }
+        }
 
         if (file.exists() && file.canRead() && file.canWrite()) {
             try {
-                Type listType = new TypeToken<List<Libro>>() {}.getType();
+                Type listType = new TypeToken<List<Libro>>() {
+                }.getType();
                 List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
-                boolean seguir = true;
-                while (seguir) {
-                System.out.println("¿Qué quieres editar?");
-
-                System.out.println("1) Título");
-                System.out.println("2) Autores");
-                System.out.println("3) Páginas");
-                System.out.println("4) Fecha");
-                System.out.println("5) Código de idioma");
-                System.out.println("OTRO) SALIR");
-                int opcion = sc.nextInt();
+                boolean seguir = false;
+                Libro target = null;
+                for (Libro libro : libros) {
+                    if (libro.getbookID() == id) {
+                        seguir = true;
+                        target = libro;
+                        break;
+                    }
+                }
+                while (seguir&&target!=null) {
+                    Interfaz.clearConsole();
+                    System.out.println("¿Qué quieres editar?");
+                    System.out.println("1) Título");
+                    System.out.println("2) Autores");
+                    System.out.println("3) Páginas");
+                    System.out.println("4) Fecha");
+                    System.out.println("5) Código de idioma");
+                    System.out.println("OTRO) SALIR");
+                    int opcion = sc.nextInt();
 
                     switch (opcion) {
 
@@ -185,84 +203,64 @@ public class DB {
                             System.out.println("Introduce nuevo título:");
                             sc.nextLine();
                             String newTitle = sc.nextLine();
-                            for (Libro libro : libros) {
-                                if (libro.getbookID() == id) {
-                                    libro.setTitle(newTitle);
-                                    break;
-                                }
-                            }
+                            target.setTitle(newTitle);
                             break;
                         case 2:
                             System.out.println("Introduce autor/es:");
                             sc.nextLine();
                             String newAuthors = sc.nextLine();
-                            for (Libro libro : libros) {
-                                if (libro.getbookID() == id) {
-                                    libro.setAuthors(newAuthors);
-                                    break;
-                                }
-                            }
+                           
+                                    target.setAuthors(newAuthors);
+                          
                             break;
                         case 3:
                             int newPages = 0;
-                            boolean valid= false;
+                             valid = false;
                             while (!valid) {
                                 System.out.println("Introduce páginas del libro:");
                                 try {
                                     newPages = sc.nextInt();
-                                    valid = newPages>0;
+                                    valid = newPages > 0;
                                 } catch (InputMismatchException e) {
 
                                 }
                                 sc.nextLine();
                             }
-                            for (Libro libro : libros) {
-                                if (libro.getbookID() == id) {
-                                    libro.setNumPages(newPages);
-                                    break;
-                                }
-                            }
+                            target.setNumPages(newPages);
                             break;
                         case 4:
                             String newFecha = "";
-                            valid=false;
+                            valid = false;
 
-                            int[] cantDias = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+                            int[] cantDias = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
                             while (!valid) {
                                 Interfaz.clearConsole();
                                 System.out.print("Fecha publicacion dd/mm/aaaa:");
                                 newFecha = sc.nextLine();
                                 String[] parts = newFecha.split("/");
-                                if (parts.length==3){
+                                if (parts.length == 3) {
                                     try {
-                                        int[] partsNum = {Integer.parseInt(parts[0]),Integer.parseInt(parts[1]),Integer.parseInt(parts[2])};
-                                        if (partsNum[0]>0 && partsNum[0]<=31 && partsNum[1]>0 && partsNum[1]<=12 && partsNum[2]>0 && partsNum[0]<=cantDias[partsNum[1]-1]){
-                                            valid=true;
+                                        int[] partsNum = { Integer.parseInt(parts[0]), Integer.parseInt(parts[1]),
+                                                Integer.parseInt(parts[2]) };
+                                        if (partsNum[0] > 0 && partsNum[0] <= 31 && partsNum[1] > 0 && partsNum[1] <= 12
+                                                && partsNum[2] > 0 && partsNum[0] <= cantDias[partsNum[1] - 1]) {
+                                            valid = true;
                                         }
-                                    }catch (Exception e){}
+                                    } catch (Exception e) {
+                                    }
                                 }
 
                             }
-                            for (Libro libro : libros) {
-                                if (libro.getbookID() == id) {
-                                    libro.setPublication_date(newFecha);
-                                    break;
-                                }
-                            }
+                            target.setPublication_date(newFecha);
                             break;
                         case 5:
                             System.out.println("Introduce código de idioma (XX-XX):");
                             sc.nextLine();
                             String newCode = sc.nextLine();
-                            for (Libro libro : libros) {
-                                if (libro.getbookID() == id) {
-                                    libro.setLanguageCode(newCode);
-                                    break;
-                                }
-                            }
+                            target.setLanguageCode(newCode);
                             break;
                         default:
-                            seguir=false;
+                            seguir = false;
                             break;
                     }
 
@@ -277,10 +275,7 @@ public class DB {
             System.out.println("Error: No se pudo leer/escribir en el archivo.");
         }
 
-
-
     }
-
 
     /**
      * Eliminar libro.
@@ -299,7 +294,8 @@ public class DB {
         if (file.exists() && file.canRead() && file.canWrite()) {
             Reader reader = Files.newBufferedReader(Paths.get(ruta));
             try {
-                Type listType = new TypeToken<List<Libro>>() {}.getType();
+                Type listType = new TypeToken<List<Libro>>() {
+                }.getType();
                 List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
 
                 for (Libro libro : libros) {
@@ -314,7 +310,7 @@ public class DB {
                 writer.write(listaUpdate);
                 writer.close();
 
-            }catch (IOException e) {
+            } catch (IOException e) {
                 // Handle the IOException
             }
 
@@ -333,14 +329,16 @@ public class DB {
     public Libro buscarLibro(String query) throws IOException {
         Gson gson = new Gson();
         query = query.toLowerCase(); // convertimos la consulta a minúsculas
-        Type listType = new TypeToken<List<Libro>>() {}.getType();
+        Type listType = new TypeToken<List<Libro>>() {
+        }.getType();
         List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
         List<Libro> queryReturn = new ArrayList<>();
 
         System.out.println("Resultados de la búsqueda para '" + query + "':");
         for (Libro libro : libros) {
             // convertimos el título del libro a minúsculas para hacer la comparación
-            if (Integer.toString(libro.getbookID()).equals(query) || libro.getTitle().toLowerCase().matches(".*" + query + ".*")) {
+            if (Integer.toString(libro.getbookID()).equals(query)
+                    || libro.getTitle().toLowerCase().matches(".*" + query + ".*")) {
                 return libro;
             }
         }
@@ -350,14 +348,16 @@ public class DB {
     public List<Libro> buscarLibros(String query) throws IOException {
         Gson gson = new Gson();
         query = query.toLowerCase(); // convertimos la consulta a minúsculas
-        Type listType = new TypeToken<List<Libro>>() {}.getType();
+        Type listType = new TypeToken<List<Libro>>() {
+        }.getType();
         List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
         List<Libro> queryReturn = new ArrayList<>();
 
         System.out.println("Resultados de la búsqueda para '" + query + "':");
         for (Libro libro : libros) {
             // convertimos el título del libro a minúsculas para hacer la comparación
-            if (Integer.toString(libro.getbookID()).equals(query) || libro.getTitle().toLowerCase().matches(".*" + query + ".*")) {
+            if (Integer.toString(libro.getbookID()).equals(query)
+                    || libro.getTitle().toLowerCase().matches(".*" + query + ".*")) {
                 queryReturn.add(libro);
             }
         }
@@ -373,7 +373,7 @@ public class DB {
      */
     public Libro buscarUnLibro(String query) throws IOException {
         List<Libro> res = buscarLibros(query);
-        return (res.equals(null)||res.size()==0)?null:res.get(0);
+        return (res.equals(null) || res.size() == 0) ? null : res.get(0);
     }
 
     /**
@@ -383,7 +383,8 @@ public class DB {
      */
     public static void leerLibros() throws IOException {
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<Libro>>() {}.getType();
+        Type listType = new TypeToken<List<Libro>>() {
+        }.getType();
         List<Libro> libros = gson.fromJson(new FileReader(ruta), listType);
         int contador = 0;
         for (Libro libro : libros) {
@@ -396,7 +397,7 @@ public class DB {
             System.out.println();
             contador++;
         }
-        System.out.println("Numero de libros: "+contador+ "\n");
+        System.out.println("Numero de libros: " + contador + "\n");
     }
 
     /**
@@ -418,15 +419,18 @@ public class DB {
      * @param u the u
      * @return the persona
      */
-    public static Persona personaCast(Usuario u){
-        if(u==null)return null;
-        if(u.getAuthLevel().equalsIgnoreCase("admin")){
-            return new Admin(u.getNombreUser(),u.getCorreo(),u.getPass(),u.getFirst_name(),u.getLast_name(),u.getLocation());
+    public static Persona personaCast(Usuario u) {
+        if (u == null)
+            return null;
+        if (u.getAuthLevel().equalsIgnoreCase("admin")) {
+            return new Admin(u.getNombreUser(), u.getCorreo(), u.getPass(), u.getFirst_name(), u.getLast_name(),
+                    u.getLocation());
         }
-        if(u.getAuthLevel().equalsIgnoreCase("moderador")){
-            return new Moderador(u.getNombreUser(),u.getCorreo(),u.getPass(),u.getFirst_name(),u.getLast_name(),u.getLocation(),u.isBanned());
-        }
-        else return u;
+        if (u.getAuthLevel().equalsIgnoreCase("moderador")) {
+            return new Moderador(u.getNombreUser(), u.getCorreo(), u.getPass(), u.getFirst_name(), u.getLast_name(),
+                    u.getLocation(), u.isBanned());
+        } else
+            return u;
     }
 
     /**
@@ -439,7 +443,6 @@ public class DB {
      * @return the persona
      */
     public Persona createPersona(String userName, String correo, String pass, String type) {
-
 
         Scanner sc = new Scanner(System.in);
 
@@ -454,7 +457,6 @@ public class DB {
         if (!usersDir.exists()) {
             usersDir.mkdir();
         }
-
 
         File userDir = new File(rutaUsers + "/" + userName);
 
@@ -488,9 +490,10 @@ public class DB {
             if (type.equalsIgnoreCase("admin")) {
                 newUser = new Admin(userName, correo, pass, fn, ln, ciudad);
             } else if (type.equalsIgnoreCase("moderador")) {
-                newUser = new Moderador(userName, correo, pass, fn, ln, ciudad,false);
+                newUser = new Moderador(userName, correo, pass, fn, ln, ciudad, false);
             } else {
-                newUser = new Usuario(userName, correo, pass, fn, ln, ciudad, false, 0, stats, listaAmigos, desafios,0);
+                newUser = new Usuario(userName, correo, pass, fn, ln, ciudad, false, 0, stats, listaAmigos, desafios,
+                        0);
             }
 
             try {
@@ -514,7 +517,7 @@ public class DB {
      * @param userName the user name
      * @return the usuario
      */
-    public static Usuario buscarUser(String userName){
+    public static Usuario buscarUser(String userName) {
         Gson gson = new Gson();
 
         // Comprobar si la carpeta data existe, si no existe, crearla
@@ -529,23 +532,22 @@ public class DB {
             usersDir.mkdir();
         }
 
-
         File userDir = new File(rutaUsers + "/" + userName);
         File userData = new File(rutaUsers + "/" + userName + "/" + userName + "Data.json");
-        if (userDir.exists()){
-            //System.out.println("existe el usuario");
-            if (userData.exists()){
-             //   System.out.println("tiene datos");
+        if (userDir.exists()) {
+            // System.out.println("existe el usuario");
+            if (userData.exists()) {
+                // System.out.println("tiene datos");
                 try {
-                 //   System.out.println("contenido:");
+                    // System.out.println("contenido:");
                     String contenidoUser = leerArchivo(String.valueOf(userData));
                     // System.out.println(contenidoUser);
                     // Comprobar si el usuario ya existe
 
                     Usuario user = gson.fromJson(contenidoUser, Usuario.class);
                     System.out.println(user.getFirst_name());
-                   // Usuario userConvert= (Usuario)user;
-                    //test
+                    // Usuario userConvert= (Usuario)user;
+                    // test
                     // System.out.println(userConvert.getDesafios().get(0).getProgress());
                     return user;
 
@@ -568,7 +570,7 @@ public class DB {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
         for (int i = 0; i < hash.length; i++) {
             String hex = Integer.toHexString(0xff & hash[i]);
-            if(hex.length() == 1) {
+            if (hex.length() == 1) {
                 hexString.append('0');
             }
             hexString.append(hex);
@@ -576,4 +578,3 @@ public class DB {
         return hexString.toString();
     }
 }
-
