@@ -43,8 +43,6 @@ public class ColeccionLibro {
 		Libro librofinal;
 		
 		librofinal = db.buscarUnLibro(titulo);
-
-
 		
 		if(librofinal==null) {
 			return GestionColecciones.LIBRO_NO_EXISTE;

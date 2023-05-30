@@ -107,7 +107,7 @@ public class GestionColecciones {
     public ColeccionLibro obtenerColeccion(String coleccionbuscada) {
 		for (int i = 0; i < listaColecciones.size(); i++) {
 			ColeccionLibro coleccionactual = listaColecciones.get(i);
-			if (coleccionactual.getNombreColeccion().equals(coleccionbuscada)) {
+			if (coleccionactual.getNombreColeccion().equalsIgnoreCase(coleccionbuscada)) {
 				return coleccionactual;
 			}
 		}
@@ -197,13 +197,13 @@ public class GestionColecciones {
      */
     public boolean eliminarLista(String nombreColeccionEliminar) {
 		//meter condiciones en caso de que no exista la lista 
-		ColeccionLibro coleccionActual = obtenerColeccion(nombreColeccionEliminar);
+		ColeccionLibro coleccion = new ColeccionLibro(nombreColeccionEliminar);
 		for (ColeccionLibro c:listaColecciones) {
 			if (c.getNombreColeccion().equalsIgnoreCase(nombreColeccionEliminar)){
-				return false;
+				return listaColecciones.remove(c);
 			}
 		}
-		return listaColecciones.remove(coleccionActual);
+		return false;
 
 	}
 

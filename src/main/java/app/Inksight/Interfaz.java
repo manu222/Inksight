@@ -184,6 +184,11 @@ public class Interfaz {
 					while (!valid2) {
 						System.out.println("Ingresa nombre de usuario:");
 						nombreUser = sc.nextLine();
+						if (DB.buscarUser(nombreUser) == null) {
+							System.out.println("El nombre de usuario no existe");
+							limpiarConDelay();
+							menu_principal();
+						}
 						personaActual = DB.personaCast(DB.buscarUser(nombreUser));
 						clearConsole();
 						if (personaActual != null) {
@@ -783,12 +788,12 @@ public class Interfaz {
 				System.out.println("Seleccione la lista que desea eliminar: ");
 				nombreLista = sc.nextLine();
 				try {
-					if (!usuarioActual.gestionColecciones.eliminarLista(nombreLista)) {
+					if (usuarioActual.gestionColecciones.eliminarLista(nombreLista)) {
 						throw new Exception();
 					}
-					System.out.println(nombreLista + " eliminada");
+					System.out.println(nombreLista + " no existe");
 				} catch (Exception e) {
-					System.out.println("La lista no existe");
+					System.out.println(nombreLista+ " Eliminada");
 				}
 				usuarioActual.serializeToJson();
 				limpiarConDelay();
@@ -1441,7 +1446,7 @@ public class Interfaz {
 				amount *= 7;
 				break;
 			case "mes":
-			case "mese":
+			case "meses":
 				amount *= 30;
 				break;
 			case "año":
