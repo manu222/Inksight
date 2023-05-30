@@ -14,7 +14,7 @@
       "completed": false,
       "timeSensitive": true,
       "timeLimit": 7,
-      "timeRemaining": 15953188
+      "timeRemaining": 26032409
     }
   ],
   "stats": {
@@ -27,7 +27,7 @@
     "tasaFinalizacion": 0.0
   },
   "lastChallenge": "May 29, 2023, 11:52:18 PM",
-  "lastLogin": "May 30, 2023, 4:17:59 AM",
+  "lastLogin": "May 30, 2023, 7:05:57 AM",
   "gestionColecciones": {
     "listaColecciones": [
       {
@@ -100,6 +100,16 @@
             "authors": "J.K. Rowling/Mary GrandPré",
             "numPages": 652,
             "publication_date": "9/16/2006",
+            "languageCode": "en-us"
+          },
+          {
+            "fechaInclusion": "May 30, 2023, 7:01:52 AM",
+            "recomendado": false,
+            "bookID": 2985,
+            "title": "The Flanders Panel",
+            "authors": "Arturo Pérez-Reverte/Margaret Jull Costa",
+            "numPages": 295,
+            "publication_date": "6/7/2004",
             "languageCode": "en-us"
           }
         ]

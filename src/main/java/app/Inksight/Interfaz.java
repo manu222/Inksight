@@ -848,20 +848,21 @@ public class Interfaz {
 					titulo = sc.nextLine();
 					System.out.println("Escriba el nombre de la lista a la que desea añadirlo: ");
 					nombreLista = sc.nextLine();
+					int response = listas.agregarlibro(nombreLista, titulo);
 					// validar que la lista existe
-					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.COLECCION_NO_EXISTE) {
+					if (response == GestionColecciones.COLECCION_NO_EXISTE) {
 						System.out.println("La lista no existe");
 					}
 					// el libro esta en la base de datos pero no en la lista, se agrega
-					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.LIBRO_AGREGADO_CORRECTAMENTE) {
+					if (response == GestionColecciones.LIBRO_AGREGADO_CORRECTAMENTE) {
 						System.out.println("El libro ha sido añadido correctamente");
 					}
 					// el libro ya esta en la lista
-					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.LIBRO_YA_EXISTE) {
+					if (response == GestionColecciones.LIBRO_YA_EXISTE) {
 						System.out.println("El libro ya existe en la lista");
 					}
 					// el libro no esta en la base de datos
-					if (listas.agregarlibro(nombreLista, titulo) == GestionColecciones.LIBRO_NO_EXISTE) {
+					if (response == GestionColecciones.LIBRO_NO_EXISTE) {
 						System.out.println("El libro no esta disponible en la base de datos");
 					}
 				} catch (Exception e) {
@@ -1412,15 +1413,15 @@ public class Interfaz {
 			}
 		}
 	}
-
+	
 	private int parseTime(String duration) {
 		String[] parts = duration.split(" ");
 		int amount;
 		if (parts.length == 1) {
 			parts = new String[] { parts[0], "dias" };
 		}
-		if (parts.length > 1) {
-			amount = 0;
+		if (parts.length > 2) {
+			return 0;
 		}
 		// obtener la cantidad de tiempo
 		try {
