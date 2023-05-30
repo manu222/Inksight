@@ -1258,6 +1258,8 @@ public class Interfaz {
 		clearConsole();
 		Admin admin = (Admin) personaActual;
 		// mostrar las opciones que tiene el moderador
+		boolean valid = false;
+		while (!valid) {
 		System.out.println("ingrese el nombre del usuario que desea moderar o q para cambiar de usuario");
 		String nombreUsuario = sc.nextLine();
 		if (nombreUsuario.equals("q")) {
@@ -1269,15 +1271,16 @@ public class Interfaz {
 			}
 		}
 		Persona victim = DB.buscarUser(nombreUsuario);
-
 		if (victim == null) {
 			System.out.println("El usuario no existe");
 			menu_AdminMod();
 		} else {
-			boolean canBeBanned = (victim.getAuthLevel().equals("user") || (victim.getAuthLevel().equals("moderador")));
+			valid=true;
+		}
+		boolean canBeBanned = (victim.getAuthLevel().equals("user") || (victim.getAuthLevel().equals("moderador")));
 			if (canBeBanned) {
 				Usuario user = (Usuario) victim;
-				boolean valid=false;
+				valid=false;
 				int opcion = 0;
 				while (!valid) {
 					clearConsole();
@@ -1302,6 +1305,7 @@ public class Interfaz {
 						user.serializeToJson();
 						clearConsole();
 						System.out.println("Usuario reincorporado");
+						limpiarConDelay();
 						menu_AdminMod();
 						break;
 					}
@@ -1380,10 +1384,10 @@ public class Interfaz {
 							}
 							user.getListaReviews().removeAll(del);
 							user.serializeToJson();
+							menu_AdminMod();
 						}
 						break;
 					case 4:
-						sc.nextLine();
 						clearConsole();
 						menu_AdminMod();
 						break;
