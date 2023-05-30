@@ -14,9 +14,10 @@ public class Moderador extends Persona {
      * @param surname    the surname
      * @param location   the location
      */
-    public Moderador(String nombreUser,String correo,String pass ,String name, String surname, String location) {
+    public Moderador(String nombreUser,String correo,String pass ,String name, String surname, String location,boolean banned) {
         super(nombreUser,correo,pass,name, surname, location);
         authLevel = "moderador";
+        this.isBanned=banned;
     }
 
     /**

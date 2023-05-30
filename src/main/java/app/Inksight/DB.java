@@ -424,7 +424,7 @@ public class DB {
             return new Admin(u.getNombreUser(),u.getCorreo(),u.getPass(),u.getFirst_name(),u.getLast_name(),u.getLocation());
         }
         if(u.getAuthLevel().equalsIgnoreCase("moderador")){
-            return new Moderador(u.getNombreUser(),u.getCorreo(),u.getPass(),u.getFirst_name(),u.getLast_name(),u.getLocation());
+            return new Moderador(u.getNombreUser(),u.getCorreo(),u.getPass(),u.getFirst_name(),u.getLast_name(),u.getLocation(),u.isBanned());
         }
         else return u;
     }
@@ -488,7 +488,7 @@ public class DB {
             if (type.equalsIgnoreCase("admin")) {
                 newUser = new Admin(userName, correo, pass, fn, ln, ciudad);
             } else if (type.equalsIgnoreCase("moderador")) {
-                newUser = new Moderador(userName, correo, pass, fn, ln, ciudad);
+                newUser = new Moderador(userName, correo, pass, fn, ln, ciudad,false);
             } else {
                 newUser = new Usuario(userName, correo, pass, fn, ln, ciudad, false, 0, stats, listaAmigos, desafios,0);
             }

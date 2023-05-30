@@ -239,7 +239,25 @@ public class Interfaz {
 							} else if (permiso.equals("admin")) {
 								menu_Administrador();
 							} else {
-								menu_Moderador();
+								System.out.println(personaActual.getNombreUser()+personaActual.getAuthLevel()+personaActual.isBanned());
+								if (personaActual.isBanned()||personaActual.getDaysUntilUnban()!=0) {
+									System.out.println("El usuario seleccionado no puede acceder al sistema.");
+									if (personaActual.getDaysUntilUnban() > 0) {
+										System.out.println(
+												"duración de la prohibicion: " + personaActual.getDaysUntilUnban());
+									} else {
+										System.out.println("El usuario está prohibido permanentemente.");
+									}
+									System.out.println("¿Desea iniciar sesión con otro usuario? (S/N)");
+									String respuesta = sc.nextLine();
+									if (respuesta.split("")[0].equalsIgnoreCase("S")) {
+										valid = false;
+									} else {
+										System.exit(0);
+									}
+								}else {
+									menu_Moderador();
+								}
 							}
 						}
 					}
@@ -475,7 +493,7 @@ public class Interfaz {
 					menu_Amigo();
 				}
 				if (!existe) {
-					System.out.println("Usuario no encontrado");
+					System.out.println("Usuario no encontrado o no puede ser añadido como amigo");
 					limpiarConDelay();
 					menu_Amigo();
 				}
@@ -1150,8 +1168,14 @@ public class Interfaz {
 						clearConsole();
 						System.out.println("Ingrese la duración del veto: (cantidad + (días|semanas|meses|años))");
 						String ans = sc.nextLine();
-						mod.addBanDuration(user, parseTime(ans));
-						System.out.println("Usuario vetado");
+						int duracion= parseTime(ans);
+						if (duracion!=0){
+							mod.addBanDuration(user, duracion);
+							System.out.println("Usuario vetado");
+						}else {
+							System.out.println("Duracion invalida, no se tomaron acciones");
+						}
+
 						user.serializeToJson();
 						limpiarConDelay();
 						menu_Moderador();

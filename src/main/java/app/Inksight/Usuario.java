@@ -286,12 +286,11 @@ public class Usuario extends Persona {
 
         DB db = new DB();
         Persona user =  db.buscarUser(nombre);
-        if(user  != null){
+        if(user  != null && user instanceof Usuario){
             this.listaAmigos.add(user.getNombreUser());
 
             return true;
-        }
-        else{
+        }else{
 
             return false;
         }
